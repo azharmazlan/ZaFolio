@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daftar Buku – Pusat Sumber Alamanda</title>
+
+<style>
+/* ===== BODY ===== */
+body{
+  margin:0;
+  min-height:100vh;
+  background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  font-family: 'Georgia', serif;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:10px;
+}
+
+/* ===== CARD ===== */
+.card{
+  background: rgba(255,255,255,0.95);
+  width:450px;
+  max-width:100%;
+  padding:30px;
+  border-radius:16px;
+  box-shadow:0 20px 40px rgba(0,0,0,0.4);
+  position:relative;
+  box-sizing:border-box;
+}
+
+/* ===== HEADING ===== */
+h2{
+  text-align:center;
+  margin-bottom:20px;
+  letter-spacing:1px;
+  font-size:22px;
+}
+
+/* ===== LABEL ===== */
+label{
+  font-weight:bold;
+  font-size:14px;
+}
+
+/* ===== INPUT / TEXTAREA / SELECT ===== */
+input, textarea, select{
+  width:100%;
+  padding:10px;
+  margin:6px 0 15px;
+  border:none;
+  border-radius:8px;
+  background:#f0f0f0;
+  font-size:14px;
+  box-sizing:border-box;
+}
+
+/* ===== BUTTON ===== */
+button{
+  width:100%;
+  padding:12px;
+  background:linear-gradient(90deg,#141e30,#243b55);
+  color:white;
+  border:none;
+  border-radius:10px;
+  font-size:16px;
+  cursor:pointer;
+  margin-top:4px;
+}
+
+button:hover{
+  opacity:0.9;
+}
+
+/* ===== BUTTON LIHAT DATA ===== */
+.btn-lihat{
+  background:linear-gradient(90deg,#1a7a4a,#2e9b6e);
+  margin-top:10px;
+}
+
+/* ===== LOADING SPINNER ===== */
+#loading{
+  display:none;
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  border:5px solid #f3f3f3;
+  border-top:5px solid #141e30;
+  border-radius:50%;
+  width:50px;
+  height:50px;
+  animation: spin 1s linear infinite;
+  z-index:10;
+  background:rgba(255,255,255,0.7);
+}
+
+@keyframes spin{
+  0%{ transform:translate(-50%, -50%) rotate(0deg);}
+  100%{ transform:translate(-50%, -50%) rotate(360deg);}
+}
+
+/* ===== SUCCESS MESSAGE ===== */
+#successMsg{
+  display:none;
+  position:absolute;
+  top:10px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#4BB543;
+  color:white;
+  padding:10px 20px;
+  border-radius:10px;
+  font-weight:bold;
+  text-align:center;
+  box-shadow:0 5px 15px rgba(0,0,0,0.3);
+  z-index:20;
+  width:80%;
+}
+
+/* ===== DATA LIST ===== */
+#dataList{
+  margin-top:20px;
+  max-height:200px;
+  overflow-y:auto;
+  display:none;
+}
+
+#dataList table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:13px;
+}
+
+#dataList th{
+  background:#141e30;
+  color:white;
+  padding:8px;
+  text-align:left;
+}
+
+#dataList td{
+  padding:8px;
+  border-bottom:1px solid #ddd;
+}
+
+#dataList .empty{
+  text-align:center;
+  color:#999;
+  padding:20px;
+}
+
+/* ===== DEMO BADGE ===== */
+.demo-badge{
+  text-align:center;
+  font-size:11px;
+  color:#888;
+  margin-top:16px;
+  border-top:1px solid #eee;
+  padding-top:12px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width:600px){
+  .card{
+    width:100%;
+    padding:20px;
+  }
+  h2{
+    font-size:20px;
+  }
+  label, input, textarea, select{
+    font-size:13px;
+  }
+  button{
+    font-size:15px;
+    padding:10px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+<h2>📚 DAFTAR BUKU</h2>
+
+<div id="successMsg">✅ Data berjaya dihantar!</div>
+<div id="loading"></div>
+
+<form id="perolehanForm">
+  <label>No. Panggilan</label>
+  <input type="text" id="noPanggilan" placeholder="cth: 2026-001" required>
+
+  <label>Judul</label>
+  <input type="text" id="judul" placeholder="Masukkan tajuk buku" required>
+
+  <label>Harga (RM)</label>
+  <input type="number" id="harga" placeholder="0.00" step="0.01" required>
+
+  <label>Tahun</label>
+  <select id="tahun" required></select>
+
+  <label>Catatan</label>
+  <textarea id="catatan" placeholder="Guna shortcode: s, etn, ete, ppu, mtk, mpi, mta, bak, man, bkp"></textarea>
+
+  <button type="submit">📤 Hantar</button>
+</form>
+
+<button class="btn-lihat" id="btnLihatData">📋 Lihat Data Tersimpan</button>
+
+<div id="dataList">
+  <table>
+    <thead><tr><th>No.</th><th>Judul</th><th>Harga</th><th>Tahun</th><th>Catatan</th></tr></thead>
+    <tbody id="dataBody"></tbody>
+  </table>
+</div>
+
+<div class="demo-badge">
+  ⚡ Demo – Data disimpan dalam localStorage
+</div>
+</div>
+
+<script>
+// ===== SHORTCODES =====
+const shortcodes = {
+  's': 'Sumbangan',
+  'etn': 'Teknologi Elektronik',
+  'ete': 'Teknologi Elektrik',
+  'ppu': 'Teknologi Penyejukan dan Penyamanan Udara',
+  'mtk': 'Teknologi Kimpalan',
+  'mpi': 'Teknologi Pemesinan Industri',
+  'mta': 'Teknologi Automotif',
+  'bak': 'Perakaunan',
+  'man': 'Mandarin',
+  'bkp': 'Setiausaha'
+};
+
+// ===== ELEMEN =====
+const form = document.getElementById('perolehanForm');
+const loading = document.getElementById('loading');
+const successMsg = document.getElementById('successMsg');
+const noPanggilanInput = document.getElementById('noPanggilan');
+const tahunSelect = document.getElementById('tahun');
+const catatanInput = document.getElementById('catatan');
+const judulInput = document.getElementById('judul');
+const hargaInput = document.getElementById('harga');
+const btnLihat = document.getElementById('btnLihatData');
+const dataList = document.getElementById('dataList');
+const dataBody = document.getElementById('dataBody');
+
+const STORAGE_KEY = 'daftar_buku_demo';
+
+// ===== STORAGE FUNCTIONS =====
+function loadData() {
+  try {
+    const data = localStorage.getItem(STORAGE_KEY);
+    return data ? JSON.parse(data) : [];
+  } catch { return []; }
+}
+
+function saveData(data) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+// ===== GENERATE TAHUN (20 tahun dari sekarang) =====
+const startYear = new Date().getFullYear();
+for(let i = 0; i < 20; i++){
+  const y = startYear + i;
+  const opt = document.createElement('option');
+  opt.value = y;
+  opt.text = y;
+  tahunSelect.appendChild(opt);
+}
+
+// ===== NO PANGGILAN AUTO (tahun + dash) =====
+function updateNoPanggilan(){
+  const tahun = tahunSelect.value;
+  const current = noPanggilanInput.value;
+  // Jika current kosong atau bermula dengan tahun sebelumnya, ganti
+  if(!current || !current.startsWith(tahun)){
+    noPanggilanInput.value = tahun + '-';
+  }
+}
+
+tahunSelect.addEventListener('change', updateNoPanggilan);
+
+// ===== CATATAN SHORTCODE =====
+catatanInput.addEventListener('input', function(){
+  const v = this.value.trim().toLowerCase();
+  if(shortcodes[v]){
+    this.value = shortcodes[v];
+  }
+});
+
+// ===== RENDER DATA LIST =====
+function renderDataList() {
+  const data = loadData();
+  if(data.length === 0) {
+    dataBody.innerHTML = '<tr><td colspan="5" class="empty">Tiada data</td></tr>';
+    dataList.style.display = 'block';
+    return;
+  }
+  dataBody.innerHTML = data.map((item, index) => `
+    <tr>
+      <td>${index + 1}</td>
+      <td>${item.judul || '-'}</td>
+      <td>RM ${item.harga || '0.00'}</td>
+      <td>${item.tahun || '-'}</td>
+      <td>${item.catatan || '-'}</td>
+    </tr>
+  `).join('');
+  dataList.style.display = 'block';
+}
+
+// ===== BUTTON LIHAT DATA =====
+let dataVisible = false;
+btnLihat.addEventListener('click', function(){
+  if(dataVisible) {
+    dataList.style.display = 'none';
+    dataVisible = false;
+    this.textContent = '📋 Lihat Data Tersimpan';
+  } else {
+    renderDataList();
+    dataVisible = true;
+    this.textContent = '❌ Tutup Data';
+  }
+});
+
+// ===== SUBMIT FORM (SIMULASI) =====
+form.addEventListener('submit', function(e){
+  e.preventDefault();
+
+  const tahun = tahunSelect.value;
+  const noPanggilan = noPanggilanInput.value.trim();
+  const judul = judulInput.value.trim();
+  const harga = parseFloat(hargaInput.value);
+  const catatan = catatanInput.value.trim();
+
+  // Validasi
+  if(!noPanggilan || !judul || isNaN(harga) || harga <= 0) {
+    alert('Sila lengkapkan semua ruangan dengan betul.');
+    return;
+  }
+
+  // Simpan data
+  const data = loadData();
+  data.push({
+    noPanggilan,
+    judul,
+    harga,
+    tahun,
+    catatan: catatan || '-',
+    tarikh: new Date().toISOString()
+  });
+  saveData(data);
+
+  // Tunjukkan loading
+  loading.style.display = 'block';
+
+  setTimeout(() => {
+    loading.style.display = 'none';
+    successMsg.style.display = 'block';
+
+    // Reset form (kecuali tahun)
+    form.reset();
+    tahunSelect.value = startYear;
+    updateNoPanggilan();
+
+    setTimeout(() => {
+      successMsg.style.display = 'none';
+      // Auto tutup data jika terbuka
+      if(dataVisible) {
+        dataList.style.display = 'none';
+        dataVisible = false;
+        btnLihat.textContent = '📋 Lihat Data Tersimpan';
+      }
+    }, 2000);
+
+  }, 1500);
+});
+
+// ===== INIT =====
+setTimeout(updateNoPanggilan, 100);
+
+console.log('📚 Sistem Daftar Buku – Demo sedia!');
+console.log('📌 Data disimpan dalam localStorage.');
+</script>
+
+</body>
+</html>

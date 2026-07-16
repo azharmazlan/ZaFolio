@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tempahan Bilik - Demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        :root {
+            --primary: #1a365d;
+            --primary-dark: #0f2547;
+            --secondary: #2d74da;
+            --secondary-light: #4a9eff;
+            --accent: #ff6b35;
+            --accent-light: #ff8b5e;
+            --success: #10b981;
+            --success-light: #34d399;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
+            --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            --hover-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --radius: 12px;
+            --radius-lg: 20px;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top:0; left:0; width:100%; height:100%;
+            background: radial-gradient(circle at 10% 20%, rgba(45,116,218,0.05) 0%, transparent 20%),
+                        radial-gradient(circle at 90% 80%, rgba(255,107,53,0.05) 0%, transparent 20%);
+            z-index: -1;
+        }
+        .container { max-width:1280px; margin:0 auto; padding:30px; }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 40px;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        header::before {
+            content: '';
+            position: absolute;
+            top:0; left:0; width:100%; height:100%;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .logo-header-top { display:flex; justify-content:center; margin-bottom:25px; }
+        .logo-center-top { height:140px; width:auto; border-radius:20px; object-fit:contain; box-shadow:0 8px 25px rgba(0,0,0,0.25); border:3px solid rgba(255,255,255,0.4); background:white; padding:8px; display:block; margin:0 auto; }
+        .header-content { width:100%; }
+        .logo-container { display:flex; align-items:center; gap:20px; margin-bottom:15px; justify-content:flex-start; flex-wrap:wrap; }
+        .logo-icon { background:rgba(255,255,255,0.1); width:70px; height:70px; border-radius:18px; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.2); }
+        .logo-icon i { font-size:32px; color:white; }
+        .header-text-container { flex:1; }
+        header h1 { font-family:'Poppins',sans-serif; font-size:2.8rem; font-weight:700; margin-bottom:8px; letter-spacing:-0.5px; }
+        .subtitle { font-size:1.3rem; opacity:0.9; margin-bottom:10px; font-weight:300; max-width:800px; }
+        .header-info { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px; margin-top:30px; }
+        .date-display { background:rgba(255,255,255,0.1); padding:15px 25px; border-radius:var(--radius); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.2); font-weight:600; display:flex; align-items:center; gap:12px; transition:var(--transition); }
+        .date-display:hover { background:rgba(255,255,255,0.15); transform:translateY(-2px); }
+        .status-badge { background:var(--success); color:white; padding:8px 16px; border-radius:50px; font-size:0.9rem; font-weight:600; display:flex; align-items:center; gap:8px; }
+
+        /* TABS */
+        .tabs { display:flex; background:white; border-radius:var(--radius); overflow:hidden; box-shadow:var(--card-shadow); margin-bottom:40px; border:1px solid var(--gray-light); flex-wrap:wrap; }
+        .tab { flex:1; padding:22px; background:white; border:none; font-size:1.1rem; font-weight:600; cursor:pointer; transition:var(--transition); display:flex; align-items:center; justify-content:center; gap:12px; position:relative; color:var(--gray); min-width:120px; }
+        .tab::after { content:''; position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:0; height:4px; background:var(--secondary); border-radius:2px 2px 0 0; transition:var(--transition); }
+        .tab.active { color:var(--primary); background:linear-gradient(to bottom, rgba(45,116,218,0.05) 0%, transparent 100%); }
+        .tab.active::after { width:80%; }
+        .tab:hover:not(.active) { background:rgba(45,116,218,0.03); color:var(--primary); }
+        .tab i { font-size:1.2rem; }
+
+        /* TAB CONTENT */
+        .tab-content { display:none; animation:fadeIn 0.5s ease; }
+        .tab-content.active { display:block; }
+        @keyframes fadeIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+
+        /* CARD */
+        .card { background:white; border-radius:var(--radius-lg); padding:40px; box-shadow:var(--card-shadow); margin-bottom:40px; border:1px solid var(--gray-light); transition:var(--transition); position:relative; overflow:hidden; }
+        .card:hover { box-shadow:var(--hover-shadow); transform:translateY(-5px); }
+        .card::before { content:''; position:absolute; top:0; left:0; width:6px; height:100%; background:linear-gradient(to bottom, var(--secondary), var(--accent)); }
+        .card h2 { color:var(--primary); margin-bottom:30px; padding-bottom:20px; border-bottom:2px solid var(--gray-light); display:flex; align-items:center; gap:15px; font-family:'Poppins',sans-serif; font-size:1.8rem; font-weight:700; }
+        .card h2 i { color:var(--secondary); background:rgba(45,116,218,0.1); width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; }
+
+        /* FORM */
+        .form-group { margin-bottom:30px; }
+        .form-group label { display:block; margin-bottom:12px; font-weight:600; color:var(--primary); display:flex; align-items:center; gap:12px; font-size:1.05rem; }
+        .form-group label i { color:var(--secondary); width:24px; text-align:center; }
+        .form-group input[type="text"], .form-group input[type="date"], .form-group input[type="password"], .form-group select, .form-group textarea {
+            width:100%; padding:18px; border:2px solid var(--gray-light); border-radius:var(--radius); font-size:1.05rem; transition:var(--transition); background:white; color:var(--dark); resize:vertical; min-height:60px;
+        }
+        .form-group textarea { min-height:100px; font-family:'Inter',sans-serif; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color:var(--secondary); outline:none; box-shadow:0 0 0 3px rgba(45,116,218,0.1); }
+
+        /* DATE INFO */
+        .date-info-message { background:rgba(45,116,218,0.05); border:1px solid rgba(45,116,218,0.2); border-radius:var(--radius); padding:15px; margin-top:10px; font-size:0.95rem; transition:var(--transition); }
+        .date-info-success { background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.2); border-left:4px solid var(--success); }
+        .date-info-warning { background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.2); border-left:4px solid var(--warning); }
+
+        /* ROOM OPTIONS */
+        .room-options { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:20px; }
+        .room-option { position:relative; }
+        .room-option input[type="radio"] { display:none; }
+        .room-option label {
+            display:flex; align-items:center; gap:20px; padding:25px; background:white; border:2px solid var(--gray-light); border-radius:var(--radius); cursor:pointer; transition:var(--transition); height:100%;
+        }
+        .room-option.disabled label { cursor:not-allowed; opacity:0.7; background:#f8f9fa; border-color:#e9ecef; }
+        .room-option.disabled .admin-only-badge { position:absolute; top:10px; right:10px; background:var(--danger); color:white; padding:4px 10px; border-radius:20px; font-size:0.75rem; font-weight:600; z-index:2; }
+        .room-option input[type="radio"]:checked + label { background:linear-gradient(to right, rgba(45,116,218,0.05), rgba(255,107,53,0.05)); border-color:var(--secondary); box-shadow:0 5px 15px rgba(45,116,218,0.15); transform:translateY(-3px); }
+        .room-option label i { font-size:2.2rem; color:var(--secondary); background:rgba(45,116,218,0.1); width:70px; height:70px; border-radius:16px; display:flex; align-items:center; justify-content:center; transition:var(--transition); }
+        .room-option input[type="radio"]:checked + label i { background:var(--secondary); color:white; transform:scale(1.1); }
+        .room-option label .room-info { flex:1; }
+        .room-option label span { font-size:1.3rem; font-weight:700; display:block; margin-bottom:5px; color:var(--primary); }
+        .room-option label p { color:var(--gray); font-size:0.95rem; margin:0; }
+
+        /* TIME GRID */
+        .time-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:15px; }
+        .time-option { display:block; position:relative; }
+        .time-option input[type="checkbox"] { display:none; }
+        .time-option span {
+            display:block; padding:20px; background:white; border:2px solid var(--gray-light); border-radius:var(--radius); text-align:center; cursor:pointer; transition:var(--transition); font-weight:600; position:relative; overflow:hidden; font-size:1.05rem;
+        }
+        .time-option input[type="checkbox"]:checked + span { background:linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%); color:white; border-color:var(--secondary); box-shadow:0 5px 15px rgba(45,116,218,0.2); transform:translateY(-3px); }
+        .time-option input[type="checkbox"]:checked + span::before { content:'✓'; position:absolute; top:5px; right:5px; font-size:0.8rem; opacity:0.8; }
+        .time-option.disabled span { background:#fef2f2; border-color:#fee2e2; color:#dc2626; cursor:not-allowed; opacity:0.7; }
+        .time-option.disabled span::after { content:"TELAH DITEMPAH"; position:absolute; top:-6px; right:-6px; background:var(--danger); color:white; font-size:0.7rem; padding:3px 8px; border-radius:10px; font-weight:bold; box-shadow:0 2px 5px rgba(239,68,68,0.3); }
+
+        /* BUTTONS */
+        .btn-submit, .btn-filter, .btn-admin, .btn-admin-action, .btn-admin-booking {
+            background:linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);
+            color:white; border:none; padding:20px 35px; border-radius:var(--radius); font-size:1.15rem; font-weight:600; cursor:pointer; transition:var(--transition); display:flex; align-items:center; justify-content:center; gap:12px; width:100%; margin-top:10px; letter-spacing:0.5px; box-shadow:0 5px 15px rgba(45,116,218,0.2); position:relative; overflow:hidden;
+        }
+        .btn-submit::after, .btn-filter::after, .btn-admin::after, .btn-admin-action::after, .btn-admin-booking::after {
+            content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); transition:0.5s;
+        }
+        .btn-submit:hover::after, .btn-filter:hover::after, .btn-admin:hover::after, .btn-admin-action:hover::after, .btn-admin-booking:hover::after { left:100%; }
+        .btn-submit:hover, .btn-filter:hover, .btn-admin:hover, .btn-admin-booking:hover { transform:translateY(-3px); box-shadow:0 8px 20px rgba(45,116,218,0.3); }
+        .btn-admin-action { background:linear-gradient(135deg, var(--success) 0%, #34d399 100%); box-shadow:0 5px 15px rgba(16,185,129,0.2); margin-bottom:20px; }
+        .btn-admin-action:hover { box-shadow:0 8px 20px rgba(16,185,129,0.3); }
+        .btn-admin-booking { background:linear-gradient(135deg, #9333ea 0%, #a855f7 100%); box-shadow:0 5px 15px rgba(147,51,234,0.2); }
+        .btn-admin-booking:hover { box-shadow:0 8px 20px rgba(147,51,234,0.3); }
+        .btn-sm { padding:8px 16px; font-size:0.85rem; width:auto; border-radius:20px; }
+
+        /* FILTER */
+        .filter-section { display:flex; gap:20px; align-items:center; margin-bottom:30px; flex-wrap:wrap; background:rgba(45,116,218,0.05); padding:25px; border-radius:var(--radius); border:1px solid var(--gray-light); }
+        .filter-section label { font-weight:600; color:var(--primary); min-width:120px; }
+        .filter-section input[type="date"] { padding:16px; border:2px solid var(--gray-light); border-radius:var(--radius); font-size:1.05rem; flex:1; max-width:250px; }
+
+        /* BOOKINGS LIST */
+        .bookings-container { background:white; border-radius:var(--radius); padding:30px; min-height:300px; border:1px solid var(--gray-light); box-shadow:0 5px 15px rgba(0,0,0,0.03); }
+        .booking-item { background:white; padding:25px; border-radius:var(--radius); margin-bottom:20px; box-shadow:0 3px 10px rgba(0,0,0,0.05); border-left:5px solid var(--secondary); transition:var(--transition); display:flex; flex-direction:column; gap:15px; border:1px solid var(--gray-light); }
+        .booking-item:hover { transform:translateY(-5px); box-shadow:0 10px 25px rgba(0,0,0,0.08); border-left-color:var(--accent); }
+        .booking-item-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:5px; }
+        .booking-room { font-weight:800; color:var(--primary); font-size:1.3rem; display:flex; align-items:center; gap:10px; }
+        .booking-room i { color:var(--secondary); }
+        .booking-name { font-weight:700; color:var(--secondary); font-size:1.2rem; display:flex; align-items:center; gap:10px; }
+        .booking-date { color:var(--gray); font-weight:500; display:flex; align-items:center; gap:8px; background:rgba(45,116,218,0.05); padding:8px 15px; border-radius:50px; }
+        .booking-details { display:flex; gap:20px; margin-top:10px; flex-wrap:wrap; }
+        .booking-time { background:rgba(45,116,218,0.1); color:var(--secondary); padding:8px 18px; border-radius:50px; font-size:0.95rem; font-weight:600; border:1px solid rgba(45,116,218,0.2); }
+        .booking-notes { background:rgba(245,158,11,0.05); border:1px solid rgba(245,158,11,0.2); border-radius:var(--radius); padding:15px; margin-top:10px; font-size:0.95rem; color:var(--dark); }
+        .booking-notes strong { color:var(--warning); display:flex; align-items:center; gap:8px; font-size:0.9rem; }
+        .room-section { margin-bottom:40px; }
+        .room-section h3 { color:var(--primary); margin-bottom:20px; padding-bottom:15px; border-bottom:2px solid var(--gray-light); font-family:'Poppins',sans-serif; font-size:1.5rem; display:flex; align-items:center; gap:12px; }
+
+        /* ADMIN */
+        .admin-actions { display:grid; grid-template-columns:repeat(auto-fit,minmax(350px,1fr)); gap:20px; margin-bottom:40px; }
+        .admin-booking-item { background:white; padding:25px; border-radius:var(--radius); margin-bottom:20px; border:1px solid var(--gray-light); transition:var(--transition); }
+        .admin-booking-item:hover { border-color:var(--secondary); box-shadow:0 5px 15px rgba(0,0,0,0.05); transform:translateY(-3px); }
+        .admin-booking-controls { display:flex; gap:12px; margin-top:20px; flex-wrap:wrap; }
+        .btn-edit, .btn-delete-admin { padding:12px 24px; border-radius:var(--radius); border:none; font-weight:600; cursor:pointer; transition:var(--transition); display:flex; align-items:center; gap:8px; flex:1; justify-content:center; }
+        .btn-edit { background:linear-gradient(135deg, var(--warning) 0%, #fbbf24 100%); color:white; box-shadow:0 3px 10px rgba(245,158,11,0.2); }
+        .btn-edit:hover { transform:translateY(-3px); box-shadow:0 5px 15px rgba(245,158,11,0.3); }
+        .btn-delete-admin { background:linear-gradient(135deg, var(--danger) 0%, #f87171 100%); color:white; box-shadow:0 3px 10px rgba(239,68,68,0.2); }
+        .btn-delete-admin:hover { transform:translateY(-3px); box-shadow:0 5px 15px rgba(239,68,68,0.3); }
+
+        /* ADMIN BOOKING FORM */
+        #admin-booking-form { background:linear-gradient(135deg, rgba(147,51,234,0.05) 0%, rgba(45,116,218,0.05) 100%); border:2px solid rgba(147,51,234,0.2); border-radius:var(--radius); padding:30px; margin-bottom:30px; }
+        #admin-booking-form h3 { color:#9333ea; border-bottom:2px solid rgba(147,51,234,0.2); padding-bottom:15px; margin-bottom:25px; display:flex; align-items:center; gap:12px; }
+        .admin-booking-info { background:rgba(147,51,234,0.1); border:1px solid rgba(147,51,234,0.3); border-radius:var(--radius); padding:15px; margin-bottom:20px; color:#6b21a8; font-size:0.95rem; }
+        .admin-booking-info i { color:#9333ea; margin-right:10px; }
+
+        /* MODAL */
+        .modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:1000; backdrop-filter:blur(5px); animation:fadeIn 0.3s ease; }
+        .modal-content { background:white; padding:40px; border-radius:var(--radius-lg); width:90%; max-width:600px; box-shadow:0 20px 60px rgba(0,0,0,0.3); animation:modalSlideIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275); border:1px solid var(--gray-light); position:relative; max-height:90vh; overflow-y:auto; }
+        @keyframes modalSlideIn { from{opacity:0; transform:translateY(-30px) scale(0.95);} to{opacity:1; transform:translateY(0) scale(1);} }
+        .modal h3 { margin-bottom:25px; color:var(--primary); font-family:'Poppins',sans-serif; font-size:1.8rem; display:flex; align-items:center; gap:12px; }
+        .modal-actions { display:flex; gap:15px; margin-top:30px; flex-wrap:wrap; }
+        .btn-save, .btn-cancel, .btn-delete { padding:16px 30px; border-radius:var(--radius); border:none; font-weight:600; cursor:pointer; flex:1; transition:var(--transition); display:flex; align-items:center; justify-content:center; gap:8px; min-width:100px; }
+        .btn-save { background:linear-gradient(135deg, var(--success) 0%, #34d399 100%); color:white; box-shadow:0 5px 15px rgba(16,185,129,0.2); }
+        .btn-save:hover { transform:translateY(-3px); box-shadow:0 8px 20px rgba(16,185,129,0.3); }
+        .btn-cancel { background:linear-gradient(135deg, var(--gray) 0%, #94a3b8 100%); color:white; box-shadow:0 5px 15px rgba(100,116,139,0.2); }
+        .btn-cancel:hover { transform:translateY(-3px); box-shadow:0 8px 20px rgba(100,116,139,0.3); }
+        .btn-delete { background:linear-gradient(135deg, var(--danger) 0%, #f87171 100%); color:white; box-shadow:0 5px 15px rgba(239,68,68,0.2); }
+        .btn-delete:hover { transform:translateY(-3px); box-shadow:0 8px 20px rgba(239,68,68,0.3); }
+
+        /* MESSAGE */
+        .message { position:fixed; top:30px; right:30px; padding:25px; border-radius:var(--radius); color:white; font-weight:600; z-index:1001; box-shadow:0 10px 30px rgba(0,0,0,0.15); max-width:450px; display:flex; align-items:center; gap:15px; animation:slideInRight 0.4s cubic-bezier(0.175,0.885,0.32,1.275), fadeOut 0.3s ease 3s forwards; backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.2); }
+        @keyframes slideInRight { from{opacity:0; transform:translateX(100%);} to{opacity:1; transform:translateX(0);} }
+        @keyframes fadeOut { to{opacity:0;} }
+        .message.success { background:linear-gradient(135deg, var(--success) 0%, rgba(16,185,129,0.9) 100%); border-left:5px solid rgba(16,185,129,0.5); }
+        .message.error { background:linear-gradient(135deg, var(--danger) 0%, rgba(239,68,68,0.9) 100%); border-left:5px solid rgba(239,68,68,0.5); }
+        .message.info { background:linear-gradient(135deg, var(--secondary) 0%, rgba(45,116,218,0.9) 100%); border-left:5px solid rgba(45,116,218,0.5); }
+        .message.warning { background:linear-gradient(135deg, var(--warning) 0%, rgba(245,158,11,0.9) 100%); border-left:5px solid rgba(245,158,11,0.5); }
+        .hidden { display:none !important; }
+
+        /* STATS */
+        .stats-container { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:20px; margin-bottom:40px; }
+        .stat-card { background:white; padding:25px; border-radius:var(--radius); text-align:center; box-shadow:var(--card-shadow); border:1px solid var(--gray-light); transition:var(--transition); position:relative; overflow:hidden; }
+        .stat-card:hover { transform:translateY(-5px); box-shadow:var(--hover-shadow); }
+        .stat-number { font-size:2.5rem; font-weight:800; margin-bottom:10px; transition:var(--transition); }
+        .stat-label { color:var(--gray); font-size:1rem; font-weight:600; margin-bottom:15px; }
+        .room-availability { margin-top:15px; padding-top:15px; border-top:1px solid var(--gray-light); }
+        .room-status { display:flex; justify-content:space-between; align-items:center; padding:8px 0; font-size:0.9rem; }
+        .room-status-dot { width:10px; height:10px; border-radius:50%; margin-right:8px; display:inline-block; }
+        .dot-available { background-color:var(--success); box-shadow:0 0 8px var(--success); }
+        .dot-full { background-color:var(--danger); box-shadow:0 0 8px var(--danger); }
+        .room-available { color:var(--success); font-weight:700; }
+        .room-full { color:var(--danger); font-weight:700; }
+
+        /* AVAILABILITY */
+        .availability-info { background:linear-gradient(135deg, rgba(45,116,218,0.05) 0%, rgba(255,107,53,0.05) 100%); border-radius:var(--radius); padding:25px; margin-bottom:30px; border:1px solid rgba(45,116,218,0.1); }
+        .availability-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:15px; }
+        .availability-header h3 { color:var(--primary); font-family:'Poppins',sans-serif; font-size:1.5rem; display:flex; align-items:center; gap:10px; }
+        .date-selector { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+        .date-selector label { font-weight:600; color:var(--primary); }
+        .date-selector input { padding:12px; border:2px solid var(--gray-light); border-radius:var(--radius); font-size:1rem; }
+        .availability-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:20px; }
+        .availability-card { background:white; border-radius:var(--radius); padding:25px; box-shadow:0 5px 15px rgba(0,0,0,0.05); border:1px solid var(--gray-light); transition:var(--transition); }
+        .availability-card:hover { transform:translateY(-3px); box-shadow:0 8px 20px rgba(0,0,0,0.1); }
+        .availability-card-header { display:flex; align-items:center; gap:15px; margin-bottom:20px; }
+        .availability-card-header i { font-size:2rem; color:var(--secondary); background:rgba(45,116,218,0.1); width:60px; height:60px; border-radius:15px; display:flex; align-items:center; justify-content:center; }
+        .availability-card-title { flex:1; }
+        .availability-card-title h4 { color:var(--primary); font-size:1.3rem; margin-bottom:5px; }
+        .availability-card-title p { color:var(--gray); font-size:0.9rem; }
+        .availability-status { text-align:center; padding:15px; border-radius:var(--radius); margin-bottom:20px; font-weight:700; font-size:1.1rem; }
+        .status-available { background:rgba(16,185,129,0.1); color:var(--success); border:2px solid rgba(16,185,129,0.2); }
+        .status-full { background:rgba(239,68,68,0.1); color:var(--danger); border:2px solid rgba(239,68,68,0.2); }
+        .slots-info { margin-top:20px; }
+        .slots-info h5 { color:var(--primary); margin-bottom:10px; font-size:1rem; }
+        .slot-list { display:flex; flex-wrap:wrap; gap:8px; }
+        .slot-item { padding:8px 12px; background:var(--gray-light); border-radius:20px; font-size:0.85rem; font-weight:600; }
+        .slot-available { background:rgba(16,185,129,0.1); color:var(--success); border:1px solid rgba(16,185,129,0.3); }
+        .slot-booked { background:rgba(239,68,68,0.1); color:var(--danger); border:1px solid rgba(239,68,68,0.3); text-decoration:line-through; }
+        .conflict-warning { background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.3); border-radius:var(--radius); padding:25px; margin-top:20px; color:#92400e; animation:pulse 2s infinite; }
+        @keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(245,158,11,0.4);}70%{box-shadow:0 0 0 10px rgba(245,158,11,0);}100%{box-shadow:0 0 0 0 rgba(245,158,11,0);} }
+        .conflict-warning h4 { margin-bottom:15px; display:flex; align-items:center; gap:12px; color:#92400e; font-size:1.2rem; }
+        .conflict-list { list-style-type:none; margin-top:15px; }
+        .conflict-list li { padding:12px; background:rgba(255,255,255,0.7); margin-bottom:8px; border-radius:var(--radius); border-left:4px solid var(--warning); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+
+        /* LOADING */
+        .loading-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); display:flex; align-items:center; justify-content:center; z-index:2000; flex-direction:column; gap:25px; backdrop-filter:blur(5px); }
+        .spinner { width:70px; height:70px; border:5px solid rgba(255,255,255,0.1); border-radius:50%; border-top-color:var(--secondary); animation:spin 1s ease-in-out infinite; box-shadow:0 0 20px rgba(45,116,218,0.5); }
+        @keyframes spin { to{transform:rotate(360deg);} }
+        .loading-text { color:white; font-size:1.3rem; font-weight:600; letter-spacing:1px; }
+
+        /* FOOTER */
+        footer { text-align:center; margin-top:60px; padding-top:30px; border-top:1px solid var(--gray-light); color:var(--gray); font-size:0.95rem; }
+        .footer-content { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px; margin-bottom:20px; }
+        .footer-logo { display:flex; align-items:center; gap:10px; font-weight:700; color:var(--primary); font-size:1.1rem; }
+        .contact-link { color:var(--secondary); text-decoration:none; font-weight:600; display:flex; align-items:center; gap:8px; transition:var(--transition); padding:10px 20px; background:rgba(45,116,218,0.05); border-radius:var(--radius); }
+        .contact-link:hover { background:rgba(45,116,218,0.1); transform:translateY(-2px); }
+        .demo-badge { display:inline-block; background:var(--warning); color:white; padding:4px 12px; border-radius:20px; font-size:0.75rem; font-weight:700; margin-top:8px; }
+
+        /* RESPONSIVE */
+        @media (max-width:1024px) {
+            .container { padding:20px; }
+            header { padding:30px; }
+            header h1 { font-size:2.4rem; }
+            .room-options { grid-template-columns:1fr; }
+            .admin-actions { grid-template-columns:1fr; }
+            .availability-grid { grid-template-columns:1fr; }
+            .logo-center-top { height:120px; }
+        }
+        @media (max-width:768px) {
+            .container { padding:15px; }
+            header h1 { font-size:2rem; }
+            .logo-center-top { height:100px; }
+            .logo-container { flex-direction:column; text-align:center; gap:15px; }
+            .header-content .logo-container, .header-content .header-text-container { text-align:center; }
+            .header-text-container { width:100%; }
+            .header-info { flex-direction:column; align-items:stretch; }
+            .tabs { flex-direction:column; }
+            .tab { padding:18px; }
+            .card { padding:25px; }
+            .time-grid { grid-template-columns:repeat(2,1fr); }
+            .filter-section { flex-direction:column; align-items:stretch; }
+            .admin-booking-controls { flex-direction:column; }
+            .modal-content { padding:25px; }
+            .modal-actions { flex-direction:column; }
+            .footer-content { flex-direction:column; text-align:center; }
+            .message { left:20px; right:20px; max-width:none; }
+            .stats-container { grid-template-columns:repeat(2,1fr); }
+            .availability-header { flex-direction:column; align-items:stretch; }
+            .date-selector { width:100%; }
+            .date-selector input { flex:1; }
+        }
+        @media (max-width:480px) {
+            .time-grid { grid-template-columns:1fr; }
+            .room-option label { flex-direction:column; text-align:center; gap:15px; }
+            .booking-item-header { flex-direction:column; align-items:flex-start; gap:10px; }
+            .stats-container { grid-template-columns:1fr; }
+            .slot-list { justify-content:center; }
+            .logo-center-top { height:80px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-header-top">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYXBsE9u9o8BI7JNZ4TqTabaa0QxVMcd5W6g&s" alt="Logo VocKAF" class="logo-center-top">
+            </div>
+            <div class="header-content">
+                <div class="logo-container">
+                    <div class="logo-icon"><i class="fas fa-calendar-check"></i></div>
+                    <div class="header-text-container">
+                        <h1>Tempahan Bilik Khas VocKAF</h1>
+                        <p class="subtitle">*Pusat Sumber Alamanda (PSA) · *Bilik Multimedia Angsana · *Bilik Akses</p>
+                        <p class="subtitle" style="font-size:0.9rem;opacity:0.8;">Demo – Data disimpan dalam localStorage</p>
+                    </div>
+                </div>
+                <div class="header-info">
+                    <div class="date-display"><i class="fas fa-calendar-day"></i> <span id="current-date"></span></div>
+                    <div class="status-badge"><i class="fas fa-circle"></i> <span>ONLINE (Demo)</span></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- STATS -->
+        <div class="stats-container">
+            <div class="stat-card"><div class="stat-number" id="today-bookings">0</div><div class="stat-label">Tempahan Hari Ini</div></div>
+            <div class="stat-card"><div class="stat-number" id="bilik-tersedia">3</div><div class="stat-label">Bilik Tersedia</div></div>
+            <div class="stat-card"><div class="stat-number" id="system-status">100%</div><div class="stat-label">Status Sistem</div></div>
+        </div>
+
+        <!-- AVAILABILITY -->
+        <div class="availability-info">
+            <div class="availability-header">
+                <h3><i class="fas fa-door-open"></i> Ketersediaan Bilik</h3>
+                <div class="date-selector">
+                    <label for="avail-date">Tarikh:</label>
+                    <input type="date" id="avail-date">
+                </div>
+            </div>
+            <div class="availability-grid" id="availability-grid"></div>
+        </div>
+
+        <!-- TABS -->
+        <div class="tabs">
+            <button class="tab active" data-tab="booking"><i class="fas fa-plus-circle"></i> Buat Tempahan</button>
+            <button class="tab" data-tab="view"><i class="fas fa-eye"></i> Lihat Tempahan</button>
+            <button class="tab" data-tab="admin"><i class="fas fa-user-shield"></i> Panel Admin</button>
+        </div>
+
+        <!-- BOOKING -->
+        <div id="booking" class="tab-content active">
+            <div class="card">
+                <h2><i class="fas fa-calendar-plus"></i> Buat Tempahan Baru</h2>
+                <form id="booking-form">
+                    <div class="form-group">
+                        <label><i class="fas fa-user-tie"></i> Nama Penempah</label>
+                        <input type="text" id="name" placeholder="Masukkan nama penuh" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-sticky-note"></i> Catatan (Kelas/Aktiviti)</label>
+                        <textarea id="notes" placeholder="Contoh: 2DVM ETN / Pembentangan PB" rows="2" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-door-closed"></i> Pilih Bilik</label>
+                        <div class="room-options">
+                            <div class="room-option disabled">
+                                <input type="radio" id="room1" name="room" value="Pusat Sumber Alamanda" disabled>
+                                <label for="room1">
+                                    <i class="fas fa-book-reader"></i>
+                                    <div class="room-info">
+                                        <span>Pusat Sumber Alamanda</span>
+                                        <p>Kapasiti: 30 orang | PDPC tidak dibenarkan</p>
+                                    </div>
+                                </label>
+                                <div class="admin-only-badge">Admin sahaja</div>
+                            </div>
+                            <div class="room-option">
+                                <input type="radio" id="room2" name="room" value="Bilik Multimedia Angsana" checked>
+                                <label for="room2">
+                                    <i class="fas fa-desktop"></i>
+                                    <div class="room-info">
+                                        <span>Bilik Multimedia Angsana</span>
+                                        <p>Kapasiti: 50 orang | Projektor, wifi, kerusi</p>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="room-option">
+                                <input type="radio" id="room3" name="room" value="Bilik Akses">
+                                <label for="room3">
+                                    <i class="fas fa-graduation-cap"></i>
+                                    <div class="room-info">
+                                        <span>Bilik Akses</span>
+                                        <p>Kapasiti: 10 orang | Komputer, pencetak, wifi</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-alt"></i> Tarikh Tempahan</label>
+                        <input type="date" id="date" required>
+                        <div id="date-info" class="date-info-message"></div>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-clock"></i> Masa Tempahan (Pilih satu atau lebih)</label>
+                        <div class="time-grid" id="time-grid"></div>
+                        <div id="time-warning" class="conflict-warning hidden">
+                            <h4><i class="fas fa-exclamation-triangle"></i> Konflik Masa</h4>
+                            <p>Slot berikut telah ditempah:</p>
+                            <ul id="conflict-list" class="conflict-list"></ul>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-submit"><i class="fas fa-check-circle"></i> Simpan Tempahan</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- VIEW -->
+        <div id="view" class="tab-content">
+            <div class="card">
+                <h2><i class="fas fa-list-alt"></i> Senarai Tempahan</h2>
+                <div class="filter-section">
+                    <label><i class="fas fa-filter"></i> Pilih Tarikh:</label>
+                    <input type="date" id="filter-date">
+                    <button id="load-bookings" class="btn-filter" style="width:auto;padding:12px 30px;"><i class="fas fa-search"></i> Cari</button>
+                </div>
+                <div class="bookings-container" id="bookings-list"></div>
+            </div>
+        </div>
+
+        <!-- ADMIN -->
+        <div id="admin" class="tab-content">
+            <div class="card">
+                <h2><i class="fas fa-user-cog"></i> Panel Pentadbir</h2>
+                <div id="admin-login-section">
+                    <h3><i class="fas fa-lock"></i> Log Masuk Pentadbir</h3>
+                    <div class="form-group">
+                        <label>Kata Laluan</label>
+                        <input type="password" id="admin-password" placeholder="Kata laluan: KVWT INTEL">
+                    </div>
+                    <button id="admin-login" class="btn-admin"><i class="fas fa-sign-in-alt"></i> Log Masuk</button>
+                    <div style="margin-top:8px; font-size:0.8rem; color:var(--text-muted); text-align:center;"><i class="fas fa-key"></i> Kata laluan: <strong>KVWT INTEL</strong></div>
+                </div>
+                <div id="admin-functions" class="hidden">
+                    <h3><i class="fas fa-tools"></i> Fungsi Pentadbiran</h3>
+                    <div id="admin-booking-form" class="hidden">
+                        <h3><i class="fas fa-crown"></i> Tempahan Pentadbir (Keistimewaan)</h3>
+                        <div class="admin-booking-info"><i class="fas fa-info-circle"></i> Anda boleh tempah mana-mana tarikh dan bilik Pusat Sumber Alamanda.</div>
+                        <form id="admin-booking-form-content">
+                            <div class="form-group"><label>Nama</label><input type="text" id="admin-name" required></div>
+                            <div class="form-group"><label>Catatan</label><textarea id="admin-notes" rows="2" required></textarea></div>
+                            <div class="form-group">
+                                <label>Bilik</label>
+                                <select id="admin-room">
+                                    <option value="Pusat Sumber Alamanda">Pusat Sumber Alamanda</option>
+                                    <option value="Bilik Multimedia Angsana">Bilik Multimedia Angsana</option>
+                                    <option value="Bilik Akses">Bilik Akses</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label>Tarikh</label><input type="date" id="admin-date"></div>
+                            <div class="form-group">
+                                <label>Masa</label>
+                                <div class="time-grid" id="admin-time-grid"></div>
+                                <div id="admin-time-warning" class="conflict-warning hidden">
+                                    <h4><i class="fas fa-exclamation-triangle"></i> Konflik</h4>
+                                    <ul id="admin-conflict-list" class="conflict-list"></ul>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-admin-booking"><i class="fas fa-check-circle"></i> Simpan Tempahan Admin</button>
+                        </form>
+                    </div>
+                    <div class="admin-actions">
+                        <button id="show-admin-booking-form" class="btn-admin-action"><i class="fas fa-plus-circle"></i> Buat Tempahan Pentadbir</button>
+                        <button id="download-excel" class="btn-admin-action"><i class="fas fa-file-export"></i> Eksport Data (Excel)</button>
+                        <button id="clear-old-data" class="btn-admin-action"><i class="fas fa-broom"></i> Hapus Data Lama (30+ hari)</button>
+                    </div>
+                    <div class="admin-bookings">
+                        <h3><i class="fas fa-edit"></i> Urus Tempahan</h3>
+                        <div id="admin-bookings-list"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer>
+            <div class="footer-content">
+                <div class="footer-logo"><i class="fas fa-university"></i> VocKAF - Tempahan Bilik (Demo)</div>
+                <a href="https://wa.me/601169387861" target="_blank" class="contact-link"><i class="fab fa-whatsapp"></i> Hubungi Sokongan</a>
+            </div>
+            <p>&copy; <span id="current-year"></span> VocKAF · powered by <strong>AzharMazlanEtn</strong></p>
+            <div class="demo-badge">⚡ Demo – Data disimpan dalam localStorage</div>
+        </footer>
+    </div>
+
+    <!-- EDIT MODAL -->
+    <div id="edit-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3><i class="fas fa-edit"></i> Edit Tempahan</h3>
+            <form id="edit-form">
+                <input type="hidden" id="edit-id">
+                <div class="form-group"><label>Nama</label><input type="text" id="edit-name" required></div>
+                <div class="form-group"><label>Catatan</label><textarea id="edit-notes" rows="2" required></textarea></div>
+                <div class="form-group"><label>Bilik</label><select id="edit-room"><option value="Pusat Sumber Alamanda">Pusat Sumber Alamanda</option><option value="Bilik Multimedia Angsana">Bilik Multimedia Angsana</option><option value="Bilik Akses">Bilik Akses</option></select></div>
+                <div class="form-group"><label>Tarikh</label><input type="date" id="edit-date"></div>
+                <div class="form-group">
+                    <label>Masa</label>
+                    <div class="time-grid" id="edit-time-grid"></div>
+                    <div id="edit-time-warning" class="conflict-warning hidden">
+                        <h4><i class="fas fa-exclamation-triangle"></i> Konflik</h4>
+                        <ul id="edit-conflict-list" class="conflict-list"></ul>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn-save"><i class="fas fa-save"></i> Simpan</button>
+                    <button type="button" id="cancel-edit" class="btn-cancel"><i class="fas fa-times"></i> Batal</button>
+                    <button type="button" id="delete-booking" class="btn-delete"><i class="fas fa-trash"></i> Hapus</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MESSAGE -->
+    <div id="message" class="message hidden"></div>
+
+    <!-- LOADING -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="spinner"></div>
+        <div class="loading-text" id="loading-text">Memproses...</div>
+    </div>
+
+    <script>
+        // ================================================================
+        // DATA CONTOH – disimpan dalam localStorage
+        // ================================================================
+        const STORAGE_KEY = 'tempahan_bilik_demo';
+        const timeSlots = ['8:00-9:00','9:00-10:00','10:00-11:00','11:00-12:00','12:00-1:00','1:00-2:00','2:00-3:00','3:00-4:00','4:00-5:00'];
+        const rooms = [
+            { id: 'Pusat Sumber Alamanda', name: 'Pusat Sumber Alamanda', icon: 'fa-book-reader', adminOnly: true },
+            { id: 'Bilik Multimedia Angsana', name: 'Bilik Multimedia Angsana', icon: 'fa-desktop', adminOnly: false },
+            { id: 'Bilik Akses', name: 'Bilik Akses', icon: 'fa-graduation-cap', adminOnly: false }
+        ];
+
+        function loadBookings() {
+            try {
+                const data = localStorage.getItem(STORAGE_KEY);
+                return data ? JSON.parse(data) : {};
+            } catch { return {}; }
+        }
+
+        function saveBookings(bookings) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(bookings));
+        }
+
+        function initDefaultData() {
+            const existing = loadBookings();
+            if (Object.keys(existing).length === 0) {
+                const today = getTodayString();
+                const defaultBookings = {
+                    'demo1': {
+                        name: 'AHMAD BIN ALI',
+                        notes: '2 DVM ETN / Pembentangan PB',
+                        room: 'Bilik Multimedia Angsana',
+                        date: today,
+                        times: ['10:00-11:00', '11:00-12:00'],
+                        createdAt: new Date().toISOString(),
+                        expiresAt: new Date(Date.now() + 30*24*60*60*1000).toISOString(),
+                        isAdminBooking: false
+                    },
+                    'demo2': {
+                        name: 'SITI NORMAH BT HASSAN',
+                        notes: 'JPP / Taklimat Pengawas',
+                        room: 'Bilik Akses',
+                        date: today,
+                        times: ['2:00-3:00'],
+                        createdAt: new Date().toISOString(),
+                        expiresAt: new Date(Date.now() + 30*24*60*60*1000).toISOString(),
+                        isAdminBooking: false
+                    }
+                };
+                saveBookings(defaultBookings);
+                return defaultBookings;
+            }
+            return existing;
+        }
+
+        // ================================================================
+        // UTILITY
+        // ================================================================
+        function getTodayString() {
+            const d = new Date();
+            return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+        }
+
+        function formatDate(iso) {
+            if (!iso) return '-';
+            const d = new Date(iso);
+            return d.toLocaleDateString('ms-MY', { day:'numeric', month:'short', year:'numeric' });
+        }
+
+        function showMessage(text, type = 'info') {
+            const el = document.getElementById('message');
+            el.innerHTML = `<i class="fas ${type==='success'?'fa-check-circle':type==='error'?'fa-exclamation-circle':type==='warning'?'fa-exclamation-triangle':'fa-info-circle'}"></i> ${text}`;
+            el.className = `message ${type}`;
+            el.classList.remove('hidden');
+            clearTimeout(el._timer);
+            el._timer = setTimeout(() => el.classList.add('hidden'), 4000);
+        }
+
+        function showLoading(text) {
+            document.getElementById('loading-text').textContent = text || 'Memproses...';
+            document.getElementById('loading-overlay').classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            document.getElementById('loading-overlay').classList.add('hidden');
+        }
+
+        function generateId() { return 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2,4); }
+
+        // ================================================================
+        // RENDER TIME SLOTS
+        // ================================================================
+        function renderTimeSlots(containerId, namePrefix) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            timeSlots.forEach(slot => {
+                const label = document.createElement('label');
+                label.className = 'time-option';
+                label.innerHTML = `<input type="checkbox" name="${namePrefix}" value="${slot}"><span>${slot}</span>`;
+                container.appendChild(label);
+            });
+        }
+
+        // ================================================================
+        // UPDATE AVAILABLE TIMES
+        // ================================================================
+        function getBookedTimes(room, date, excludeId = null) {
+            const bookings = loadBookings();
+            const booked = [];
+            for (const id in bookings) {
+                if (id === excludeId) continue;
+                const b = bookings[id];
+                if (b.room === room && b.date === date) {
+                    booked.push(...(b.times || []));
+                }
+            }
+            return booked;
+        }
+
+        function updateTimeGrid(containerId, room, date, excludeId = null) {
+            const container = document.getElementById(containerId);
+            const options = container.querySelectorAll('.time-option');
+            const booked = getBookedTimes(room, date, excludeId);
+            options.forEach(opt => {
+                const checkbox = opt.querySelector('input[type="checkbox"]');
+                const timeVal = checkbox.value;
+                if (booked.includes(timeVal)) {
+                    opt.classList.add('disabled');
+                    checkbox.disabled = true;
+                    checkbox.checked = false;
+                } else {
+                    opt.classList.remove('disabled');
+                    checkbox.disabled = false;
+                }
+            });
+            const warnId = containerId.replace('time-grid', 'time-warning');
+            const warn = document.getElementById(warnId);
+            if (warn) warn.classList.add('hidden');
+        }
+
+        // ================================================================
+        // LOAD STATS & AVAILABILITY
+        // ================================================================
+        function loadStats() {
+            const bookings = loadBookings();
+            const today = getTodayString();
+            let todayCount = 0;
+            const roomBookings = {};
+            rooms.forEach(r => roomBookings[r.id] = { total: 0, slots: 9 });
+
+            for (const id in bookings) {
+                const b = bookings[id];
+                if (b.date === today) {
+                    todayCount++;
+                    if (roomBookings[b.room]) {
+                        roomBookings[b.room].total++;
+                        roomBookings[b.room].slots -= (b.times || []).length;
+                    }
+                }
+            }
+
+            document.getElementById('today-bookings').textContent = todayCount;
+            let available = 0;
+            for (const r of rooms) {
+                const stat = roomBookings[r.id] || { total:0, slots:9 };
+                if (stat.slots > 0 && !r.adminOnly) available++;
+            }
+            document.getElementById('bilik-tersedia').textContent = available;
+            document.getElementById('system-status').textContent = '100%';
+        }
+
+        function loadAvailability(date) {
+            const bookings = loadBookings();
+            const grid = document.getElementById('availability-grid');
+            grid.innerHTML = '';
+            rooms.forEach(room => {
+                const booked = getBookedTimes(room.id, date);
+                const allSlots = timeSlots;
+                const availableSlots = allSlots.filter(s => !booked.includes(s));
+                const isFull = availableSlots.length === 0;
+                const statusText = isFull ? 'PENUH' : `${availableSlots.length} slot tersedia`;
+                const statusClass = isFull ? 'status-full' : 'status-available';
+
+                const card = document.createElement('div');
+                card.className = 'availability-card';
+                const adminLabel = room.adminOnly ? ' <span style="font-size:0.7rem;color:var(--danger);font-weight:600;">(Admin sahaja)</span>' : '';
+                card.innerHTML = `
+                    <div class="availability-card-header">
+                        <i class="fas ${room.icon}"></i>
+                        <div class="availability-card-title">
+                            <h4>${room.name}${adminLabel}</h4>
+                            <p>${room.adminOnly ? 'PDPC tidak dibenarkan' : 'Kapasiti: 30-50 orang'}</p>
+                        </div>
+                    </div>
+                    <div class="availability-status ${statusClass}">${statusText}</div>
+                    <div class="slots-info">
+                        <h5>Slot Masa:</h5>
+                        <div class="slot-list">
+                            ${allSlots.map(s => `<span class="slot-item ${booked.includes(s) ? 'slot-booked' : 'slot-available'}">${s}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // ================================================================
+        // LOAD BOOKINGS (view)
+        // ================================================================
+        function loadBookingsForDate(date) {
+            const container = document.getElementById('bookings-list');
+            const bookings = loadBookings();
+            const filtered = [];
+            for (const id in bookings) {
+                if (bookings[id].date === date) filtered.push({ id, ...bookings[id] });
+            }
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="no-bookings">Tiada tempahan untuk tarikh ini.</div>';
+                return;
+            }
+            const groups = {};
+            filtered.forEach(b => {
+                if (!groups[b.room]) groups[b.room] = [];
+                groups[b.room].push(b);
+            });
+            let html = '';
+            for (const room in groups) {
+                html += `<div class="room-section"><h3><i class="fas fa-door-open"></i> ${room}</h3>`;
+                groups[room].forEach(b => {
+                    const adminBadge = b.isAdminBooking ? ' <span style="background:#9333ea;color:white;padding:2px 8px;border-radius:10px;font-size:0.7rem;">Admin</span>' : '';
+                    const times = b.times.map(t => `<span class="booking-time">${t}</span>`).join('');
+                    const notes = b.notes ? `<div class="booking-notes"><strong><i class="fas fa-sticky-note"></i> Catatan:</strong> ${b.notes}</div>` : '';
+                    html += `
+                        <div class="booking-item" data-id="${b.id}">
+                            <div class="booking-item-header">
+                                <div class="booking-name"><i class="fas fa-user"></i> ${b.name}${adminBadge}</div>
+                                <div class="booking-date"><i class="fas fa-calendar"></i> ${formatDate(b.date)}</div>
+                            </div>
+                            <div class="booking-room"><i class="fas fa-door-closed"></i> ${b.room}</div>
+                            <div class="booking-details"><div><i class="fas fa-clock"></i> Masa:</div> ${times}</div>
+                            ${notes}
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            }
+            container.innerHTML = html;
+        }
+
+        // ================================================================
+        // ADMIN FUNCTIONS
+        // ================================================================
+        let isAdmin = false;
+
+        function loadAdminBookings() {
+            const container = document.getElementById('admin-bookings-list');
+            const bookings = loadBookings();
+            const items = Object.keys(bookings).map(id => ({ id, ...bookings[id] }));
+            if (items.length === 0) {
+                container.innerHTML = '<div class="no-bookings">Tiada tempahan.</div>';
+                return;
+            }
+            items.sort((a,b) => (a.date > b.date ? -1 : 1));
+            container.innerHTML = items.map(b => `
+                <div class="admin-booking-item" data-id="${b.id}">
+                    <div><strong>${b.name}</strong> · ${b.room} · ${formatDate(b.date)} · ${(b.times||[]).join(', ')}</div>
+                    <div style="font-size:0.85rem;color:var(--gray);">${b.notes || 'Tiada catatan'}</div>
+                    <div class="admin-booking-controls">
+                        <button class="btn-edit" data-id="${b.id}"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="btn-delete-admin" data-id="${b.id}"><i class="fas fa-trash"></i> Hapus</button>
+                    </div>
+                </div>
+            `).join('');
+            container.querySelectorAll('.btn-edit').forEach(btn => btn.addEventListener('click', () => openEditModal(btn.dataset.id)));
+            container.querySelectorAll('.btn-delete-admin').forEach(btn => btn.addEventListener('click', () => deleteBooking(btn.dataset.id)));
+        }
+
+        // ================================================================
+        // EDIT MODAL
+        // ================================================================
+        let editingId = null;
+
+        function openEditModal(id) {
+            const bookings = loadBookings();
+            const b = bookings[id];
+            if (!b) return;
+            editingId = id;
+            document.getElementById('edit-id').value = id;
+            document.getElementById('edit-name').value = b.name;
+            document.getElementById('edit-notes').value = b.notes || '';
+            document.getElementById('edit-room').value = b.room;
+            document.getElementById('edit-date').value = b.date;
+
+            const checkboxes = document.querySelectorAll('#edit-time-grid input[type="checkbox"]');
+            checkboxes.forEach(cb => {
+                cb.checked = b.times.includes(cb.value);
+            });
+
+            updateTimeGrid('edit-time-grid', b.room, b.date, id);
+            document.getElementById('edit-modal').classList.remove('hidden');
+        }
+
+        function closeEditModal() { document.getElementById('edit-modal').classList.add('hidden'); editingId = null; }
+
+        document.getElementById('edit-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const id = document.getElementById('edit-id').value;
+            const bookings = loadBookings();
+            if (!bookings[id]) { showMessage('Ralat: Tempahan tidak dijumpai.', 'error'); return; }
+
+            const name = document.getElementById('edit-name').value.trim();
+            const notes = document.getElementById('edit-notes').value.trim();
+            const room = document.getElementById('edit-room').value;
+            const date = document.getElementById('edit-date').value;
+            const times = Array.from(document.querySelectorAll('#edit-time-grid input[type="checkbox"]:checked')).map(cb => cb.value);
+
+            if (!name || !notes || !room || !date || times.length === 0) {
+                showMessage('Sila lengkapkan semua ruangan.', 'error');
+                return;
+            }
+
+            const conflicts = getBookedTimes(room, date, id);
+            const conflictTimes = times.filter(t => conflicts.includes(t));
+            if (conflictTimes.length > 0) {
+                const list = document.getElementById('edit-conflict-list');
+                list.innerHTML = conflictTimes.map(t => `<li><span>${t}</span><span>Ditempah oleh orang lain</span></li>`).join('');
+                document.getElementById('edit-time-warning').classList.remove('hidden');
+                return;
+            }
+
+            bookings[id] = { ...bookings[id], name, notes, room, date, times, updatedAt: new Date().toISOString() };
+            saveBookings(bookings);
+            showMessage('✅ Tempahan dikemaskini.', 'success');
+            closeEditModal();
+            refreshAll();
+        });
+
+        document.getElementById('cancel-edit').addEventListener('click', closeEditModal);
+
+        document.getElementById('delete-booking').addEventListener('click', function() {
+            if (!editingId) return;
+            if (!confirm('Hapus tempahan ini?')) return;
+            deleteBooking(editingId);
+            closeEditModal();
+        });
+
+        function deleteBooking(id) {
+            const bookings = loadBookings();
+            if (!bookings[id]) return;
+            delete bookings[id];
+            saveBookings(bookings);
+            showMessage('✅ Tempahan dihapus.', 'success');
+            refreshAll();
+        }
+
+        // ================================================================
+        // SUBMIT BOOKING (user)
+        // ================================================================
+        document.getElementById('booking-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value.trim();
+            const notes = document.getElementById('notes').value.trim();
+            const room = document.querySelector('input[name="room"]:checked')?.value;
+            const date = document.getElementById('date').value;
+            const times = Array.from(document.querySelectorAll('#time-grid input[type="checkbox"]:checked')).map(cb => cb.value);
+
+            if (!name || !notes || !room || !date || times.length === 0) {
+                showMessage('Sila lengkapkan semua ruangan.', 'error');
+                return;
+            }
+
+            const conflicts = getBookedTimes(room, date);
+            const conflictTimes = times.filter(t => conflicts.includes(t));
+            if (conflictTimes.length > 0) {
+                const list = document.getElementById('conflict-list');
+                list.innerHTML = conflictTimes.map(t => `<li><span>${t}</span><span>Ditempah oleh orang lain</span></li>`).join('');
+                document.getElementById('time-warning').classList.remove('hidden');
+                return;
+            }
+
+            const bookings = loadBookings();
+            const newId = generateId();
+            bookings[newId] = {
+                name, notes, room, date, times,
+                createdAt: new Date().toISOString(),
+                expiresAt: new Date(Date.now() + 30*24*60*60*1000).toISOString(),
+                isAdminBooking: false
+            };
+            saveBookings(bookings);
+            showMessage('✅ Tempahan berjaya disimpan.', 'success');
+            document.getElementById('booking-form').reset();
+            document.getElementById('time-warning').classList.add('hidden');
+            document.getElementById('room2').checked = true;
+            refreshAll();
+        });
+
+        // ================================================================
+        // ADMIN BOOKING
+        // ================================================================
+        document.getElementById('admin-booking-form-content').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!isAdmin) { showMessage('Sila log masuk sebagai admin.', 'error'); return; }
+            const name = document.getElementById('admin-name').value.trim();
+            const notes = document.getElementById('admin-notes').value.trim();
+            const room = document.getElementById('admin-room').value;
+            const date = document.getElementById('admin-date').value;
+            const times = Array.from(document.querySelectorAll('#admin-time-grid input[type="checkbox"]:checked')).map(cb => cb.value);
+
+            if (!name || !notes || !room || !date || times.length === 0) {
+                showMessage('Sila lengkapkan semua ruangan.', 'error');
+                return;
+            }
+
+            const conflicts = getBookedTimes(room, date);
+            const conflictTimes = times.filter(t => conflicts.includes(t));
+            if (conflictTimes.length > 0) {
+                const list = document.getElementById('admin-conflict-list');
+                list.innerHTML = conflictTimes.map(t => `<li><span>${t}</span><span>Ditempah</span></li>`).join('');
+                document.getElementById('admin-time-warning').classList.remove('hidden');
+                return;
+            }
+
+            const bookings = loadBookings();
+            const newId = generateId();
+            bookings[newId] = {
+                name, notes, room, date, times,
+                createdAt: new Date().toISOString(),
+                expiresAt: new Date(Date.now() + 30*24*60*60*1000).toISOString(),
+                isAdminBooking: true
+            };
+            saveBookings(bookings);
+            showMessage('✅ Tempahan pentadbir disimpan.', 'success');
+            document.getElementById('admin-booking-form-content').reset();
+            document.getElementById('admin-time-warning').classList.add('hidden');
+            refreshAll();
+        });
+
+        // ================================================================
+        // REFRESH ALL
+        // ================================================================
+        function refreshAll() {
+            loadStats();
+            const availDate = document.getElementById('avail-date').value || getTodayString();
+            loadAvailability(availDate);
+            const filterDate = document.getElementById('filter-date').value || getTodayString();
+            loadBookingsForDate(filterDate);
+            if (isAdmin) loadAdminBookings();
+            updateTimeGrid('time-grid', document.querySelector('input[name="room"]:checked')?.value || 'Bilik Multimedia Angsana', document.getElementById('date').value);
+            updateTimeGrid('admin-time-grid', document.getElementById('admin-room').value, document.getElementById('admin-date').value);
+        }
+
+        // ================================================================
+        // EVENT BINDINGS
+        // ================================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Init data
+            initDefaultData();
+
+            // Set dates
+            const today = getTodayString();
+            document.getElementById('current-date').textContent = new Date().toLocaleDateString('ms-MY', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+            document.getElementById('date').value = today;
+            document.getElementById('filter-date').value = today;
+            document.getElementById('avail-date').value = today;
+            document.getElementById('admin-date').value = today;
+
+            // Render time slots
+            renderTimeSlots('time-grid', 'time');
+            renderTimeSlots('edit-time-grid', 'edit-time');
+            renderTimeSlots('admin-time-grid', 'admin-time');
+
+            // Refresh all
+            refreshAll();
+
+            // Tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    document.getElementById(this.dataset.tab).classList.add('active');
+                    if (this.dataset.tab === 'view') loadBookingsForDate(document.getElementById('filter-date').value);
+                    if (this.dataset.tab === 'admin' && isAdmin) loadAdminBookings();
+                });
+            });
+
+            // Filter load
+            document.getElementById('load-bookings').addEventListener('click', function() {
+                loadBookingsForDate(document.getElementById('filter-date').value);
+            });
+
+            // Date changes
+            document.getElementById('date').addEventListener('change', function() {
+                const room = document.querySelector('input[name="room"]:checked')?.value || 'Bilik Multimedia Angsana';
+                updateTimeGrid('time-grid', room, this.value);
+            });
+            document.querySelectorAll('input[name="room"]').forEach(r => {
+                r.addEventListener('change', function() {
+                    const date = document.getElementById('date').value;
+                    updateTimeGrid('time-grid', this.value, date);
+                });
+            });
+
+            document.getElementById('avail-date').addEventListener('change', function() {
+                loadAvailability(this.value);
+            });
+
+            // Admin login
+            document.getElementById('admin-login').addEventListener('click', function() {
+                const pass = document.getElementById('admin-password').value;
+                if (pass === 'KVWT INTEL') {
+                    isAdmin = true;
+                    document.getElementById('admin-login-section').classList.add('hidden');
+                    document.getElementById('admin-functions').classList.remove('hidden');
+                    showMessage('✅ Log masuk admin berjaya.', 'success');
+                    loadAdminBookings();
+                } else {
+                    showMessage('❌ Kata laluan salah.', 'error');
+                }
+            });
+
+            // Show admin booking form
+            document.getElementById('show-admin-booking-form').addEventListener('click', function() {
+                const form = document.getElementById('admin-booking-form');
+                if (form.classList.contains('hidden')) {
+                    form.classList.remove('hidden');
+                    this.innerHTML = '<i class="fas fa-times-circle"></i> Tutup Form';
+                    this.style.background = 'linear-gradient(135deg, var(--warning) 0%, #fbbf24 100%)';
+                } else {
+                    form.classList.add('hidden');
+                    this.innerHTML = '<i class="fas fa-plus-circle"></i> Buat Tempahan Pentadbir';
+                    this.style.background = 'linear-gradient(135deg, var(--success) 0%, #34d399 100%)';
+                }
+            });
+
+            // Admin room/date change for time grid
+            document.getElementById('admin-room').addEventListener('change', function() {
+                const date = document.getElementById('admin-date').value;
+                updateTimeGrid('admin-time-grid', this.value, date);
+            });
+            document.getElementById('admin-date').addEventListener('change', function() {
+                const room = document.getElementById('admin-room').value;
+                updateTimeGrid('admin-time-grid', room, this.value);
+            });
+
+            // Edit modal date/room change
+            document.getElementById('edit-room').addEventListener('change', function() {
+                const date = document.getElementById('edit-date').value;
+                updateTimeGrid('edit-time-grid', this.value, date, editingId);
+            });
+            document.getElementById('edit-date').addEventListener('change', function() {
+                const room = document.getElementById('edit-room').value;
+                updateTimeGrid('edit-time-grid', room, this.value, editingId);
+            });
+
+            // Download Excel
+            document.getElementById('download-excel').addEventListener('click', function() {
+                const bookings = loadBookings();
+                const data = [];
+                for (const id in bookings) {
+                    const b = bookings[id];
+                    data.push({
+                        'Nama': b.name,
+                        'Catatan': b.notes || '',
+                        'Bilik': b.room,
+                        'Tarikh': b.date,
+                        'Masa': (b.times || []).join(', '),
+                        'Jenis': b.isAdminBooking ? 'Admin' : 'Biasa',
+                        'Dicipta': b.createdAt ? new Date(b.createdAt).toLocaleString('ms-MY') : ''
+                    });
+                }
+                if (data.length === 0) { showMessage('Tiada data untuk dieksport.', 'info'); return; }
+                const ws = XLSX.utils.json_to_sheet(data);
+                ws['!cols'] = [{wch:25},{wch:30},{wch:20},{wch:15},{wch:30},{wch:12},{wch:25}];
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'Tempahan');
+                XLSX.writeFile(wb, `tempahan-vockaf-${getTodayString()}.xlsx`);
+                showMessage('✅ Fail Excel dimuat turun.', 'success');
+            });
+
+            // Clear old data
+            document.getElementById('clear-old-data').addEventListener('click', function() {
+                if (!confirm('Hapus semua tempahan yang berusia 30+ hari?')) return;
+                const bookings = loadBookings();
+                const thirtyDaysAgo = new Date();
+                thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+                const cutoff = thirtyDaysAgo.toISOString().split('T')[0];
+                let deleted = 0;
+                for (const id in bookings) {
+                    if (bookings[id].date < cutoff) {
+                        delete bookings[id];
+                        deleted++;
+                    }
+                }
+                saveBookings(bookings);
+                showMessage(`✅ ${deleted} tempahan lama dihapus.`, 'success');
+                refreshAll();
+            });
+        });
+    </script>
+</body>
+</html>

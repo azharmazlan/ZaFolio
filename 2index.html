@@ -1,0 +1,2349 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NILAM Digital | VocKAF (Demo)</title>
+
+<!-- ===== TAMBAHAN PWA (tidak mengubah UI) ===== -->
+<meta name="theme-color" content="#0a2540">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" id="manifestLink">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'><path fill='%23c9a227' d='M448 352v-320C448 14.3 433.7 0 416 0H160C107 0 64 43 64 96v256c0 53 43 96 96 96h256c17.7 0 32-14.3 32-32v-32c0-17.7-14.3-32-32-32H160c-17.7 0-32 14.3-32 32s14.3 32 32 32h256c17.7 0 32-14.3 32-32zm-32 64H160c-17.7 0-32 14.3-32 32s14.3 32 32 32h256v-64z'/></svg>" type="image/svg+xml">
+<!-- ===== (TAMAT TAMBAHAN) ===== -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{
+  --navy-900:#071a33;
+  --navy-800:#0a2540;
+  --navy-700:#123863;
+  --gold:#c9a227;
+  --gold-light:#f0d98c;
+  --bg:#f4f6fa;
+  --card:#ffffff;
+  --border:#e3e8ef;
+  --text:#16222f;
+  --muted:#5f6b7a;
+  --success:#1b7a3d;
+  --success-bg:#e6f6ea;
+  --danger:#b91c1c;
+  --danger-bg:#fde8e8;
+  --radius:14px;
+  --shadow:0 4px 20px rgba(10,37,64,0.06);
+  --shadow-lg:0 18px 50px rgba(10,37,64,0.14);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+h1,h2,h3,h4{font-family:'Poppins',sans-serif;}
+.mono{font-family:'Roboto Mono',monospace;}
+#app{width:100%;min-height:100vh;}
+.page{display:none;}
+.page.active{display:block;animation:fadeIn .35s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* ===== LOADING OVERLAY DENGAN PROGRESS ===== */
+#loadingOverlay {
+  position:fixed; inset:0; z-index:99998;
+  background:rgba(7,26,51,0.75); backdrop-filter:blur(8px);
+  display:none; align-items:center; justify-content:center; flex-direction:column;
+  transition:opacity .4s ease;
+}
+#loadingOverlay.show{display:flex;}
+#loadingOverlay .load-box {
+  background:rgba(255,255,255,0.07);
+  backdrop-filter:blur(12px);
+  padding:40px 50px;
+  border-radius:24px;
+  border:1px solid rgba(255,255,255,0.12);
+  box-shadow:0 30px 80px rgba(0,0,0,0.5);
+  max-width:440px;
+  width:90%;
+  text-align:center;
+}
+#loadingOverlay .load-icon {
+  font-size:38px; color:var(--gold); margin-bottom:14px;
+  display:inline-block;
+  animation:pulse-icon 1.4s ease-in-out infinite;
+}
+@keyframes pulse-icon {
+  0%{transform:scale(1);opacity:0.8;}
+  50%{transform:scale(1.15);opacity:1;}
+  100%{transform:scale(1);opacity:0.8;}
+}
+#loadingOverlay .load-message {
+  color:#fff; font-size:16px; font-weight:600; letter-spacing:0.3px;
+  margin-bottom:22px; font-family:'Poppins',sans-serif;
+}
+#loadingOverlay .progress-track {
+  width:100%; height:8px; background:rgba(255,255,255,0.15);
+  border-radius:20px; overflow:hidden; position:relative;
+  margin-bottom:12px;
+}
+#loadingOverlay .progress-bar {
+  height:100%; width:0%; background:linear-gradient(90deg, var(--gold), #f5d742);
+  border-radius:20px; transition:width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow:0 0 20px rgba(201,162,39,0.4);
+}
+#loadingOverlay .progress-text {
+  color:rgba(255,255,255,0.7); font-size:14px; font-weight:500;
+  font-family:'Roboto Mono',monospace;
+}
+#loadingOverlay .progress-text span {
+  color:#fff; font-weight:700; font-size:16px;
+}
+
+/* ===== BUTANG PASANG APLIKASI (FLOATING - TIDAK MENGGANGU) ===== */
+#installBtn {
+  position:fixed; bottom:24px; right:24px; z-index:9999;
+  background:var(--gold); color:var(--navy-900); border:none;
+  border-radius:50px; padding:12px 20px; font-weight:700; font-size:13px;
+  box-shadow:0 8px 30px rgba(201,162,39,0.35); cursor:pointer;
+  display:none; align-items:center; gap:8px;
+  transition:0.2s; font-family:'Inter',sans-serif;
+}
+#installBtn:hover{transform:scale(1.05); background:#dbb42c;}
+#installBtn i{font-size:16px;}
+
+/* ===== TOAST ===== */
+#toastContainer{position:fixed;top:20px;right:20px;z-index:99999;display:flex;flex-direction:column;gap:10px;}
+.toast{padding:12px 18px;border-radius:10px;font-size:14px;font-weight:600;color:#fff;box-shadow:var(--shadow-lg);}
+.toast.success{background:var(--success);}
+.toast.error{background:var(--danger);}
+.toast.info{background:var(--navy-800);}
+
+/* ===== AUTH PAGE ===== */
+.auth-shell{min-height:100vh;display:flex;flex-direction:column;}
+.auth-header{background:linear-gradient(135deg,var(--navy-900),var(--navy-800));color:#fff;padding:22px 5%;display:flex;align-items:center;gap:14px;box-shadow:0 2px 12px rgba(0,0,0,.15);}
+.auth-header .crest{width:46px;height:46px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--navy-900);flex-shrink:0;}
+.auth-header .brand-text h1{font-size:19px;letter-spacing:.3px;}
+.auth-header .brand-text span{color:var(--gold-light);}
+.auth-header .brand-text p{font-size:12px;color:rgba(255,255,255,.65);margin-top:2px;}
+.auth-body{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 16px;background:
+  radial-gradient(circle at 15% 20%, rgba(201,162,39,.08), transparent 40%),
+  radial-gradient(circle at 85% 80%, rgba(10,37,64,.05), transparent 40%);}
+.auth-container{width:100%;max-width:520px;padding:40px 36px;background:var(--card);border-radius:20px;box-shadow:var(--shadow-lg);border:1px solid var(--border);}
+.auth-container h1{font-size:24px;color:var(--navy-800);margin-bottom:4px;}
+.auth-container .sub{color:var(--muted);font-size:13.5px;margin-bottom:26px;}
+.form-group{margin-bottom:16px;}
+.form-group label{display:block;font-weight:600;font-size:13px;color:var(--text);margin-bottom:5px;}
+.form-group .hint{display:block;font-weight:400;font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5;}
+.form-group .hint a{color:var(--navy-700);font-weight:600;text-decoration:underline;}
+input,select,textarea{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-family:inherit;transition:.15s;background:#fbfcfe;}
+input:focus,select:focus,textarea:focus{border-color:var(--navy-700);outline:none;box-shadow:0 0 0 3px rgba(18,56,99,.12);background:#fff;}
+input.uppercase{text-transform:uppercase;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;background:var(--navy-800);color:#fff;border:none;border-radius:10px;font-size:14.5px;font-weight:600;cursor:pointer;transition:.15s;font-family:inherit;}
+.btn:hover{background:var(--navy-700);}
+.btn.gold{background:var(--gold);color:var(--navy-900);}
+.btn.gold:hover{background:var(--gold-light);}
+.btn.block{width:100%;}
+.btn.danger{background:var(--danger-bg);color:var(--danger);}
+.btn.danger:hover{background:#fcd5d5;}
+.btn.ghost{background:transparent;color:var(--navy-800);border:1.5px solid var(--border);}
+.btn.ghost:hover{background:var(--bg);border-color:var(--navy-700);}
+.btn.sm{padding:6px 12px;font-size:12.5px;border-radius:8px;}
+.switch-link{text-align:center;margin-top:18px;font-size:13.5px;color:var(--muted);}
+.switch-link a{color:var(--navy-700);font-weight:700;cursor:pointer;text-decoration:none;}
+.error-msg,.success-msg{padding:11px 15px;border-radius:10px;font-size:13px;margin-bottom:14px;display:none;font-weight:500;}
+.error-msg.show{display:block;background:var(--danger-bg);color:var(--danger);}
+.success-msg.show{display:block;background:var(--success-bg);color:var(--success);}
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.telegram-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.telegram-links a{font-size:12px;padding:7px 12px;border-radius:8px;background:var(--bg);border:1px solid var(--border);color:var(--navy-700);text-decoration:none;font-weight:600;display:inline-flex;align-items:center;gap:6px;}
+.telegram-links a:hover{background:#eef2f7;}
+.admin-login-trigger{margin-top:16px;text-align:center;}
+
+/* ===== FOOTER (auth page) ===== */
+.auth-footer{background:var(--navy-900);color:rgba(255,255,255,.75);padding:26px 5%;text-align:center;font-size:12.5px;}
+.contact-link{display:inline-flex;align-items:center;gap:8px;background:#25d366;color:#fff;padding:10px 20px;border-radius:30px;font-weight:600;font-size:13.5px;text-decoration:none;transition:.15s;}
+.contact-link:hover{background:#1ebc59;}
+.auth-footer p{margin-top:16px;line-height:1.7;}
+.auth-footer strong{color:var(--gold-light);}
+
+/* ===== ADMIN MODAL ===== */
+.modal-overlay{position:fixed;inset:0;background:rgba(7,26,51,.65);backdrop-filter:blur(4px);z-index:10000;display:none;align-items:center;justify-content:center;padding:16px;}
+.modal-overlay.show{display:flex;}
+.modal-box{background:#fff;border-radius:20px;padding:34px 32px;max-width:460px;width:100%;box-shadow:var(--shadow-lg);position:relative;max-height:90vh;overflow-y:auto;}
+.modal-box.wide{max-width:640px;}
+.modal-close{position:absolute;top:14px;right:18px;background:none;border:none;font-size:24px;color:var(--muted);cursor:pointer;line-height:1;}
+.modal-close:hover{color:var(--navy-800);}
+.modal-box h2{font-size:20px;color:var(--navy-800);margin-bottom:4px;}
+.modal-sub{color:var(--muted);font-size:13px;margin-bottom:20px;}
+.modal-error{background:var(--danger-bg);color:var(--danger);padding:10px 14px;border-radius:10px;font-size:13px;margin-bottom:14px;display:none;text-align:center;}
+.modal-error.show{display:block;}
+.modal-footer{text-align:center;margin-top:14px;font-size:12px;color:var(--muted);}
+.modal-footer .reset-link{color:var(--danger);font-weight:600;cursor:pointer;text-decoration:underline;}
+.image-modal-box img{max-width:100%;max-height:80vh;border-radius:10px;display:block;margin:0 auto;}
+.image-modal-box .img-loading{text-align:center;padding:40px 0;color:var(--muted);}
+.image-modal-box .img-error{text-align:center;padding:40px 0;color:var(--danger);}
+.image-modal-box .img-error i{font-size:32px;display:block;margin-bottom:10px;}
+
+/* ===== DASHBOARD LAYOUT ===== */
+.dash-layout{display:flex;min-height:100vh;}
+.sidebar{width:264px;background:linear-gradient(180deg,var(--navy-900),var(--navy-800));color:#fff;padding:26px 16px;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;}
+.sidebar .brand{display:flex;align-items:center;gap:10px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:18px;}
+.sidebar .brand .crest{width:38px;height:38px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;color:var(--navy-900);font-size:17px;flex-shrink:0;}
+.sidebar .brand .txt{font-size:15px;font-weight:700;line-height:1.3;}
+.sidebar .brand .txt span{color:var(--gold-light);display:block;font-size:10.5px;font-weight:500;letter-spacing:.5px;text-transform:uppercase;}
+.nav-item{display:flex;align-items:center;gap:13px;padding:12px 15px;border-radius:11px;color:rgba(255,255,255,.68);cursor:pointer;transition:.15s;font-weight:500;font-size:14px;margin-bottom:3px;border:none;background:transparent;width:100%;text-align:left;}
+.nav-item:hover{background:rgba(255,255,255,.06);color:#fff;}
+.nav-item.active{background:var(--gold);color:var(--navy-900);font-weight:700;}
+.nav-item .icon{font-size:16px;width:22px;text-align:center;}
+.sidebar .spacer{flex:1;}
+.user-badge{padding:14px 13px;background:rgba(255,255,255,.05);border-radius:12px;margin-top:10px;border:1px solid rgba(255,255,255,.08);}
+.user-badge .name{font-weight:700;font-size:14px;}
+.user-badge .role{font-size:11px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+.logout-btn{margin-top:10px;padding:10px;background:rgba(255,70,70,.16);color:#ff8080;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:13px;width:100%;transition:.15s;}
+.logout-btn:hover{background:rgba(255,70,70,.28);}
+.main-content{flex:1;padding:30px 34px;overflow-x:hidden;min-width:0;}
+.main-content .page-title{font-size:24px;font-weight:700;color:var(--navy-800);margin-bottom:4px;}
+.main-content .page-sub{color:var(--muted);margin-bottom:22px;font-size:13.5px;}
+.view{display:none;}
+.view.active{display:block;animation:fadeIn .3s ease;}
+
+/* ===== STAT / RANK CARDS ===== */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:26px;}
+.stat-card{background:var(--card);padding:20px 22px;border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);position:relative;overflow:hidden;}
+.stat-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--gold);}
+.stat-card .number{font-family:'Roboto Mono',monospace;font-size:30px;font-weight:700;color:var(--navy-800);}
+.stat-card .label{font-size:13px;color:var(--muted);margin-top:4px;}
+
+.points-badge{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,#fff 60%,var(--gold-light) 100%);border:4px solid var(--gold);box-shadow:0 6px 24px rgba(201,162,39,.3);}
+.points-badge .num{font-family:'Roboto Mono',monospace;font-size:30px;font-weight:800;color:var(--navy-800);}
+.points-badge .lbl{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-top:2px;}
+
+.rank-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-bottom:26px;}
+.rank-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:18px 22px;box-shadow:var(--shadow);}
+.rank-card h4{font-size:14.5px;color:var(--navy-800);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.rank-item{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #f0f4f8;font-size:13px;}
+.rank-item:last-child{border-bottom:none;}
+.rank-item .pos{font-weight:700;color:var(--muted);width:26px;font-family:'Roboto Mono',monospace;}
+.rank-item .name{flex:1;font-weight:600;}
+.rank-item .value{font-weight:700;color:var(--navy-800);}
+.text-muted{color:var(--muted);font-size:13px;font-style:italic;}
+
+/* ===== TABLE ===== */
+.table-wrap{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;margin-bottom:24px;box-shadow:var(--shadow);}
+.table-header{padding:16px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border-bottom:1px solid var(--border);background:#fafcff;}
+.table-header h3{font-size:15.5px;color:var(--navy-800);}
+.table-header .search-box{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.table-header .search-box input,.table-header .search-box select{padding:8px 13px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;background:#fff;min-width:150px;}
+.table-scroll{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:640px;}
+th{background:#f8fafc;text-align:left;padding:13px 16px;font-weight:700;color:var(--text);border-bottom:1px solid var(--border);font-size:12px;text-transform:uppercase;letter-spacing:.3px;}
+td{padding:12px 16px;border-bottom:1px solid #f0f4f8;vertical-align:middle;}
+tr:hover td{background:#fafcff;}
+.badge{display:inline-block;padding:3px 12px;border-radius:30px;font-size:11.5px;font-weight:700;background:#eaf1fb;color:var(--navy-700);}
+.badge.gold{background:#fbf1d8;color:#8a6d10;}
+.btn-sm{padding:5px 11px;border:none;border-radius:8px;font-size:11.5px;font-weight:700;cursor:pointer;transition:.15s;margin:2px;}
+.btn-sm.danger{background:var(--danger-bg);color:var(--danger);}
+.btn-sm.danger:hover{background:#fcd5d5;}
+.btn-sm.edit{background:#eaf1fb;color:var(--navy-700);}
+.btn-sm.edit:hover{background:#dbe7f8;}
+.btn-sm.view{background:#f0ead8;color:#8a6d10;}
+.btn-sm.view:hover{background:#e7dcb9;}
+.empty-row td{text-align:center;padding:38px 20px;color:#8a9aa8;font-style:italic;}
+.thumb{width:38px;height:38px;border-radius:8px;object-fit:cover;cursor:pointer;border:1px solid var(--border);transition:0.15s;}
+.thumb:hover{opacity:0.8;transform:scale(1.03);}
+
+/* ===== FORM CARD ===== */
+.form-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:26px 28px;max-width:720px;box-shadow:var(--shadow);margin-bottom:24px;}
+.form-card textarea{min-height:90px;resize:vertical;}
+.file-drop{border:1.5px dashed var(--border);border-radius:10px;padding:16px;text-align:center;cursor:pointer;background:#fbfcfe;transition:.15s;}
+.file-drop:hover{border-color:var(--navy-700);}
+.file-drop i{font-size:22px;color:var(--muted);margin-bottom:6px;}
+#readGambarPreview{max-width:180px;border-radius:10px;margin-top:10px;display:none;border:1px solid var(--border);}
+
+/* ===== PROFILE VIEW ===== */
+.profile-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:28px;box-shadow:var(--shadow);max-width:640px;display:flex;gap:26px;align-items:center;flex-wrap:wrap;margin-bottom:24px;}
+.profile-info{flex:1;min-width:220px;}
+.profile-info .row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f0f4f8;font-size:13.5px;}
+.profile-info .row:last-child{border-bottom:none;}
+.profile-info .row .k{color:var(--muted);font-weight:600;}
+.profile-info .row .v{font-weight:700;color:var(--navy-800);}
+
+.export-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+
+@media (max-width:900px){
+  .dash-layout{flex-direction:column;}
+  .sidebar{width:100%;height:auto;position:relative;flex-direction:row;overflow-x:auto;padding:14px;}
+  .sidebar .brand,.sidebar .spacer,.user-badge{display:none;}
+  .nav-item{white-space:nowrap;}
+  .main-content{padding:20px 16px;}
+  .row-2{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div id="toastContainer"></div>
+
+<!-- ===== LOADING OVERLAY DENGAN PROGRESS ===== -->
+<div id="loadingOverlay">
+  <div class="load-box">
+    <div class="load-icon"><i class="fas fa-spinner fa-pulse"></i></div>
+    <div class="load-message" id="loadMessage">Sedang memproses...</div>
+    <div class="progress-track">
+      <div class="progress-bar" id="progressBar" style="width:0%;"></div>
+    </div>
+    <div class="progress-text"><span id="progressPercent">0</span>%</div>
+  </div>
+</div>
+
+<!-- ===== BUTANG PASANG APLIKASI (tambahan, tidak mengganggu) ===== -->
+<button id="installBtn"><i class="fas fa-download"></i> Pasang Aplikasi</button>
+
+<div id="app">
+
+  <!-- ============================================================ AUTH PAGE ============================================================ -->
+  <div class="page active" id="authPage">
+    <div class="auth-shell">
+      <div class="auth-header">
+        <div class="crest"><i class="fas fa-book-reader"></i></div>
+        <div class="brand-text">
+          <h1>NILAM <span>Digital</span></h1>
+          <p>VocKAF · Sistem Nadi Ilmu Amalan Membaca</p>
+        </div>
+      </div>
+
+      <div class="auth-body">
+        <div class="auth-container">
+
+          <!-- LOGIN FORM -->
+          <div id="loginForm">
+            <h1>Log Masuk</h1>
+            <div class="sub">Sila log masuk untuk merekod bacaan anda.</div>
+            <div class="error-msg" id="loginError"></div>
+            <div class="form-group">
+              <label>No. Kad Pengenalan</label>
+              <input type="text" id="loginIc" placeholder="Contoh: 050101140123">
+            </div>
+            <div class="form-group">
+              <label>Kata Laluan</label>
+              <input type="password" id="loginPassword" placeholder="••••••••">
+            </div>
+            <button class="btn block" id="loginBtn"><i class="fas fa-right-to-bracket"></i> Log Masuk</button>
+            <div class="switch-link">Belum ada akaun? <a id="goToRegister">Daftar sekarang</a></div>
+            <div class="admin-login-trigger">
+              <button class="btn ghost sm" id="showAdminModalBtn"><i class="fas fa-user-shield"></i> Log Masuk sebagai Admin</button>
+            </div>
+          </div>
+
+          <!-- REGISTER FORM -->
+          <div id="registerForm" style="display:none;">
+            <h1>Daftar Akaun Pelajar</h1>
+            <div class="sub">Lengkapkan maklumat di bawah untuk mendaftar.</div>
+            <div class="error-msg" id="registerError"></div>
+            <div class="success-msg" id="registerSuccess"></div>
+
+            <div class="form-group">
+              <label>Nama Penuh (HURUF BESAR)</label>
+              <input type="text" id="regNama" class="uppercase" placeholder="CONTOH: AZHAR BIN MAZLAN">
+            </div>
+            <div class="row-2">
+              <div class="form-group">
+                <label>No. Kad Pengenalan</label>
+                <input type="text" id="regIc" placeholder="050101140123">
+              </div>
+              <div class="form-group">
+                <label>Kelas</label>
+                <input type="text" id="regKelas" placeholder="Contoh: 2 DVM ETN">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>No. Telefon</label>
+              <input type="text" id="regNoTel" placeholder="Contoh: 0121234567">
+            </div>
+            <div class="form-group">
+              <label>ID Telegram (nombor)</label>
+              <input type="text" id="regTelegramId" placeholder="Contoh: 123456789" inputmode="numeric">
+              <span class="hint">
+                <strong>Cara mendapatkan Telegram ID:</strong>
+                <ol style="margin:6px 0 0 18px;padding:0;">
+                  <li>Klik pautan <a href="https://t.me/UserInfoBot" target="_blank">https://t.me/UserInfoBot</a> untuk dapatkan Telegram ID anda.</li>
+                  <li>Tekan <strong>START</strong> pada bot tersebut.</li>
+                  <li>Bot akan memaparkan nombor Telegram ID anda.</li>
+                  <li>Salin nombor Telegram ID tersebut.</li>
+                  <li>Kemudian klik pautan <a href="https://t.me/Alamanda_VocKAF_bot" target="_blank">https://t.me/Alamanda_VocKAF_bot</a>.</li>
+                  <li>Hantar nombor Telegram ID yang diperoleh tadi kepada bot Rasmi VocKAF tersebut supaya akaun anda didaftarkan untuk menerima notifikasi akan datang.</li>
+                  <li>Selepas mesej berjaya dihantar, kembali ke sini dan masukkan nombor Telegram ID tersebut di ruangan 'ID Telegram''.</li>
+                </ol>
+                <span class="telegram-links">
+                  <a href="https://t.me/UserInfoBot" target="_blank"><i class="fab fa-telegram"></i> 1. Dapatkan ID Telegram</a>
+                  <a href="https://t.me/Alamanda_VocKAF_bot" target="_blank"><i class="fas fa-paper-plane"></i> 2. Hantar ID ke Bot Rasmi VocKAF</a>
+                </span>
+                ID Telegram adalah <strong>WAJIB</strong> untuk membolehkan sistem menghantar notifikasi kepada anda.
+              </span>
+            </div>
+            <div class="form-group">
+              <label>Kata Laluan (min. 6 aksara)</label>
+              <input type="password" id="regPassword" placeholder="••••••••">
+            </div>
+            <button class="btn block" id="registerBtn"><i class="fas fa-user-plus"></i> Daftar</button>
+            <div class="switch-link">Sudah ada akaun? <a id="goToLogin">Log masuk</a></div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="auth-footer">
+        <a href="https://wa.me/601169387861?text=Assalamualaikum%20En.%20Azhar,%20saya%20perlukan%20bantuan%20berkaitan%20Sistem."
+           target="_blank" class="contact-link">
+          <i class="fab fa-whatsapp"></i>
+          <span>Hubungi Sokongan Teknikal</span>
+        </a>
+        <p>
+          &copy; <span id="current-year"></span> VocKAF - Sistem E-LamVocKAF (Demo)
+          <br>Powered by <strong>AzharMazlanEtn</strong>.
+          <br>Hak cipta terpelihara.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN LOGIN MODAL -->
+  <div class="modal-overlay" id="adminModalOverlay">
+    <div class="modal-box">
+      <button class="modal-close" id="adminModalClose">&times;</button>
+      <div style="text-align:center;font-size:38px;margin-bottom:6px;">🔐</div>
+      <h2 style="text-align:center;">Log Masuk Admin</h2>
+      <div class="modal-sub" style="text-align:center;">Akses khusus untuk pentadbir sistem.</div>
+      <div class="modal-error" id="adminModalError"></div>
+      <div class="form-group">
+        <label>Kata Laluan Admin</label>
+        <input type="password" id="adminModalPassword" placeholder="••••••••">
+      </div>
+      <button class="btn block" id="adminModalLoginBtn">Log Masuk</button>
+      <div class="modal-footer">Terlupa kata laluan? <span class="reset-link" id="adminModalResetLink">Reset ke default</span></div>
+      <div style="text-align:center;margin-top:18px;padding-top:16px;border-top:1px solid var(--border);">
+        <a href="https://wa.me/601169387861?text=Assalamualaikum%20En.%20Azhar,%20saya%20perlukan%20bantuan%20berkaitan%20Sistem."
+           target="_blank" class="contact-link" style="font-size:12.5px;padding:8px 16px;">
+          <i class="fab fa-whatsapp"></i><span>Hubungi Sokongan Teknikal</span>
+        </a>
+        <p style="font-size:11px;color:var(--muted);margin-top:10px;line-height:1.6;">
+          &copy; <span class="admin-modal-year"></span> VocKAF - Sistem E-LamVocKAF · Powered by <strong>AzharMazlanEtn</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- IMAGE VIEWER MODAL -->
+  <div class="modal-overlay" id="imageModalOverlay">
+    <div class="modal-box image-modal-box wide">
+      <button class="modal-close" id="imageModalClose">&times;</button>
+      <div id="imageModalContent">
+        <div class="img-loading" id="imageModalLoading"><i class="fas fa-spinner fa-pulse fa-2x"></i><br>Memuatkan gambar...</div>
+        <img id="imageModalImg" src="" alt="Gambar bacaan" style="display:none;">
+        <div class="img-error" id="imageModalError" style="display:none;">
+          <i class="fas fa-image"></i>
+          Gambar tidak dapat dimuatkan.<br>
+          <small style="color:var(--muted);">Sila cuba lagi nanti.</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN EDIT STUDENT MODAL -->
+  <div class="modal-overlay" id="editStudentModalOverlay">
+    <div class="modal-box">
+      <button class="modal-close" id="editStudentModalClose">&times;</button>
+      <h2>Kemas Kini Maklumat Pelajar</h2>
+      <div class="modal-sub">Ubah maklumat pelajar di bawah.</div>
+      <div class="modal-error" id="editStudentError"></div>
+      <input type="hidden" id="editStudentUid">
+      <div class="form-group"><label>Nama Penuh</label><input type="text" id="editStudentNama" class="uppercase"></div>
+      <div class="row-2">
+        <div class="form-group"><label>No. IC</label><input type="text" id="editStudentIc"></div>
+        <div class="form-group"><label>Kelas</label><input type="text" id="editStudentKelas"></div>
+      </div>
+      <div class="row-2">
+        <div class="form-group"><label>ID Telegram</label><input type="text" id="editStudentTelegramId"></div>
+        <div class="form-group"><label>No. Telefon</label><input type="text" id="editStudentNoTel"></div>
+      </div>
+      <div class="form-group"><label>Kata Laluan Baru (kosongkan jika tak nak tukar)</label><input type="password" id="editStudentPassword" placeholder="••••••••"></div>
+      <button class="btn block" id="editStudentSaveBtn"><i class="fas fa-save"></i> Simpan Perubahan</button>
+      <button class="btn ghost block" id="editStudentResetPwBtn" style="margin-top:10px;"><i class="fas fa-key"></i> Reset Kata Laluan ke Default</button>
+    </div>
+  </div>
+
+  <!-- ADMIN EDIT RECORD MODAL -->
+  <div class="modal-overlay" id="editRecordModalOverlay">
+    <div class="modal-box wide">
+      <button class="modal-close" id="editRecordModalClose">&times;</button>
+      <h2>Kemas Kini Rekod Bacaan</h2>
+      <div class="modal-sub">Ubah maklumat rekod bacaan pelajar.</div>
+      <div class="modal-error" id="editRecordError"></div>
+      <input type="hidden" id="editRecordId">
+      <div class="form-group"><label>Tajuk Bacaan</label><input type="text" id="editRecordTajuk"></div>
+      <div class="row-2">
+        <div class="form-group">
+          <label>Jenis Bacaan</label>
+          <select id="editRecordJenis">
+            <option value="Buku">Buku</option><option value="Novel">Novel</option><option value="Artikel">Artikel</option>
+            <option value="Majalah">Majalah</option><option value="Komik Pendidikan">Komik Pendidikan</option>
+            <option value="E-book">E-book</option><option value="Bahan Online">Bahan Online</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Bahasa</label>
+          <select id="editRecordBahasa">
+            <option value="Bahasa Melayu">Bahasa Melayu</option><option value="Bahasa Inggeris">Bahasa Inggeris</option>
+            <option value="Bahasa Mandarin">Bahasa Mandarin</option><option value="Lain-lain">Lain-lain</option>
+          </select>
+        </div>
+      </div>
+      <div class="row-2">
+        <div class="form-group"><label>Bilangan Muka Surat</label><input type="number" id="editRecordMukaSurat" min="1"></div>
+        <div class="form-group"><label>Tarikh Mula</label><input type="date" id="editRecordTarikhMula"></div>
+      </div>
+      <div class="form-group"><label>Tarikh Tamat</label><input type="date" id="editRecordTarikhTamat"></div>
+      <div class="form-group"><label>Ringkasan</label><textarea id="editRecordRingkasan"></textarea></div>
+      <button class="btn block" id="editRecordSaveBtn"><i class="fas fa-save"></i> Simpan Perubahan</button>
+    </div>
+  </div>
+
+  <!-- ============================================================ STUDENT DASHBOARD ============================================================ -->
+  <div class="page" id="studentPage">
+    <div class="dash-layout">
+      <div class="sidebar" id="studentSidebar">
+        <div class="brand">
+          <div class="crest"><i class="fas fa-book-reader"></i></div>
+          <div class="txt">NILAM Digital<span>VocKAF</span></div>
+        </div>
+        <button class="nav-item active" data-view="studentMyRecords"><span class="icon"><i class="fas fa-list-check"></i></span> Rekod Saya</button>
+        <button class="nav-item" data-view="studentAddReading"><span class="icon"><i class="fas fa-plus-circle"></i></span> Tambah Bacaan</button>
+        <button class="nav-item" data-view="studentEditProfile"><span class="icon"><i class="fas fa-user-pen"></i></span> Kemas Kini Profil</button>
+        <div class="spacer"></div>
+        <div class="user-badge">
+          <div class="name" id="studentSidebarName">Pelajar</div>
+          <div class="role">Pelajar</div>
+        </div>
+        <button class="logout-btn" id="studentLogoutBtn"><i class="fas fa-right-from-bracket"></i> Log Keluar</button>
+      </div>
+
+      <div class="main-content" id="studentMain">
+
+        <!-- REKOD SAYA -->
+        <div class="view active" id="studentMyRecords">
+          <div class="page-title">Rekod Bacaan Saya</div>
+          <div class="page-sub">Senarai semua bacaan yang telah anda rekodkan.</div>
+
+          <div class="profile-card" id="studentProfileSummary">
+            <div class="points-badge">
+              <div class="num" id="spTotalMata">0</div>
+              <div class="lbl">Jumlah Mata</div>
+            </div>
+            <div class="profile-info">
+              <div class="row"><span class="k">Nama</span><span class="v" id="spNama">-</span></div>
+              <div class="row"><span class="k">Kelas</span><span class="v" id="spKelas">-</span></div>
+              <div class="row"><span class="k">Jumlah Bacaan</span><span class="v" id="spTotalBacaan">0</span></div>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <div class="table-header">
+              <h3>Senarai Bacaan</h3>
+              <div class="search-box">
+                <input type="text" id="studentRecordSearch" placeholder="🔍 Cari tajuk...">
+                <select id="studentRecordFilterJenis">
+                  <option value="">Semua Jenis</option>
+                  <option value="Buku">Buku</option><option value="Novel">Novel</option><option value="Artikel">Artikel</option>
+                  <option value="Majalah">Majalah</option><option value="Komik Pendidikan">Komik Pendidikan</option>
+                  <option value="E-book">E-book</option><option value="Bahan Online">Bahan Online</option>
+                </select>
+              </div>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th>Gambar</th><th>Tajuk</th><th>Jenis</th><th>Bahasa</th><th>M/S</th><th>Mata</th><th>Tarikh Tamat</th><th></th></tr></thead>
+                <tbody id="studentRecordsBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAMBAH BACAAN -->
+        <div class="view" id="studentAddReading">
+          <div class="page-title">Tambah Rekod Bacaan</div>
+          <div class="page-sub">Isi maklumat bacaan yang telah anda selesaikan.</div>
+          <div class="form-card">
+            <div class="error-msg" id="addReadingError"></div>
+            <div class="success-msg" id="addReadingSuccess"></div>
+            <div class="form-group"><label>Tajuk Bacaan</label><input type="text" id="readTajuk" placeholder="Contoh: Ketam dan tuannya"></div>
+            <div class="row-2">
+              <div class="form-group">
+                <label>Jenis Bacaan</label>
+                <select id="readJenis">
+                  <option value="Buku">Buku</option>
+                  <option value="Novel">Novel</option>
+                  <option value="Artikel">Artikel</option>
+                  <option value="Majalah">Majalah</option>
+                  <option value="Komik Pendidikan">Komik Pendidikan</option>
+                  <option value="E-book">E-book</option>
+                  <option value="Bahan Online">Bahan Online</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Bahasa</label>
+                <select id="readBahasa">
+                  <option value="Bahasa Melayu">Bahasa Melayu</option>
+                  <option value="Bahasa Inggeris">Bahasa Inggeris</option>
+                  <option value="Bahasa Mandarin">Bahasa Mandarin</option>
+                  <option value="Lain-lain">Lain-lain</option>
+                </select>
+              </div>
+            </div>
+            <div class="row-2">
+              <div class="form-group"><label>Bilangan Muka Surat</label><input type="number" id="readMukaSurat" min="1" placeholder="Contoh: 120"></div>
+              <div class="form-group"><label>Tarikh Mula Membaca</label><input type="date" id="readTarikhMula"></div>
+            </div>
+            <div class="form-group">
+              <label>Ringkasan (Pilihan)</label>
+              <textarea id="readRingkasan" placeholder="Ringkasan pendek tentang bacaan anda (tidak wajib)"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Gambar Bukti (Screen shoot / Gambar Buku)</label>
+              <div class="file-drop" id="readGambarDrop">
+                <i class="fas fa-camera"></i>
+                <div>Klik untuk pilih / ambil gambar</div>
+              </div>
+              <input type="file" id="readGambar" accept="image/*" capture="environment" style="display:none;">
+              <img id="readGambarPreview">
+            </div>
+            <button class="btn gold" id="addReadingBtn"><i class="fas fa-cloud-arrow-up"></i> Simpan Rekod</button>
+          </div>
+        </div>
+
+        <!-- KEMAS KINI PROFIL -->
+        <div class="view" id="studentEditProfile">
+          <div class="page-title">Kemas Kini Profil</div>
+          <div class="form-card">
+            <div class="error-msg" id="editProfileError"></div>
+            <div class="success-msg" id="editProfileSuccess"></div>
+            <div class="form-group"><label>Nama Penuh</label><input type="text" id="editNama" class="uppercase"></div>
+            <div class="row-2">
+              <div class="form-group"><label>No. IC (tidak boleh diubah)</label><input type="text" id="editIc" disabled style="background:#eef1f5;color:var(--muted);"></div>
+              <div class="form-group"><label>Kelas</label><input type="text" id="editKelas" class="uppercase"></div>
+            </div>
+            <div class="row-2">
+              <div class="form-group"><label>ID Telegram</label><input type="text" id="editTelegramId"></div>
+              <div class="form-group"><label>No. Telefon</label><input type="text" id="editNoTel"></div>
+            </div>
+            <div class="form-group"><label>Kata Laluan Baru (kosongkan jika tidak mahu tukar)</label><input type="password" id="editPassword" placeholder="••••••••"></div>
+            <button class="btn block" id="editProfileBtn"><i class="fas fa-save"></i> Simpan Maklumat</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ ADMIN DASHBOARD ============================================================ -->
+  <div class="page" id="adminPage">
+    <div class="dash-layout">
+      <div class="sidebar" id="adminSidebar">
+        <div class="brand">
+          <div class="crest"><i class="fas fa-book-reader"></i></div>
+          <div class="txt">NILAM Digital<span>VocKAF · Admin</span></div>
+        </div>
+        <button class="nav-item active" data-view="adminOverview"><span class="icon"><i class="fas fa-chart-pie"></i></span> Overview</button>
+        <button class="nav-item" data-view="adminStudents"><span class="icon"><i class="fas fa-user-graduate"></i></span> Pelajar</button>
+        <button class="nav-item" data-view="adminRecords"><span class="icon"><i class="fas fa-book"></i></span> Records</button>
+        <button class="nav-item" data-view="adminEmail"><span class="icon"><i class="fab fa-telegram"></i></span> Hantar Notifikasi Telegram</button>
+        <button class="nav-item" data-view="adminEmailLogs"><span class="icon"><i class="fas fa-clock-rotate-left"></i></span> Log Notifikasi</button>
+        <div class="spacer"></div>
+        <div class="user-badge">
+          <div class="name" id="adminSidebarName">Admin</div>
+          <div class="role">Pentadbir</div>
+        </div>
+        <button class="logout-btn" id="adminLogoutBtn"><i class="fas fa-right-from-bracket"></i> Log Keluar</button>
+      </div>
+
+      <div class="main-content" id="adminMain">
+
+        <!-- OVERVIEW -->
+        <div class="view active" id="adminOverview">
+          <div class="page-title">Overview Sistem</div>
+          <div class="page-sub">Ringkasan keseluruhan aktiviti membaca pelajar.</div>
+          <div class="stats-grid">
+            <div class="stat-card"><div class="number" id="statStudents">0</div><div class="label">Jumlah Pelajar</div></div>
+            <div class="stat-card"><div class="number" id="statRecords">0</div><div class="label">Jumlah Rekod Bacaan</div></div>
+            <div class="stat-card"><div class="number" id="statMata">0</div><div class="label">Jumlah Mata Terkumpul</div></div>
+            <div class="stat-card"><div class="number" id="statToday">0</div><div class="label">Rekod Hari Ini</div></div>
+            <div class="stat-card"><div class="number" id="statMonth">0</div><div class="label">Rekod Bulan Ini</div></div>
+            <div class="stat-card"><div class="number" id="statYear">0</div><div class="label">Rekod Tahun Ini</div></div>
+          </div>
+
+          <div class="rank-grid">
+            <div class="rank-card"><h4>📊 Bacaan Mengikut Bulan (Tahun Semasa)</h4><canvas id="chartMonthly" height="180"></canvas></div>
+            <div class="rank-card"><h4>📚 Bacaan Mengikut Jenis</h4><canvas id="chartJenis" height="180"></canvas></div>
+          </div>
+
+          <div class="rank-grid">
+            <div class="rank-card"><h4>🏆 Top Mata</h4><div id="rankMata"></div></div>
+            <div class="rank-card"><h4>📖 Top Bacaan</h4><div id="rankBacaan"></div></div>
+            <div class="rank-card"><h4>🏫 Top Kelas</h4><div id="rankKelas"></div></div>
+          </div>
+        </div>
+
+        <!-- PELAJAR -->
+        <div class="view" id="adminStudents">
+          <div class="page-title">Senarai Pelajar</div>
+          <div class="page-sub">Urus maklumat akaun pelajar berdaftar.</div>
+          <div class="table-wrap">
+            <div class="table-header">
+              <h3>Pelajar Berdaftar</h3>
+              <div class="search-box"><input type="text" id="adminStudentSearch" placeholder="🔍 Cari nama / kelas..."></div>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th>Nama</th><th>No. IC</th><th>Kelas</th><th>No. Tel</th><th>ID Telegram</th><th>Bacaan</th><th>Mata</th><th></th></tr></thead>
+                <tbody id="adminStudentsBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- RECORDS -->
+        <div class="view" id="adminRecords">
+          <div class="page-title">Semua Rekod Bacaan</div>
+          <div class="page-sub">Lihat dan muat turun rekod bacaan mengikut tahun/bulan.</div>
+
+          <div class="table-wrap" style="margin-bottom:18px;">
+            <div class="table-header">
+              <h3><i class="fas fa-file-arrow-down"></i> Muat Turun Rekod (Excel)</h3>
+              <div class="export-bar">
+                <select id="exportMonth">
+                  <option value="">Semua Bulan</option>
+                  <option value="01">Januari</option><option value="02">Februari</option><option value="03">Mac</option>
+                  <option value="04">April</option><option value="05">Mei</option><option value="06">Jun</option>
+                  <option value="07">Julai</option><option value="08">Ogos</option><option value="09">September</option>
+                  <option value="10">Oktober</option><option value="11">November</option><option value="12">Disember</option>
+                </select>
+                <select id="exportYear"></select>
+                <button class="btn gold sm" id="exportRecordsBtn"><i class="fas fa-file-excel"></i> Muat Turun Excel</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <div class="table-header">
+              <h3>Rekod Bacaan</h3>
+              <div class="search-box">
+                <input type="text" id="adminRecordSearch" placeholder="🔍 Cari tajuk / nama...">
+                <select id="filterRecordYear"><option value="">Semua Tahun</option></select>
+                <select id="filterRecordMonth">
+                  <option value="">Semua Bulan</option>
+                  <option value="01">Januari</option><option value="02">Februari</option><option value="03">Mac</option>
+                  <option value="04">April</option><option value="05">Mei</option><option value="06">Jun</option>
+                  <option value="07">Julai</option><option value="08">Ogos</option><option value="09">September</option>
+                  <option value="10">Oktober</option><option value="11">November</option><option value="12">Disember</option>
+                </select>
+                <select id="filterRecordKelas"><option value="">Semua Kelas</option></select>
+              </div>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th>Gambar</th><th>Nama</th><th>Kelas</th><th>Tajuk</th><th>Jenis</th><th>Bahasa</th><th>M/S</th><th>Mata</th><th>Tarikh Tamat</th><th></th></tr></thead>
+                <tbody id="adminRecordsBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- HANTAR NOTIFIKASI -->
+        <div class="view" id="adminEmail">
+          <div class="page-title">Hantar Notifikasi Telegram</div>
+          <div class="page-sub">Hantar makluman kepada pelajar terpilih melalui Telegram.</div>
+          <div class="form-card">
+            <div class="error-msg" id="emailError"></div>
+            <div class="success-msg" id="emailSuccess"></div>
+            <div class="form-group">
+              <label>Pilih Penerima <label style="display:inline;font-weight:400;"><input type="checkbox" id="emailSelectAll" style="width:auto;"> Pilih Semua</label></label>
+              <div id="emailRecipientList" style="display:flex;flex-wrap:wrap;gap:8px;padding:10px 0;"></div>
+            </div>
+            <div class="row-2">
+              <div class="form-group"><label>Nama Penerima</label><input type="text" id="emailRecipientName" readonly></div>
+              <div class="form-group"><label>ID Telegram Penerima</label><input type="text" id="emailRecipientTelegramId" readonly></div>
+            </div>
+            <div class="form-group"><label>Subjek</label><input type="text" id="emailSubject" placeholder="Contoh: Peringatan NILAM"></div>
+            <div class="form-group"><label>Mesej</label><textarea id="emailMessage" placeholder="Tulis mesej anda di sini..."></textarea></div>
+            <div class="form-group">
+              <label>Lampiran (Pilihan)</label>
+              <input type="file" id="emailAttachment">
+              <span class="hint" id="emailAttachmentPreview" style="display:none;"></span>
+            </div>
+            <button class="btn gold" id="emailSendBtn"><i class="fab fa-telegram"></i> Hantar Notifikasi</button>
+          </div>
+        </div>
+
+        <!-- LOG NOTIFIKASI -->
+        <div class="view" id="adminEmailLogs">
+          <div class="page-title">Log Notifikasi</div>
+          <div class="page-sub">Sejarah semua notifikasi yang telah dihantar.</div>
+          <div class="table-wrap">
+            <div class="table-header">
+              <h3>Log Hantar</h3>
+              <div class="search-box"><input type="text" id="logSearch" placeholder="🔍 Cari nama / subjek..."></div>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th>Nama</th><th>ID Telegram</th><th>Subjek</th><th>Tarikh</th><th></th></tr></thead>
+                <tbody id="emailLogsBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- JAVASCRIPT -->
+<script>
+// ============================================================
+// DUMMY DATA – GANTIKAN BACKEND
+// ============================================================
+
+// Senarai pelajar contoh
+const DUMMY_STUDENTS = [
+  { uid: 'S001', nama: 'AZHAR BIN MAZLAN', ic: '050101140123', kelas: '2 DVM ETN', noTel: '0123456789', telegramId: '123456789', password: 'pelajar123', totalBacaan: 8, totalMata: 145 },
+  { uid: 'S002', nama: 'NURUL AIN BINTI HASSAN', ic: '030815080456', kelas: '1 DVM ETN', noTel: '0112345678', telegramId: '987654321', password: 'pelajar456', totalBacaan: 5, totalMata: 92 },
+  { uid: 'S003', nama: 'MUHAMMAD AFIQ BIN RAMLI', ic: '020210091234', kelas: '2 DVM ETN', noTel: '0198765432', telegramId: '555666777', password: 'pelajar789', totalBacaan: 12, totalMata: 210 },
+  { uid: 'S004', nama: 'SITI NORMAH BINTI KAMARUDIN', ic: '040512072345', kelas: '1 DVM ETN', noTel: '0187654321', telegramId: '444555666', password: 'pelajar101', totalBacaan: 3, totalMata: 45 },
+];
+
+// Rekod bacaan contoh (untuk pelajar)
+const DUMMY_RECORDS = [
+  { id: 'R001', uid: 'S001', nama: 'AZHAR BIN MAZLAN', kelas: '2 DVM ETN', tajuk: 'Ketam dan tuannya', jenis: 'Buku', bahasa: 'Bahasa Melayu', mukaSurat: 120, mata: 120, tarikhMula: '2026-01-10', tarikhTamat: '2026-01-15', ringkasan: 'Kisah teladan tentang ketam sombong.', gambarUrl: '' },
+  { id: 'R002', uid: 'S001', nama: 'AZHAR BIN MAZLAN', kelas: '2 DVM ETN', tajuk: 'Harry Potter and the Philosopher\'s Stone', jenis: 'Novel', bahasa: 'Bahasa Inggeris', mukaSurat: 223, mata: 223, tarikhMula: '2026-02-01', tarikhTamat: '2026-02-20', ringkasan: '', gambarUrl: '' },
+  { id: 'R003', uid: 'S002', nama: 'NURUL AIN BINTI HASSAN', kelas: '1 DVM ETN', tajuk: 'Kepentingan Menjaga Alam Sekitar', jenis: 'Artikel', bahasa: 'Bahasa Melayu', mukaSurat: 5, mata: 5, tarikhMula: '2026-03-01', tarikhTamat: '2026-03-02', ringkasan: 'Artikel tentang alam sekitar.', gambarUrl: '' },
+  { id: 'R004', uid: 'S003', nama: 'MUHAMMAD AFIQ BIN RAMLI', kelas: '2 DVM ETN', tajuk: 'Komik Pendidikan: Sains', jenis: 'Komik Pendidikan', bahasa: 'Bahasa Melayu', mukaSurat: 48, mata: 48, tarikhMula: '2026-01-20', tarikhTamat: '2026-01-22', ringkasan: '', gambarUrl: '' },
+  { id: 'R005', uid: 'S003', nama: 'MUHAMMAD AFIQ BIN RAMLI', kelas: '2 DVM ETN', tajuk: 'Majalah Dewan Pelajar', jenis: 'Majalah', bahasa: 'Bahasa Melayu', mukaSurat: 60, mata: 60, tarikhMula: '2026-02-10', tarikhTamat: '2026-02-12', ringkasan: '', gambarUrl: '' },
+  { id: 'R006', uid: 'S001', nama: 'AZHAR BIN MAZLAN', kelas: '2 DVM ETN', tajuk: 'E-book: Python Programming', jenis: 'E-book', bahasa: 'Bahasa Inggeris', mukaSurat: 150, mata: 150, tarikhMula: '2026-03-05', tarikhTamat: '2026-03-18', ringkasan: 'Belajar asas Python', gambarUrl: '' },
+];
+
+// Log notifikasi contoh
+const DUMMY_LOGS = [
+  { logId: 'L001', recipientName: 'AZHAR BIN MAZLAN', telegramId: '123456789', subject: 'Peringatan NILAM', sentAt: Date.now() - 86400000 * 2 },
+  { logId: 'L002', recipientName: 'MUHAMMAD AFIQ BIN RAMLI', telegramId: '555666777', subject: 'Tahniah! Rekod baru', sentAt: Date.now() - 86400000 * 1 },
+];
+
+// Data untuk admin overview
+const DUMMY_OVERVIEW = {
+  studentCount: DUMMY_STUDENTS.length,
+  recordCount: DUMMY_RECORDS.length,
+  totalMata: DUMMY_RECORDS.reduce((sum, r) => sum + (r.mata || 0), 0),
+  recordsToday: 2,
+  recordsThisMonth: 15,
+  recordsThisYear: 42,
+  monthlyChart: [
+    { month: 'Jan', count: 8 },
+    { month: 'Feb', count: 12 },
+    { month: 'Mac', count: 6 },
+    { month: 'Apr', count: 10 },
+    { month: 'Mei', count: 4 },
+    { month: 'Jun', count: 2 },
+  ],
+  jenisChart: [
+    { jenis: 'Buku', count: 8 },
+    { jenis: 'Novel', count: 5 },
+    { jenis: 'Artikel', count: 3 },
+    { jenis: 'Majalah', count: 2 },
+    { jenis: 'Komik Pendidikan', count: 4 },
+  ],
+  rankMata: DUMMY_STUDENTS.map(s => ({ nama: s.nama, mata: s.totalMata })).sort((a, b) => b.mata - a.mata),
+  rankBacaan: DUMMY_STUDENTS.map(s => ({ nama: s.nama, bacaan: s.totalBacaan })).sort((a, b) => b.bacaan - a.bacaan),
+  rankKelas: [
+    { kelas: '2 DVM ETN', bacaan: 20 },
+    { kelas: '1 DVM ETN', bacaan: 8 },
+  ],
+};
+
+// ============================================================
+// API PALSU (DUMMY) – menggantikan panggilan ke backend
+// ============================================================
+async function apiCall(action, data = {}, usePost = false) {
+  // Simulasi kelewatan
+  await new Promise(resolve => setTimeout(resolve, 400 + Math.random() * 600));
+
+  // Log aksi (untuk debugging)
+  console.log(`[DUMMY] action: ${action}`, data);
+
+  switch (action) {
+
+    case 'login': {
+      const { ic, password } = data;
+      // Admin
+      if (ic === 'admin') {
+        if (password === 'kvwt intel' || password === ADMIN_PASSWORD) {
+          return { success: true, data: { uid: 'admin-local', nama: 'Admin Sistem', ic: 'admin', kelas: 'Admin', telegramId: '', role: 'admin', totalMata: 0, totalBacaan: 0 } };
+        } else {
+          return { success: false, error: 'Password admin salah.' };
+        }
+      }
+      // Pelajar
+      const student = DUMMY_STUDENTS.find(s => s.ic === ic);
+      if (!student) return { success: false, error: 'No. IC tidak dijumpai.' };
+      if (student.password !== password) return { success: false, error: 'Kata laluan salah.' };
+      return { success: true, data: { ...student, role: 'student' } };
+    }
+
+    case 'register': {
+      // Simulasi pendaftaran (tidak disimpan sebenar)
+      const { nama, ic, kelas, noTel, telegramId, password } = data;
+      if (DUMMY_STUDENTS.some(s => s.ic === ic)) {
+        return { success: false, error: 'No. IC sudah didaftarkan.' };
+      }
+      // Kita hanya return success tanpa menyimpan (demo)
+      return { success: true, data: { uid: 'S' + (DUMMY_STUDENTS.length + 1), nama, ic, kelas, noTel, telegramId } };
+    }
+
+    case 'getProfile': {
+      const { uid } = data;
+      const student = DUMMY_STUDENTS.find(s => s.uid === uid);
+      if (!student) return { success: false, error: 'Pelajar tidak dijumpai.' };
+      return { success: true, data: { ...student } };
+    }
+
+    case 'getRecords': {
+      const { uid } = data;
+      const records = DUMMY_RECORDS.filter(r => r.uid === uid);
+      return { success: true, data: records };
+    }
+
+    case 'addRecord': {
+      // Simulasi tambah rekod (tidak disimpan)
+      const { uid, tajuk, jenis, bahasa, mukaSurat, tarikhMula, ringkasan, gambar } = data;
+      const today = new Date().toISOString().split('T')[0];
+      const mata = mukaSurat || 0;
+      return {
+        success: true,
+        data: {
+          id: 'R' + Date.now(),
+          tarikhTamat: today,
+          mata: mata,
+        }
+      };
+    }
+
+    case 'deleteRecord': {
+      return { success: true };
+    }
+
+    case 'updateProfile': {
+      return { success: true, data: { ...data } };
+    }
+
+    case 'adminOverview': {
+      return { success: true, data: DUMMY_OVERVIEW };
+    }
+
+    case 'adminStudents': {
+      return { success: true, data: DUMMY_STUDENTS };
+    }
+
+    case 'adminRecords': {
+      return { success: true, data: DUMMY_RECORDS };
+    }
+
+    case 'adminUpdateStudent': {
+      return { success: true };
+    }
+
+    case 'adminResetStudentPassword': {
+      return { success: true, data: { tempPassword: 'default123' } };
+    }
+
+    case 'deleteStudent': {
+      return { success: true };
+    }
+
+    case 'deleteRecordAdmin': {
+      return { success: true };
+    }
+
+    case 'editRecordAdmin': {
+      return { success: true };
+    }
+
+    case 'sendNotification': {
+      const recipients = JSON.parse(data.recipients || '[]');
+      return {
+        success: true,
+        data: {
+          sent: recipients.length,
+          total: recipients.length,
+          errors: [],
+        }
+      };
+    }
+
+    case 'getLogs': {
+      return { success: true, data: DUMMY_LOGS };
+    }
+
+    case 'deleteLog': {
+      return { success: true };
+    }
+
+    case 'resetAdmin': {
+      return { success: true };
+    }
+
+    default:
+      return { success: false, error: 'Aksi tidak dikenali.' };
+  }
+}
+
+// ============================================================
+// TOAST & UTILITY
+// ============================================================
+function showToast(message, type = 'info') {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(40px)';
+    toast.style.transition = '0.3s';
+    setTimeout(() => toast.remove(), 300);
+  }, 4500);
+}
+
+function formatDate(ts) {
+  if (!ts) return '-';
+  const d = new Date(ts);
+  return d.toLocaleDateString('ms-MY', { day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+
+function escapeHtml(text) {
+  if (!text) return '';
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function showError(el, msg) {
+  el.textContent = msg;
+  el.style.display = 'block';
+  el.classList.add('show');
+  setTimeout(() => { el.style.display = 'none'; el.classList.remove('show'); }, 5000);
+}
+
+function showSuccess(el, msg) {
+  el.textContent = msg;
+  el.style.display = 'block';
+  el.classList.add('show');
+  setTimeout(() => { el.style.display = 'none'; el.classList.remove('show'); }, 5000);
+}
+
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+}
+
+// ============================================================
+// LOADING OVERLAY
+// ============================================================
+let loadingInterval = null;
+let loadingPercent = 0;
+let loadingTarget = 0;
+
+function showLoading(message = 'Sedang memproses...') {
+  const overlay = document.getElementById('loadingOverlay');
+  const msgEl = document.getElementById('loadMessage');
+  const bar = document.getElementById('progressBar');
+  const percentEl = document.getElementById('progressPercent');
+
+  if (loadingInterval) clearInterval(loadingInterval);
+  loadingPercent = 0;
+  loadingTarget = 95;
+
+  msgEl.textContent = message;
+  bar.style.width = '0%';
+  percentEl.textContent = '0';
+  overlay.classList.add('show');
+
+  loadingInterval = setInterval(() => {
+    const increment = Math.random() * 5 + 1;
+    if (loadingPercent < loadingTarget) {
+      loadingPercent = Math.min(loadingPercent + increment, loadingTarget);
+      const rounded = Math.round(loadingPercent);
+      bar.style.width = rounded + '%';
+      percentEl.textContent = rounded;
+    }
+  }, 200);
+}
+
+function updateLoadingProgress(percent, message) {
+  const bar = document.getElementById('progressBar');
+  const percentEl = document.getElementById('progressPercent');
+  const msgEl = document.getElementById('loadMessage');
+  if (percent !== undefined) {
+    const p = Math.min(100, Math.max(0, percent));
+    loadingPercent = p;
+    bar.style.width = p + '%';
+    percentEl.textContent = Math.round(p);
+  }
+  if (message) msgEl.textContent = message;
+}
+
+function hideLoading() {
+  const overlay = document.getElementById('loadingOverlay');
+  const bar = document.getElementById('progressBar');
+  const percentEl = document.getElementById('progressPercent');
+  const msgEl = document.getElementById('loadMessage');
+
+  if (loadingInterval) clearInterval(loadingInterval);
+  loadingPercent = 100;
+  bar.style.width = '100%';
+  percentEl.textContent = '100';
+  msgEl.textContent = 'Selesai!';
+
+  setTimeout(() => {
+    overlay.classList.remove('show');
+    loadingPercent = 0;
+    bar.style.width = '0%';
+    percentEl.textContent = '0';
+    msgEl.textContent = 'Sedang memproses...';
+    if (loadingInterval) {
+      clearInterval(loadingInterval);
+      loadingInterval = null;
+    }
+  }, 600);
+}
+
+async function withLoading(fn, message = 'Sedang memproses...') {
+  showLoading(message);
+  try {
+    const result = await fn();
+    if (result && typeof result === 'object' && result.progress !== undefined) {
+      updateLoadingProgress(result.progress, result.message || message);
+    }
+    return result;
+  } finally {
+    hideLoading();
+  }
+}
+
+// ============================================================
+// IMAGE MODAL
+// ============================================================
+function openImageModal(url) {
+  const overlay = document.getElementById('imageModalOverlay');
+  const img = document.getElementById('imageModalImg');
+  const loading = document.getElementById('imageModalLoading');
+  const error = document.getElementById('imageModalError');
+
+  if (!url || url === '') {
+    showToast('Tiada gambar untuk rekod ini.', 'info');
+    return;
+  }
+
+  img.style.display = 'none';
+  error.style.display = 'none';
+  loading.style.display = 'block';
+  overlay.classList.add('show');
+
+  function loadImage(src) {
+    img.onload = function() {
+      loading.style.display = 'none';
+      error.style.display = 'none';
+      img.style.display = 'block';
+    };
+    img.onerror = function() {
+      if (!src.includes('t=')) {
+        const newSrc = src + (src.indexOf('?') > -1 ? '&t=' : '?t=') + Date.now();
+        img.src = newSrc;
+        img.onerror = function() {
+          loading.style.display = 'none';
+          error.style.display = 'block';
+          img.style.display = 'none';
+        };
+      } else {
+        loading.style.display = 'none';
+        error.style.display = 'block';
+        img.style.display = 'none';
+      }
+    };
+    img.src = src;
+  }
+
+  loadImage(url);
+  setTimeout(() => {
+    if (loading.style.display !== 'none') {
+      loading.style.display = 'none';
+      error.style.display = 'block';
+      img.style.display = 'none';
+    }
+  }, 10000);
+}
+
+document.getElementById('imageModalClose').addEventListener('click', () => {
+  document.getElementById('imageModalOverlay').classList.remove('show');
+});
+document.getElementById('imageModalOverlay').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) document.getElementById('imageModalOverlay').classList.remove('show');
+});
+window.openImageModal = openImageModal;
+
+// ============================================================
+// AUTH
+// ============================================================
+document.getElementById('goToRegister').addEventListener('click', () => {
+  document.getElementById('loginForm').style.display = 'none';
+  document.getElementById('registerForm').style.display = 'block';
+});
+document.getElementById('goToLogin').addEventListener('click', () => {
+  document.getElementById('loginForm').style.display = 'block';
+  document.getElementById('registerForm').style.display = 'none';
+});
+
+document.querySelectorAll('input.uppercase').forEach(inp => {
+  inp.addEventListener('input', () => {
+    const pos = inp.selectionStart;
+    inp.value = inp.value.toUpperCase();
+    inp.setSelectionRange(pos, pos);
+  });
+});
+
+document.getElementById('registerBtn').addEventListener('click', async () => {
+  const nama = document.getElementById('regNama').value.trim().toUpperCase();
+  const ic = document.getElementById('regIc').value.trim();
+  const kelas = document.getElementById('regKelas').value.trim();
+  const noTel = document.getElementById('regNoTel').value.trim();
+  const telegramId = document.getElementById('regTelegramId').value.trim();
+  const password = document.getElementById('regPassword').value.trim();
+  const errEl = document.getElementById('registerError');
+  const sucEl = document.getElementById('registerSuccess');
+
+  if (!nama || !ic || !kelas || !noTel || !telegramId || !password) {
+    showError(errEl, 'Sila lengkapkan semua ruangan.');
+    return;
+  }
+  if (!/^[0-9]+$/.test(telegramId)) {
+    showError(errEl, 'ID Telegram mesti nombor.');
+    return;
+  }
+  if (password.length < 6) {
+    showError(errEl, 'Kata laluan minimum 6 aksara.');
+    return;
+  }
+
+  const result = await withLoading(async () => {
+    updateLoadingProgress(20, 'Mengesahkan maklumat...');
+    const res = await apiCall('register', { nama, ic, kelas, noTel, telegramId, password });
+    if (res.success) updateLoadingProgress(90, 'Akaun berjaya didaftarkan (demo)');
+    return res;
+  }, 'Mendaftar akaun...');
+
+  if (result.success) {
+    showSuccess(sucEl, '✅ Pendaftaran berjaya (demo)! Sila log masuk.');
+    document.getElementById('regNama').value = '';
+    document.getElementById('regIc').value = '';
+    document.getElementById('regKelas').value = '';
+    document.getElementById('regNoTel').value = '';
+    document.getElementById('regTelegramId').value = '';
+    document.getElementById('regPassword').value = '';
+    document.getElementById('loginForm').style.display = 'block';
+    document.getElementById('registerForm').style.display = 'none';
+    document.getElementById('loginIc').value = ic;
+  } else {
+    showError(errEl, result.error || 'Pendaftaran gagal.');
+  }
+});
+
+document.getElementById('loginBtn').addEventListener('click', async () => {
+  const ic = document.getElementById('loginIc').value.trim();
+  const password = document.getElementById('loginPassword').value.trim();
+  const errEl = document.getElementById('loginError');
+
+  if (!ic || !password) {
+    showError(errEl, 'Sila masukkan No. IC dan kata laluan.');
+    return;
+  }
+
+  const result = await withLoading(async () => {
+    updateLoadingProgress(30, 'Menghubung sistem...');
+    const res = await apiCall('login', { ic, password });
+    if (res.success) updateLoadingProgress(90, 'Log masuk berjaya!');
+    return res;
+  }, 'Log masuk...');
+
+  if (result.success) {
+    currentUser = result.data;
+    if (currentUser.role === 'admin') {
+      showPage('adminPage');
+      initAdminDashboard();
+    } else {
+      showPage('studentPage');
+      initStudentDashboard();
+    }
+  } else {
+    showError(errEl, result.error || 'Log masuk gagal.');
+  }
+});
+
+document.getElementById('loginPassword').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('loginBtn').click();
+});
+document.getElementById('regPassword').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('registerBtn').click();
+});
+
+// ============================================================
+// ADMIN LOGIN
+// ============================================================
+const ADMIN_PASSWORD = 'kvwt intel';
+
+document.getElementById('showAdminModalBtn').addEventListener('click', () => {
+  document.getElementById('adminModalOverlay').classList.add('show');
+  document.getElementById('adminModalPassword').value = '';
+  document.getElementById('adminModalError').classList.remove('show');
+});
+document.getElementById('adminModalClose').addEventListener('click', () => {
+  document.getElementById('adminModalOverlay').classList.remove('show');
+});
+document.getElementById('adminModalOverlay').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) document.getElementById('adminModalOverlay').classList.remove('show');
+});
+document.getElementById('adminModalPassword').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('adminModalLoginBtn').click();
+});
+
+document.getElementById('adminModalLoginBtn').addEventListener('click', async () => {
+  const password = document.getElementById('adminModalPassword').value.trim();
+  const errEl = document.getElementById('adminModalError');
+  if (!password) {
+    errEl.textContent = 'Sila masukkan kata laluan.';
+    errEl.classList.add('show');
+    return;
+  }
+  errEl.classList.remove('show');
+
+  const result = await withLoading(async () => {
+    updateLoadingProgress(30, 'Mengesahkan admin...');
+    const res = await apiCall('login', { ic: 'admin', password });
+    if (res.success) updateLoadingProgress(90, 'Berjaya!');
+    return res;
+  }, 'Log masuk admin...');
+
+  if (result.success && result.data.role === 'admin') {
+    currentUser = result.data;
+    document.getElementById('adminModalOverlay').classList.remove('show');
+    showToast('✅ Log masuk admin.', 'success');
+    showPage('adminPage');
+    initAdminDashboard();
+  } else {
+    if (password === ADMIN_PASSWORD) {
+      currentUser = { uid: 'admin-local', nama: 'Admin Sistem', ic: 'admin', kelas: 'Admin', telegramId: '', role: 'admin', totalMata: 0, totalBacaan: 0 };
+      document.getElementById('adminModalOverlay').classList.remove('show');
+      showToast('✅ Log masuk admin (local).', 'success');
+      showPage('adminPage');
+      initAdminDashboard();
+    } else {
+      errEl.textContent = 'Password Admin Salah';
+      errEl.classList.add('show');
+    }
+  }
+});
+
+document.getElementById('adminModalResetLink').addEventListener('click', async () => {
+  if (!confirm('Reset akaun admin?')) return;
+  const result = await withLoading(async () => {
+    updateLoadingProgress(30, 'Meriset admin...');
+    const res = await apiCall('resetAdmin', {});
+    updateLoadingProgress(90, 'Selesai!');
+    return res;
+  }, 'Mereset admin...');
+  if (result.success) {
+    showToast('✅ Admin direset! Kata laluan: ' + ADMIN_PASSWORD, 'success');
+    document.getElementById('adminModalPassword').value = ADMIN_PASSWORD;
+  } else {
+    showToast('❌ Reset gagal: ' + (result.error || ''), 'error');
+  }
+});
+
+// ============================================================
+// SESSION
+// ============================================================
+let currentUser = null;
+
+function loadSession() {
+  try {
+    const saved = localStorage.getItem('nilam_user_demo');
+    if (saved) {
+      const user = JSON.parse(saved);
+      currentUser = user;
+      if (user.role === 'admin') {
+        showPage('adminPage');
+        initAdminDashboard();
+      } else if (user.role === 'student') {
+        showPage('studentPage');
+        initStudentDashboard();
+      }
+      return true;
+    }
+  } catch (e) {}
+  return false;
+}
+
+function saveSession() {
+  if (currentUser) {
+    localStorage.setItem('nilam_user_demo', JSON.stringify(currentUser));
+  } else {
+    localStorage.removeItem('nilam_user_demo');
+  }
+}
+
+function clearSession() {
+  localStorage.removeItem('nilam_user_demo');
+  currentUser = null;
+  showPage('authPage');
+  document.getElementById('loginForm').style.display = 'block';
+  document.getElementById('registerForm').style.display = 'none';
+}
+
+document.getElementById('studentLogoutBtn').addEventListener('click', clearSession);
+document.getElementById('adminLogoutBtn').addEventListener('click', clearSession);
+
+// ============================================================
+// STUDENT DASHBOARD
+// ============================================================
+let studentRecordsCache = [];
+let pendingGambar = null;
+
+function initStudentDashboard() {
+  if (!currentUser) return;
+  document.getElementById('studentSidebarName').textContent = currentUser.nama || 'Pelajar';
+  updateStudentProfile();
+  loadStudentRecords();
+
+  document.querySelectorAll('#studentSidebar .nav-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#studentSidebar .nav-item').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const view = btn.dataset.view;
+      document.querySelectorAll('#studentMain .view').forEach(v => v.classList.remove('active'));
+      const target = document.getElementById(view);
+      if (target) target.classList.add('active');
+      if (view === 'studentMyRecords') { updateStudentProfile(); loadStudentRecords(); }
+      if (view === 'studentEditProfile') fillEditProfile();
+    });
+  });
+
+  document.getElementById('addReadingBtn').addEventListener('click', addReadingRecord);
+  document.getElementById('studentRecordSearch').addEventListener('input', () => renderStudentRecords());
+  document.getElementById('studentRecordFilterJenis').addEventListener('change', () => renderStudentRecords());
+  document.getElementById('editProfileBtn').addEventListener('click', updateStudentProfileSave);
+
+  document.getElementById('readTarikhMula').value = new Date().toISOString().split('T')[0];
+
+  const gambarInput = document.getElementById('readGambar');
+  document.getElementById('readGambarDrop').addEventListener('click', () => gambarInput.click());
+  gambarInput.addEventListener('change', handleGambarSelect);
+
+  saveSession();
+}
+
+function handleGambarSelect(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  compressImage(file, 900, 0.7).then(({ base64, mimeType }) => {
+    pendingGambar = { content: base64, filename: file.name, type: mimeType };
+    const preview = document.getElementById('readGambarPreview');
+    preview.src = 'data:' + mimeType + ';base64,' + base64;
+    preview.style.display = 'block';
+  }).catch(() => showToast('Gagal proses gambar.', 'error'));
+}
+
+function compressImage(file, maxWidth, quality) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if (w > maxWidth) { h = Math.round(h * (maxWidth / w)); w = maxWidth; }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        const dataUrl = canvas.toDataURL('image/jpeg', quality);
+        resolve({ base64: dataUrl.split(',')[1], mimeType: 'image/jpeg' });
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function updateStudentProfile() {
+  if (!currentUser) return;
+  const result = await withLoading(async () => {
+    updateLoadingProgress(30, 'Memuat profil...');
+    const res = await apiCall('getProfile', { uid: currentUser.uid });
+    if (res.success) updateLoadingProgress(90, 'Profil dimuatkan.');
+    return res;
+  }, 'Memuat profil...');
+  if (result.success) {
+    currentUser = { ...currentUser, ...result.data };
+    saveSession();
+  }
+  document.getElementById('spNama').textContent = currentUser.nama || '-';
+  document.getElementById('spKelas').textContent = currentUser.kelas || '-';
+  document.getElementById('spTotalBacaan').textContent = currentUser.totalBacaan || 0;
+  document.getElementById('spTotalMata').textContent = currentUser.totalMata || 0;
+}
+
+async function loadStudentRecords() {
+  if (!currentUser) return;
+  const result = await withLoading(async () => {
+    updateLoadingProgress(20, 'Memuat rekod bacaan...');
+    const res = await apiCall('getRecords', { uid: currentUser.uid });
+    if (res.success) updateLoadingProgress(90, 'Rekod dimuatkan.');
+    return res;
+  }, 'Memuat rekod bacaan...');
+  if (result.success) {
+    studentRecordsCache = result.data || [];
+    studentRecordsCache.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    renderStudentRecords();
+  } else {
+    showToast('Gagal muat rekod: ' + (result.error || ''), 'error');
+  }
+}
+
+function renderStudentRecords() {
+  const tbody = document.getElementById('studentRecordsBody');
+  const search = document.getElementById('studentRecordSearch').value.toLowerCase().trim();
+  const jenisFilter = document.getElementById('studentRecordFilterJenis').value;
+  let filtered = studentRecordsCache;
+  if (search) filtered = filtered.filter(r => (r.tajuk || '').toLowerCase().includes(search));
+  if (jenisFilter) filtered = filtered.filter(r => r.jenis === jenisFilter);
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="8">Tiada rekod bacaan.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = filtered.map(r => `
+    <tr>
+      <td>${r.gambarUrl ? `<img class="thumb" src="${r.gambarUrl}" onclick="openImageModal('${r.gambarUrl}')" alt="Gambar bacaan">` : '-'}</td>
+      <td><strong>${escapeHtml(r.tajuk || '-')}</strong></td>
+      <td><span class="badge">${escapeHtml(r.jenis || '-')}</span></td>
+      <td>${escapeHtml(r.bahasa || '-')}</td>
+      <td>${r.mukaSurat || 0}</td>
+      <td><strong>${r.mata || 0}</strong></td>
+      <td>${escapeHtml(r.tarikhTamat || '-')}</td>
+      <td><button class="btn-sm danger" onclick="deleteStudentRecord('${r.id}')">🗑️</button></td>
+    </tr>
+  `).join('');
+}
+
+window.deleteStudentRecord = async function(recordId) {
+  if (!confirm('Padam rekod ini?')) return;
+  const result = await withLoading(async () => {
+    updateLoadingProgress(20, 'Memadam rekod...');
+    const res = await apiCall('deleteRecord', { recordId, uid: currentUser.uid });
+    if (res.success) updateLoadingProgress(90, 'Rekod dipadam.');
+    return res;
+  }, 'Memadam rekod...');
+  if (result.success) {
+    showToast('✅ Rekod dipadam (demo).', 'success');
+    await updateStudentProfile();
+    await loadStudentRecords();
+  } else {
+    showToast('Gagal padam: ' + (result.error || ''), 'error');
+  }
+};
+
+async function addReadingRecord() {
+  const tajuk = document.getElementById('readTajuk').value.trim();
+  const jenis = document.getElementById('readJenis').value;
+  const bahasa = document.getElementById('readBahasa').value;
+  const mukaSurat = parseInt(document.getElementById('readMukaSurat').value) || 0;
+  const tarikhMula = document.getElementById('readTarikhMula').value;
+  const ringkasan = document.getElementById('readRingkasan').value.trim();
+  const errEl = document.getElementById('addReadingError');
+  const sucEl = document.getElementById('addReadingSuccess');
+
+  if (!tajuk || mukaSurat < 1 || !tarikhMula) {
+    showError(errEl, 'Sila lengkapkan tajuk, muka surat (>0) dan tarikh mula.');
+    return;
+  }
+
+  const result = await withLoading(async () => {
+    updateLoadingProgress(20, 'Menghantar data bacaan...');
+    const res = await apiCall('addRecord', {
+      uid: currentUser.uid, tajuk, jenis, bahasa, mukaSurat, tarikhMula, ringkasan,
+      gambar: pendingGambar ? JSON.stringify(pendingGambar) : ''
+    }, true);
+    if (res.success) updateLoadingProgress(90, 'Rekod disimpan!');
+    return res;
+  }, 'Menyimpan rekod bacaan...');
+
+  if (result.success) {
+    showSuccess(sucEl, '✅ Rekod bacaan disimpan (demo)! +' + (result.data.mata || mukaSurat) + ' mata. Tarikh tamat: ' + result.data.tarikhTamat);
+    document.getElementById('readTajuk').value = '';
+    document.getElementById('readMukaSurat').value = '';
+    document.getElementById('readRingkasan').value = '';
+    document.getElementById('readTarikhMula').value = new Date().toISOString().split('T')[0];
+    document.getElementById('readGambar').value = '';
+    document.getElementById('readGambarPreview').style.display = 'none';
+    pendingGambar = null;
+    await updateStudentProfile();
+    await loadStudentRecords();
+  } else {
+    showError(errEl, result.error || 'Gagal simpan rekod.');
+  }
+}
+
+function fillEditProfile() {
+  if (!currentUser) return;
+  document.getElementById('editNama').value = currentUser.nama || '';
+  document.getElementById('editIc').value = currentUser.ic || '';
+  document.getElementById('editKelas').value = currentUser.kelas || '';
+  document.getElementById('editTelegramId').value = currentUser.telegramId || '';
+  document.getElementById('editNoTel').value = currentUser.noTel || '';
+}
+
+async function updateStudentProfileSave() {
+  const nama = document.getElementById('editNama').value.trim().toUpperCase();
+  const kelas = document.getElementById('editKelas').value.trim().toUpperCase();
+  const telegramId = document.getElementById('editTelegramId').value.trim();
+  const noTel = document.getElementById('editNoTel').value.trim();
+  const password = document.getElementById('editPassword').value.trim();
+  const errEl = document.getElementById('editProfileError');
+  const sucEl = document.getElementById('editProfileSuccess');
+
+  if (!nama || !kelas || !telegramId || !noTel) {
+    showError(errEl, 'Sila lengkapkan semua ruangan.');
+    return;
+  }
+  if (password && password.length < 6) {
+    showError(errEl, 'Kata laluan baru minimum 6 aksara.');
+    return;
+  }
+
+  const result = await withLoading(async () => {
+    updateLoadingProgress(20, 'Mengemas kini profil...');
+    const res = await apiCall('updateProfile', { uid: currentUser.uid, nama, kelas, telegramId, noTel, password });
+    if (res.success) updateLoadingProgress(90, 'Profil dikemas kini.');
+    return res;
+  }, 'Mengemaskini profil...');
+
+  if (result.success) {
+    currentUser = { ...currentUser, ...result.data };
+    saveSession();
+    document.getElementById('studentSidebarName').textContent = nama;
+    document.getElementById('editPassword').value = '';
+    showSuccess(sucEl, '✅ Profil dikemaskini (demo)!');
+    updateStudentProfile();
+  } else {
+    showError(errEl, result.error || 'Gagal kemaskini profil.');
+  }
+}
+
+// ============================================================
+// ADMIN DASHBOARD
+// ============================================================
+let adminStudentsCache = [];
+let adminRecordsCache = [];
+let emailLogsCache = [];
+let chartMonthlyInstance = null;
+let chartJenisInstance = null;
+
+function initAdminDashboard() {
+  if (!currentUser) return;
+  document.getElementById('adminSidebarName').textContent = 'Admin';
+
+  document.querySelectorAll('#adminSidebar .nav-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#adminSidebar .nav-item').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const view = btn.dataset.view;
+      document.querySelectorAll('#adminMain .view').forEach(v => v.classList.remove('active'));
+      const target = document.getElementById(view);
+      if (target) target.classList.add('active');
+      if (view === 'adminOverview') loadAdminOverview();
+      if (view === 'adminStudents') loadAdminStudents();
+      if (view === 'adminRecords') loadAdminRecords();
+      if (view === 'adminEmail') loadEmailRecipients();
+      if (view === 'adminEmailLogs') loadEmailLogs();
+    });
+  });
+
+  populateExportYears();
+  loadAdminOverview();
+  loadAdminStudents();
+  loadAdminRecords();
+  loadEmailRecipients();
+  loadEmailLogs();
+
+  document.getElementById('adminStudentSearch').addEventListener('input', () => renderAdminStudents());
+  document.getElementById('adminRecordSearch').addEventListener('input', () => renderAdminRecords());
+  document.getElementById('filterRecordYear').addEventListener('change', () => renderAdminRecords());
+  document.getElementById('filterRecordMonth').addEventListener('change', () => renderAdminRecords());
+  document.getElementById('filterRecordKelas').addEventListener('change', () => renderAdminRecords());
+  document.getElementById('exportRecordsBtn').addEventListener('click', exportRecordsXlsx);
+  document.getElementById('logSearch').addEventListener('input', () => renderEmailLogs());
+
+  document.getElementById('emailSelectAll').addEventListener('change', (e) => {
+    const checked = e.target.checked;
+    document.querySelectorAll('#emailRecipientList input[type="checkbox"]').forEach(cb => cb.checked = checked);
+    updateEmailRecipientFields();
+  });
+
+  document.getElementById('emailSendBtn').addEventListener('click', sendTelegramNotification);
+  document.getElementById('emailAttachment').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    const preview = document.getElementById('emailAttachmentPreview');
+    if (file) {
+      preview.textContent = '📎 ' + file.name + ' (' + (file.size / 1024).toFixed(1) + ' KB)';
+      preview.style.display = 'inline-block';
+    } else {
+      preview.style.display = 'none';
+    }
+  });
+
+  saveSession();
+}
+
+async function loadAdminOverview() {
+  const result = await withLoading(async () => {
+    updateLoadingProgress(20, 'Memuat overview sistem...');
+    const res = await apiCall('adminOverview', {});
+    if (res.success) updateLoadingProgress(90, 'Data dimuatkan.');
+    return res;
+  }, 'Memuat overview sistem...');
+  if (result.success) {
+    const data = result.data;
+    document.getElementById('statStudents').textContent = data.studentCount || 0;
+    document.getElementById('statRecords').textContent = data.recordCount || 0;
+    document.getElementById('statMata').textContent = data.totalMata || 0;
+    document.getElementById('statToday').textContent = data.recordsToday || 0;
+    document.getElementById('statMonth').textContent = data.recordsThisMonth || 0;
+    document.getElementById('statYear').textContent = data.recordsThisYear || 0;
+
+    drawMonthlyChart(data.monthlyChart || []);
+    drawJenisChart(data.jenisChart || []);
+
+    const rankMataEl = document.getElementById('rankMata');
+    rankMataEl.innerHTML = (!data.rankMata || data.rankMata.length === 0)
+      ? '<div class="text-muted">Tiada data.</div>'
+      : data.rankMata.map((s, i) => `<div class="rank-item"><span class="pos">#${i+1}</span><span class="name">${escapeHtml(s.nama||'-')}</span><span class="value">${s.mata||0} mata</span></div>`).join('');
+
+    const rankBacaanEl = document.getElementById('rankBacaan');
+    rankBacaanEl.innerHTML = (!data.rankBacaan || data.rankBacaan.length === 0)
+      ? '<div class="text-muted">Tiada data.</div>'
+      : data.rankBacaan.map((s, i) => `<div class="rank-item"><span class="pos">#${i+1}</span><span class="name">${escapeHtml(s.nama||'-')}</span><span class="value">${s.bacaan||0} bacaan</span></div>`).join('');
+
+    const rankKelasEl = document.getElementById('rankKelas');
+    rankKelasEl.innerHTML = (!data.rankKelas || data.rankKelas.length === 0)
+      ? '<div class="text-muted">Tiada data.</div>'
+      : data.rankKelas.map((s, i) => `<div class="rank-item"><span class="pos">#${i+1}</span><span class="name">${escapeHtml(s.kelas||'-')}</span><span class="value">${s.bacaan||0} bacaan</span></div>`).join('');
+  } else {
+    showToast('Gagal muat overview: ' + (result.error || ''), 'error');
+  }
+}
+
+function drawMonthlyChart(monthlyData) {
+  const ctx = document.getElementById('chartMonthly');
+  if (!ctx || typeof Chart === 'undefined') return;
+  if (chartMonthlyInstance) chartMonthlyInstance.destroy();
+  chartMonthlyInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: monthlyData.map(m => m.month),
+      datasets: [{ label: 'Bilangan Rekod', data: monthlyData.map(m => m.count), backgroundColor: '#c9a227', borderRadius: 6 }]
+    },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+  });
+}
+
+function drawJenisChart(jenisData) {
+  const ctx = document.getElementById('chartJenis');
+  if (!ctx || typeof Chart === 'undefined') return;
+  if (chartJenisInstance) chartJenisInstance.destroy();
+  const colors = ['#0a2540','#123863','#c9a227','#1b7a3d','#8a6d10','#5f6b7a','#b91c1c'];
+  chartJenisInstance = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: jenisData.map(j => j.jenis),
+      datasets: [{ data: jenisData.map(j => j.count), backgroundColor: colors }]
+    },
+    options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } } }
+  });
+}
+
+async function loadAdminStudents() {
+  const result = await withLoading(async () => {
+    updateLoadingProgress(20, 'Memuat senarai pelajar...');
+    const res = await apiCall('adminStudents', {});
+    if (res.success) updateLoadingProgress(90, 'Senarai dimuatkan.');
+    return res;
+  }, 'Memuat senarai pelajar...');
+  if (result.success) {
+    adminStudentsCache = result.data || [];
+    renderAdminStudents();
+  } else {
+    showToast('Gagal muat pelajar: ' + (result.error || ''), 'error');
+  }
+}
+
+function renderAdminStudents() {
+  const tbody = document.getElementById('adminStudentsBody');
+  const search = document.getElementById('adminStudentSearch').value.toLowerCase().trim();
+  let filtered = adminStudentsCache;
+  if (search) filtered = filtered.filter(s =>
+    (s.nama || '').toLowerCase().includes(search) || (s.kelas || '').toLowerCase().includes(search)
+  );
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="8">Tiada pelajar.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = filtered.map(s => `
+    <tr>
+      <td><strong>${escapeHtml(s.nama||'-')}</strong></td>
+      <td>${escapeHtml(s.ic||'-')}</td>
+      <td><span class="badge">${escapeHtml(s.kelas||'-')}</span></td>
+      <td>${escapeHtml(s.noTel||'-')}</td>
+      <td>${escapeHtml(s.telegramId||'-')}</td>
+      <td>${s.totalBacaan||0}</td>
+      <td><strong>${s.totalMata||0}</strong></td>
+      <td>
+        <button class="btn-sm edit" onclick="openEditStudent('${s.uid}')">✏️ Edit</button>
+        <button class="btn-sm danger" onclick="adminDeleteStudent('${s.uid}')">🗑️</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+window.adminDeleteStudent = async function(uid) {
+  if (!confirm('Padam akaun pelajar ini? Semua rekod bacaan juga akan dipadam.')) return;
+  const result = await withLoading(async () => {
+    updateLoadingProgress(20, 'Memadam pelajar...');
+    const res = await apiCall('deleteStudent', { uid });
+    if (res.success) updateLoadingProgress(90, 'Pelajar dipadam.');
+    return res;
+  }, 'Memadam pelajar...');
+  if (result.success) {
+    showToast('✅ Akaun pelajar dipadam (demo).', 'success');
+    loadAdminStudents(); loadAdminOverview(); loadAdminRecords();
+  } else {
+    showToast('Gagal padam: ' + (result.error || ''), 'error');
+  }
+};
+
+window.openEditStudent = function(uid) {
+  const s = adminStudentsCache.find(x => x.uid === uid);
+  if (!s) return;
+  document.getElementById('editStudentUid').value = s.uid;
+  document.getElementById('editStudentNama').value = s.nama || '';
+  document.getElementById('editStudentIc').value = s.ic || '';
+  document.getElementById('editStudentKelas').value = s.kelas || '';
+  document.getElementById('editStudentTelegramId').value = s.telegramId || '';
+  document.getElementById('editStudentNoTel').value = s.noTel || '';
+  document.getElementById('editStudentPassword').value = '';
+  document.getElementById('editStudentError').classList.remove('show');
+  document.getElementById('editStudentModalOverlay').classList.add('show');
+};
+document.getElementById('editStudentModalClose').addEventListener('click', () => {
+  document.getElementById('editStudentModalOverlay').classList.remove('show');
+});
+document.getElementById('editStudentModalOverlay').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) document.getElementById('editStudentModalOverlay').classList.remove('show');
+});
+document.getElementById('editStudentSaveBtn').addEventListener('click', async () => {
+  const errEl = document.getElementById('editStudentError');
+  const uid = document.getElementById('editStudentUid').value;
+  const nama = document.getElementById('editStudentNama').value.trim().toUpperCase();
+  const ic = document.getElementById('editStudentIc').value.trim();
+  const kelas = document.getElementById('editStudentKelas').value.trim();
+  const telegramId = document.getElementById('editStudentTelegramId').value.trim();
+  const noTel = document.getElementById('editStudentNoTel').value.trim();
+  const password = document.getElementById('editStudentPassword').value.trim();
+
+  if (!nama || !ic || !kelas || !telegramId || !noTel) {
+    errEl.textContent = 'Sila lengkapkan semua ruangan.'; errEl.classList.add('show'); return;
+  }
+  const result = await withLoading(async () => {
+    updateLoadingProgress(20, 'Menyimpan perubahan...');
+    const res = await apiCall('adminUpdateStudent', { uid, nama, ic, kelas, telegramId, noTel, password });
+    if (res.success) updateLoadingProgress(90, 'Perubahan disimpan.');
+    return res;
+  }, 'Menyimpan perubahan...');
+  if (result.success) {
+    showToast('✅ Maklumat pelajar dikemaskini (demo).', 'success');
+    document.getElementById('editStudentModalOverlay').classList.remove('show');
+    loadAdminStudents();
+  } else {
+    errEl.textContent = result.error || 'Gagal kemaskini.'; errEl.classList.add('show');
+  }
+});
+document.getElementById('editStudentResetPwBtn').addEventListener('click', async () => {
+  const uid = document.getElementById('editStudentUid').value;
+  if (!confirm('Reset kata laluan pelajar ini ke kata laluan default?')) return;
+  const result = await withLoading(async () => {
+    updateLoadingProgress(20, 'Mereset kata laluan...');
+    const res = await apiCall('adminResetStudentPassword', { uid });
+    if (res.success) updateLoadingProgress(90, 'Selesai.');
+    return res;
+  }, 'Mereset kata laluan...');
+  if (result.success) {
+    showToast('✅ Kata laluan direset kepada: ' + result.data.tempPassword, 'success');
+  } else {
+    showToast('Gagal reset: ' + (result.error || ''), 'error');
+  }
+});
+
+async function loadAdminRecords() {
+  const result = await withLoading(async () => {
+    updateLoadingProgress(20, 'Memuat rekod bacaan...');
+    const res = await apiCall('adminRecords', {});
+    if (res.success) updateLoadingProgress(90, 'Rekod dimuatkan.');
+    return res;
+  }, 'Memuat rekod bacaan...');
+  if (result.success) {
+    adminRecordsCache = result.data || [];
+    adminRecordsCache.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    populateRecordFilters();
+    renderAdminRecords();
+  } else {
+    showToast('Gagal muat rekod: ' + (result.error || ''), 'error');
+  }
+}
+
+function populateRecordFilters() {
+  const years = new Set();
+  const kelasSet = new Set();
+  adminRecordsCache.forEach(r => {
+    const d = r.tarikhTamat || r.tarikhMula || '';
+    if (d) years.add(d.substring(0, 4));
+    if (r.kelas) kelasSet.add(r.kelas);
+  });
+  const yearSel = document.getElementById('filterRecordYear');
+  const curYearVal = yearSel.value;
+  yearSel.innerHTML = '<option value="">Semua Tahun</option>' + [...years].sort().reverse().map(y => `<option value="${y}">${y}</option>`).join('');
+  yearSel.value = curYearVal;
+
+  const kelasSel = document.getElementById('filterRecordKelas');
+  const curKelasVal = kelasSel.value;
+  kelasSel.innerHTML = '<option value="">Semua Kelas</option>' + [...kelasSet].sort().map(k => `<option value="${escapeHtml(k)}">${escapeHtml(k)}</option>`).join('');
+  kelasSel.value = curKelasVal;
+}
+
+function renderAdminRecords() {
+  const tbody = document.getElementById('adminRecordsBody');
+  const search = document.getElementById('adminRecordSearch').value.toLowerCase().trim();
+  const fYear = document.getElementById('filterRecordYear').value;
+  const fMonth = document.getElementById('filterRecordMonth').value;
+  const fKelas = document.getElementById('filterRecordKelas').value;
+
+  let filtered = adminRecordsCache;
+  if (search) filtered = filtered.filter(r =>
+    (r.tajuk || '').toLowerCase().includes(search) || (r.nama || '').toLowerCase().includes(search)
+  );
+  if (fYear || fMonth) {
+    filtered = filtered.filter(r => {
+      const d = r.tarikhTamat || r.tarikhMula || '';
+      if (!d) return false;
+      const [y, m] = d.split('-');
+      if (fYear && y !== fYear) return false;
+      if (fMonth && m !== fMonth) return false;
+      return true;
+    });
+  }
+  if (fKelas) filtered = filtered.filter(r => r.kelas === fKelas);
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="10">Tiada rekod.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = filtered.map(r => `
+    <tr>
+      <td>${r.gambarUrl ? `<img class="thumb" src="${r.gambarUrl}" onclick="openImageModal('${r.gambarUrl}')" alt="Gambar">` : '-'}</td>
+      <td><strong>${escapeHtml(r.nama||'-')}</strong></td>
+      <td><span class="badge">${escapeHtml(r.kelas||'-')}</span></td>
+      <td>${escapeHtml(r.tajuk||'-')}</td>
+      <td><span class="badge gold">${escapeHtml(r.jenis||'-')}</span></td>
+      <td>${escapeHtml(r.bahasa||'-')}</td>
+      <td>${r.mukaSurat||0}</td>
+      <td><strong>${r.mata||0}</strong></td>
+      <td>${escapeHtml(r.tarikhTamat||'-')}</td>
+      <td>
+        <button class="btn-sm edit" onclick="openEditRecord('${r.id}')">✏️</button>
+        <button class="btn-sm danger" onclick="adminDeleteRecord('${r.id}')">🗑️</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+window.openEditRecord = function(recordId) {
+  const r = adminRecordsCache.find(x => x.id === recordId);
+  if (!r) return;
+  document.getElementById('editRecordId').value = r.id;
+  document.getElementById('editRecordTajuk').value = r.tajuk || '';
+  document.getElementById('editRecordJenis').value = r.jenis || 'Buku';
+  document.getElementById('editRecordBahasa').value = r.bahasa || 'Bahasa Melayu';
+  document.getElementById('editRecordMukaSurat').value = r.mukaSurat || 0;
+  document.getElementById('editRecordTarikhMula').value = r.tarikhMula || '';
+  document.getElementById('editRecordTarikhTamat').value = r.tarikhTamat || '';
+  document.getElementById('editRecordRingkasan').value = r.ringkasan || '';
+  document.getElementById('editRecordError').classList.remove('show');
+  document.getElementById('editRecordModalOverlay').classList.add('show');
+};
+document.getElementById('editRecordModalClose').addEventListener('click', () => {
+  document.getElementById('editRecordModalOverlay').classList.remove('show');
+});
+document.getElementById('editRecordModalOverlay').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) document.getElementById('editRecordModalOverlay').classList.remove('show');
+});
+document.getElementById('editRecordSaveBtn').addEventListener('click', async () => {
+  const errEl = document.getElementById('editRecordError');
+  const recordId = document.getElementById('editRecordId').value;
+  const tajuk = document.getElementById('editRecordTajuk').value.trim();
+  const jenis = document.getElementById('editRecordJenis').value;
+  const bahasa = document.getElementById('editRecordBahasa').value;
+  const mukaSurat = parseInt(document.getElementById('editRecordMukaSurat').value) || 0;
+  const tarikhMula = document.getElementById('editRecordTarikhMula').value;
+  const tarikhTamat = document.getElementById('editRecordTarikhTamat').value;
+  const ringkasan = document.getElementById('editRecordRingkasan').value.trim();
+
+  if (!tajuk || mukaSurat < 1 || !tarikhMula || !tarikhTamat) {
+    errEl.textContent = 'Sila lengkapkan semua ruangan wajib.'; errEl.classList.add('show'); return;
+  }
+  const result = await withLoading(async () => {
+    updateLoadingProgress(20, 'Menyimpan perubahan rekod...');
+    const res = await apiCall('editRecordAdmin', { recordId, tajuk, jenis, bahasa, mukaSurat, tarikhMula, tarikhTamat, ringkasan });
+    if (res.success) updateLoadingProgress(90, 'Rekod dikemaskini.');
+    return res;
+  }, 'Menyimpan perubahan rekod...');
+  if (result.success) {
+    showToast('✅ Rekod dikemaskini (demo).', 'success');
+    document.getElementById('editRecordModalOverlay').classList.remove('show');
+    loadAdminRecords(); loadAdminOverview();
+  } else {
+    errEl.textContent = result.error || 'Gagal kemaskini.'; errEl.classList.add('show');
+  }
+});
+
+window.adminDeleteRecord = async function(recordId) {
+  if (!confirm('Padam rekod bacaan ini?')) return;
+  const result = await withLoading(async () => {
+    updateLoadingProgress(20, 'Memadam rekod...');
+    const res = await apiCall('deleteRecordAdmin', { recordId });
+    if (res.success) updateLoadingProgress(90, 'Rekod dipadam.');
+    return res;
+  }, 'Memadam rekod...');
+  if (result.success) {
+    showToast('✅ Rekod dipadam (demo).', 'success');
+    loadAdminRecords(); loadAdminOverview();
+  } else {
+    showToast('Gagal padam: ' + (result.error || ''), 'error');
+  }
+};
+
+function populateExportYears() {
+  const sel = document.getElementById('exportYear');
+  const thisYear = new Date().getFullYear();
+  sel.innerHTML = '<option value="">Semua Tahun</option>';
+  for (let y = thisYear; y >= thisYear - 5; y--) {
+    sel.innerHTML += `<option value="${y}">${y}</option>`;
+  }
+}
+
+function exportRecordsXlsx() {
+  const year = document.getElementById('exportYear').value;
+  const month = document.getElementById('exportMonth').value;
+
+  let filtered = adminRecordsCache.filter(r => {
+    const d = r.tarikhTamat || r.tarikhMula || '';
+    if (!d) return false;
+    const [y, m] = d.split('-');
+    if (year && y !== year) return false;
+    if (month && m !== month) return false;
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    showToast('Tiada rekod untuk tempoh yang dipilih.', 'info');
+    return;
+  }
+
+  const rows = filtered.map(r => ({
+    'Nama': r.nama, 'Kelas': r.kelas, 'Tajuk': r.tajuk, 'Jenis': r.jenis, 'Bahasa': r.bahasa,
+    'Muka Surat': r.mukaSurat, 'Mata': r.mata, 'Tarikh Mula': r.tarikhMula, 'Tarikh Tamat': r.tarikhTamat,
+    'Ringkasan': r.ringkasan || ''
+  }));
+
+  if (typeof XLSX === 'undefined') {
+    showToast('Pustaka Excel gagal dimuat.', 'error');
+    return;
+  }
+
+  const ws = XLSX.utils.json_to_sheet(rows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Rekod Bacaan');
+  const label = (year || 'semua-tahun') + '-' + (month || 'semua-bulan');
+  XLSX.writeFile(wb, `Rekod_Bacaan_${label}.xlsx`);
+  showToast('✅ Fail Excel dimuat turun (' + filtered.length + ' rekod).', 'success');
+}
+
+// ============================================================
+// NOTIFIKASI
+// ============================================================
+function loadEmailRecipients() {
+  const list = document.getElementById('emailRecipientList');
+  if (adminStudentsCache.length === 0) {
+    list.innerHTML = '<span class="text-muted">Tiada pelajar.</span>';
+    return;
+  }
+  list.innerHTML = adminStudentsCache.map(s => `
+    <label style="display:flex;align-items:center;gap:4px;background:#f8fafc;padding:4px 12px;border-radius:20px;border:1px solid #eef2f7;cursor:pointer;">
+      <input type="checkbox" class="recipient-check" value="${s.uid}" data-name="${escapeHtml(s.nama)}" data-telegram="${escapeHtml(s.telegramId || '')}" />
+      ${escapeHtml(s.nama)} ${s.telegramId ? '✅' : '❌'}
+    </label>
+  `).join('');
+
+  document.querySelectorAll('#emailRecipientList .recipient-check').forEach(cb => {
+    cb.addEventListener('change', updateEmailRecipientFields);
+  });
+  document.getElementById('emailSelectAll').checked = false;
+}
+
+function updateEmailRecipientFields() {
+  const checked = document.querySelectorAll('#emailRecipientList .recipient-check:checked');
+  if (checked.length === 0) {
+    document.getElementById('emailRecipientName').value = '';
+    document.getElementById('emailRecipientTelegramId').value = '';
+    return;
+  }
+  const names = Array.from(checked).map(cb => cb.dataset.name).filter(Boolean);
+  const telegrams = Array.from(checked).map(cb => cb.dataset.telegram).filter(Boolean);
+  document.getElementById('emailRecipientName').value = names.join(', ');
+  document.getElementById('emailRecipientTelegramId').value = telegrams.join(', ') || '(tiada)';
+}
+
+async function sendTelegramNotification() {
+  const recipientTelegramIds = document.getElementById('emailRecipientTelegramId').value.trim();
+  const subject = document.getElementById('emailSubject').value.trim();
+  const message = document.getElementById('emailMessage').value.trim();
+  const attachment = document.getElementById('emailAttachment').files[0];
+  const errEl = document.getElementById('emailError');
+  const sucEl = document.getElementById('emailSuccess');
+
+  const checkedBoxes = document.querySelectorAll('#emailRecipientList .recipient-check:checked');
+  if (checkedBoxes.length === 0 || !subject || !message) {
+    showError(errEl, 'Sila pilih penerima, isi subjek dan mesej.');
+    return;
+  }
+  if (!recipientTelegramIds || recipientTelegramIds === '(tiada)') {
+    showError(errEl, 'Penerima tiada ID Telegram. Notifikasi tidak dapat dihantar.');
+    return;
+  }
+
+  const recipients = [];
+  checkedBoxes.forEach(cb => {
+    const name = cb.dataset.name;
+    const telegramId = cb.dataset.telegram;
+    if (telegramId) recipients.push({ name, telegramId });
+  });
+
+  if (recipients.length === 0) {
+    showError(errEl, 'Tiada penerima yang mempunyai ID Telegram.');
+    return;
+  }
+
+  let attachmentData = null;
+  if (attachment) {
+    try {
+      const base64 = await readFileAsBase64(attachment);
+      attachmentData = { filename: attachment.name, content: base64, type: attachment.type };
+    } catch (e) {
+      showError(errEl, 'Gagal membaca lampiran: ' + e.message);
+      return;
+    }
+  }
+
+  const result = await withLoading(async () => {
+    updateLoadingProgress(10, 'Menyediakan notifikasi...');
+    const res = await apiCall('sendNotification', {
+      recipients: JSON.stringify(recipients),
+      subject,
+      message,
+      attachment: attachmentData ? JSON.stringify(attachmentData) : ''
+    }, true);
+    if (res.success) updateLoadingProgress(90, 'Notifikasi dihantar.');
+    return res;
+  }, 'Menghantar notifikasi...');
+
+  if (result.success) {
+    const data = result.data;
+    let msg = `✅ Notifikasi berjaya dihantar kepada ${data.sent} daripada ${data.total} penerima.`;
+    if (data.errors && data.errors.length > 0) msg += ' ⚠️ Gagal: ' + data.errors.join(' | ');
+    if (data.sent === 0 && data.errors && data.errors.length > 0) {
+      showError(errEl, msg);
+    } else {
+      showSuccess(sucEl, msg);
+    }
+    document.getElementById('emailSubject').value = '';
+    document.getElementById('emailMessage').value = '';
+    document.getElementById('emailAttachment').value = '';
+    document.getElementById('emailAttachmentPreview').style.display = 'none';
+    loadEmailLogs();
+  } else {
+    showError(errEl, result.error || 'Gagal hantar notifikasi.');
+  }
+}
+
+function readFileAsBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+// ============================================================
+// LOG NOTIFICATION
+// ============================================================
+async function loadEmailLogs() {
+  const result = await withLoading(async () => {
+    updateLoadingProgress(20, 'Memuat log notifikasi...');
+    const res = await apiCall('getLogs', {});
+    if (res.success) updateLoadingProgress(90, 'Log dimuatkan.');
+    return res;
+  }, 'Memuat log notifikasi...');
+  if (result.success) {
+    emailLogsCache = result.data || [];
+    emailLogsCache.sort((a, b) => (b.sentAt || 0) - (a.sentAt || 0));
+    renderEmailLogs();
+  } else {
+    showToast('Gagal muat log: ' + (result.error || ''), 'error');
+  }
+}
+
+function renderEmailLogs() {
+  const search = (document.getElementById('logSearch').value || '').toLowerCase().trim();
+  let logs = emailLogsCache;
+  if (search) logs = logs.filter(l =>
+    (l.recipientName || '').toLowerCase().includes(search) || (l.subject || '').toLowerCase().includes(search)
+  );
+  const tbody = document.getElementById('emailLogsBody');
+  if (logs.length === 0) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="5">Tiada log.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = logs.map(log => `
+    <tr>
+      <td><strong>${escapeHtml(log.recipientName||'-')}</strong></td>
+      <td>${escapeHtml(log.telegramId || '-')}</td>
+      <td>${escapeHtml(log.subject||'-')}</td>
+      <td>${formatDate(log.sentAt)}</td>
+      <td><button class="btn-sm danger" onclick="adminDeleteLog('${log.logId}')">🗑️</button></td>
+    </tr>
+  `).join('');
+}
+
+window.adminDeleteLog = async function(logId) {
+  if (!confirm('Padam log ini?')) return;
+  const result = await withLoading(async () => {
+    updateLoadingProgress(20, 'Memadam log...');
+    const res = await apiCall('deleteLog', { logId });
+    if (res.success) updateLoadingProgress(90, 'Log dipadam.');
+    return res;
+  }, 'Memadam log...');
+  if (result.success) {
+    showToast('✅ Log dipadam (demo).', 'success');
+    loadEmailLogs();
+  } else {
+    showToast('Gagal padam log: ' + (result.error || ''), 'error');
+  }
+};
+
+// ============================================================
+// PWA MANIFEST (tidak mengubah UI)
+// ============================================================
+(function setupPWA() {
+  const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="#c9a227" d="M448 352v-320C448 14.3 433.7 0 416 0H160C107 0 64 43 64 96v256c0 53 43 96 96 96h256c17.7 0 32-14.3 32-32v-32c0-17.7-14.3-32-32-32H160c-17.7 0-32 14.3-32 32s14.3 32 32 32h256c17.7 0 32-14.3 32-32zm-32 64H160c-17.7 0-32 14.3-32 32s14.3 32 32 32h256v-64z"/></svg>`;
+  const iconDataUri = 'data:image/svg+xml,' + encodeURIComponent(iconSvg);
+
+  const manifest = {
+    name: "NILAM Digital",
+    short_name: "NILAM",
+    description: "Sistem Nadi Ilmu Amalan Membaca",
+    start_url: location.href.split('?')[0],
+    display: "standalone",
+    background_color: "#f4f6fa",
+    theme_color: "#0a2540",
+    icons: [
+      { src: iconDataUri, sizes: "192x192", type: "image/svg+xml" },
+      { src: iconDataUri, sizes: "512x512", type: "image/svg+xml" }
+    ]
+  };
+  const blob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
+  const manifestURL = URL.createObjectURL(blob);
+  document.getElementById('manifestLink').href = manifestURL;
+
+  let deferredPrompt = null;
+  const installBtn = document.getElementById('installBtn');
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.style.display = 'flex';
+  });
+
+  window.addEventListener('appinstalled', () => {
+    installBtn.style.display = 'none';
+    showToast('✅ Aplikasi telah dipasang!', 'success');
+  });
+
+  installBtn.addEventListener('click', async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const result = await deferredPrompt.userChoice;
+      if (result.outcome === 'accepted') {
+        showToast('✅ Aplikasi berjaya dipasang!', 'success');
+        installBtn.style.display = 'none';
+      } else {
+        showToast('❌ Pemasangan dibatalkan.', 'info');
+      }
+      deferredPrompt = null;
+    } else {
+      showToast('📱 Tekan "Tambah ke Skrin Utama" dalam pelayar anda.', 'info');
+    }
+  });
+
+  if (window.matchMedia('(display-mode: standalone)').matches) {
+    installBtn.style.display = 'none';
+  }
+})();
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('current-year').textContent = new Date().getFullYear();
+  document.querySelectorAll('.admin-modal-year').forEach(el => el.textContent = new Date().getFullYear());
+  if (!loadSession()) {
+    showPage('authPage');
+  }
+});
+
+console.log('📚 NILAM Digital VocKAF (DEMO) sedia!');
+console.log('📌 Data contoh digunakan. Tiada backend sebenar.');
+</script>
+</body>
+</html>

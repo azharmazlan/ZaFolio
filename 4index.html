@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PUSAT SUMBER ALAMANDA -  Fast Line  Printing</title>
+  <style>
+    body {
+      font-family: 'Georgia', serif;
+      background: linear-gradient(135deg, #f5e8c7, #d9b38c);
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      color: #2c1b0e;
+    }
+    header {
+      background: url('https://via.placeholder.com/1200x300') no-repeat center/cover;
+      padding: 100px 20px;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+    header h1 {
+      font-size: 3.5em;
+      margin: 0;
+      font-weight: bold;
+    }
+    header h2 {
+      font-size: 2em;
+      margin: 5px 0;
+    }
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+    .details {
+      font-size: 1.2em;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .library-graphic {
+      background: url('https://via.placeholder.com/800x400') no-repeat center/cover;
+      margin: 20px 0;
+      padding: 20px;
+      border: 5px solid #d9b38c;
+      border-radius: 10px;
+      position: relative;
+    }
+    input[type="file"], input[type="text"], select {
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 1em;
+      border: 2px solid #d9b38c;
+      border-radius: 5px;
+      width: 80%;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1em;
+      background-color: #d9b38c;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover {
+      background-color: #c79e6e;
+    }
+    footer {
+      margin-top: 40px;
+      padding: 20px;
+      background: #2c1b0e;
+      color: white;
+      font-size: 0.9em;
+    }
+    footer a {
+      color: #ffd700;
+      text-decoration: none;
+    }
+    .status-message {
+      margin: 15px 0;
+      padding: 10px;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    .form-group {
+      margin: 15px 0;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .telegram-button {
+      background-color: #0088cc !important;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .instructions {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+      text-align: left;
+      border-left: 4px solid #0088cc;
+    }
+    .loading-container {
+      display: none;
+      margin: 20px 0;
+    }
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      margin: 0 auto;
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #d9b38c;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    .loading-text {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #2c1b0e;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .progress-bar {
+      width: 80%;
+      margin: 10px auto;
+      background-color: #f3f3f3;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .progress {
+      height: 20px;
+      background-color: #d9b38c;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    .ic-example {
+      font-size: 0.9em;
+      color: #666;
+      margin-top: 5px;
+    }
+    .ic-warning {
+      color: #721c24;
+      font-weight: bold;
+    }
+    .student-fields {
+      display: none;
+    }
+    .demo-badge {
+      display: inline-block;
+      background: #ffd700;
+      color: #2c1b0e;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>PUSAT SUMBER ALAMANDA</h1>
+    <h2>FAST LANE  PRINTING</h2>
+    <div class="demo-badge">⚡ DEMO – Data Simulasi</div>
+  </header>
+
+   <div class="container">
+    <div class="details">
+      <h3 style="text-align:center;">LANGKAH PENGGUNAAN  FAST LANE PRINTING</h3>
+      <p>1: TEKAN "CHOOSE FILE" DI BAWAH</p>
+      <p>2: PILIH DOKUMEN YANG PERLU DICETAK</p>
+      <p>3: TEKAN "HANTAR"</p>
+    </div>
+
+    <div class="library-graphic">
+      <div style="background: rgba(255,255,255,0.85); padding: 20px; border-radius: 10px; color: #2c1b0e; text-align: left; font-size: 1em;">
+      
+        <ol>
+          <li>SILA PASTIKAN ANDA MENGHANTAR DOKUMEN YANG BETUL</li>
+          <li>PASTIKAN DOKUMEN DALAM BENTUK <STRONG>"PDF"</STRONG> UNTUK MENGELAKKAN RALAT FORMAT</li>
+          <li>PASTIKAN IC DI ISI DENGAN BETUL</li>
+          <li>PILIH JENIS PENGGUNA TERLEBIH DAHULU SEBELUM MEMILIH FILE</li>
+          <li>
+            BAYARAN CETAKAN SEPERTI BERIKUT:
+            <ul>
+              <li><strong>HITAM PUTIH</strong> => RM0.20</li>
+              <li><strong>BERWARNA</strong> => RM0.30 - RM1.00</li>
+            </ul>
+          </li>
+          <li>CAJ SERVIS CETAKAN:<ul>
+            <li><strong>1-3 HELAI</strong> => RM0.10</li>
+            <li><strong>4-5 HELAI</strong> => RM0.20</li>
+            <li><strong>6 HELAI KE ATAS</strong> => RM0.30</li>
+          </ul></li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="upload-section">
+      <div class="form-group">
+        <label for="userName">Nama Anda:</label>
+        <input type="text" id="userName" placeholder="Masukkan nama penuh anda 'huruf besar'" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="userType">Jenis Pengguna:</label>
+        <select id="userType" required onchange="toggleStudentFields()">
+          <option value="">-- PILIH JENIS PENGGUNA --</option>
+          <option value="pelajar">PELAJAR</option>
+          <option value="guru">GURU</option>
+          <option value="kakitangan">KAKITANGAN</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="userIC">Nombor IC (Tanpa '-'):</label>
+        <input type="text" id="userIC" placeholder="Contoh:060605110523" required maxlength="12">
+        <div id="icWarning" class="ic-example ic-warning" style="display: none;"></div>
+      </div>
+      
+      <div id="studentFields" class="student-fields">
+        <div class="form-group">
+          <label for="userYear">TAHUN:</label>
+          <select id="userYear" required>
+            <option value="">-- PILIH TAHUN --</option>
+            <option value="2 DVM (SEM4)">DIPLOMA SEMESTER 4</option>
+            <option value="2 DVM (SEM3)">DIPLOMA SEMESTER 3</option>
+            <option value="1 DVM (SEM2)">DIPLOMA SEMESTER 2</option>
+            <option value="1 DVM (SEM1)">DIPLOMA SEMESTER 1</option>
+            <option value="2 SVM (SEM4)">SIJIL SEMESTER 4</option>
+            <option value="2 SVM (SEM3)">SIJIL SEMESTER 3</option>
+            <option value="1 SVM (SEM2)">SIJIL SEMESTER 2</option>
+            <option value="1 SVM (SEM1)">SIJIL SEMESTER 1</option>
+          </select>
+        </div>
+
+         <div class="form-group">
+          <label for="userProgram">PROGRAM:</label>
+          <select id="userProgram" required>
+            <option value="">-- Pilih PROGRAM --</option>
+            <option value="ELETRONIK">ELETRONIK</option>
+            <option value="ELEKTRIK">ELEKTRIK</option>
+            <option value="PERAKAUNAN">PERAKAUNAN</option>
+            <option value="KIMPALAN">KIMPALAN</option>
+            <option value="PEMESINAN">PEMESINAN</option>
+            <option value="KESETIAUSAHAAN">KESETIAUSAHAAN</option>
+            <option value="PENYEJUK BEKUAN">PENYEJUK BEKUAN</option>
+            <option value="AUTOMOTIF">AUTOMOTIF</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="fileInput">Pilih Fail:</label>
+        <input type="file" id="fileInput" accept=".pdf,.doc,.docx">
+      </div>
+      
+      <button onclick="sendViaTelegram()" class="telegram-button">
+        <img src="https://www.pngplay.com/wp-content/uploads/8/Upload-Icon-Image-Transparent-PNG.png" width="16" alt="Telegram"> Hantar
+      </button>
+      
+      <!-- Loading animation container -->
+      <div id="loadingContainer" class="loading-container">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Memproses permintaan cetakan...</div>
+        <div class="progress-bar">
+          <div id="uploadProgress" class="progress"></div>
+        </div>
+      </div>
+      
+      <div id="statusMessage"></div>
+      
+      <div id="mobileInstructions" class="instructions" style="display: none;">
+        <h4>Untuk Pengguna Telefon:</h4>
+        <ol>
+          <li>Telegram akan dibuka secara automatik</li>
+          <li>Tekan icon <strong>lampiran</strong> (klip kertas)</li>
+          <li>Pilih <strong>Dokumen</strong></li>
+          <li>Cari dan pilih file yang ingin dikirim</li>
+          <li>Tekan <strong>kirim</strong></li>
+        </ol>
+      </div>
+      
+      <div id="desktopInstructions" class="instructions" style="display: none;">
+        <h4>Untuk Pengguna Komputer:</h4>
+        <ol>
+          <li>File telah di-download secara automatik</li>
+          <li>Buka Telegram Web/Desktop</li>
+          <li>Kirim file yang telah di-download ke bot: <strong>@AlamandaPrintBot</strong></li>
+          <li>Tambahkan pesan: <em>"Nama: [nama anda], IC: [nombor IC], Kursus: [kursus]"</em></li>
+        </ol>
+      </div>
+
+      <div style="margin-top:20px; padding:12px; background:#f0f9ff; border-radius:8px; border-left:4px solid #0088cc; text-align:left; font-size:0.9rem; color:#2c1b0e;">
+        <strong><i class="fas fa-info-circle"></i> Demo:</strong> Tiada sambungan ke Telegram. Semua permintaan adalah simulasi.
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy;Pusat Sumber ALAMANDA. All rights reserved. Contact us:
+      <a href="https://wa.me/60169890302" target="_blank">Pn. JIA</a> atau
+      <a href="https://wa.me/601169387861" target="_blank">En. AZHAR</a>
+    </p>
+    <p style="font-size:0.8rem; opacity:0.7;">Demo – data tidak dihantar ke mana-mana server.</p>
+  </footer>
+
+  <script>
+    // ===== VALIDASI IC =====
+    const validStateCodes = [
+      '01','02','03','04','05','06','07','08','09','10',
+      '11','12','13','14','15','16',
+      '21','22','23','24',
+      '25','26','27','28','29','30',
+      '31','32','33',
+      '34','35','36','37',
+      '38','39','40'
+    ];
+
+    function toggleStudentFields() {
+      const userType = document.getElementById('userType').value;
+      const studentFields = document.getElementById('studentFields');
+      if (userType === 'pelajar') {
+        studentFields.style.display = 'block';
+        document.getElementById('userYear').required = true;
+        document.getElementById('userProgram').required = true;
+      } else {
+        studentFields.style.display = 'none';
+        document.getElementById('userYear').required = false;
+        document.getElementById('userProgram').required = false;
+      }
+    }
+
+    function validateIC(icNumber) {
+      if (icNumber === '060605110523') {
+        return { valid: false, message: "Sila isi dengan IC sebenar anda!!" };
+      }
+      const cleanIC = icNumber.replace(/\D/g, '');
+      if (cleanIC.length !== 12) return { valid: false, message: "IC mesti 12 digit" };
+      if (!/^\d+$/.test(cleanIC)) return { valid: false, message: "Hanya nombor dibenarkan" };
+      
+      const birthDate = cleanIC.substr(0, 6);
+      const stateCode = cleanIC.substr(6, 2);
+      const month = parseInt(birthDate.substr(2, 2));
+      const day = parseInt(birthDate.substr(4, 2));
+      
+      if (month < 1 || month > 12) return { valid: false, message: "Bulan lahir tidak sah (01-12)" };
+      if (day < 1 || day > 31) return { valid: false, message: "Hari lahir tidak sah (01-31)" };
+      if ((month === 4 || month === 6 || month === 9 || month === 11) && day > 30) {
+        return { valid: false, message: "Bulan ini hanya ada 30 hari" };
+      }
+      if (month === 2 && day > 29) {
+        return { valid: false, message: "Februari hanya ada 28/29 hari" };
+      }
+      if (!validStateCodes.includes(stateCode)) {
+        return { valid: false, message: "Kod negeri tidak dikenali" };
+      }
+      return { valid: true };
+    }
+
+    // ===== FUNGSI UTAMA (SIMULASI) =====
+    function sendViaTelegram() {
+      const fileInput = document.getElementById('fileInput');
+      const userName = document.getElementById('userName').value;
+      const userType = document.getElementById('userType').value;
+      const userIC = document.getElementById('userIC').value;
+      const userYear = document.getElementById('userYear').value;
+      const userProgram = document.getElementById('userProgram').value;
+      const file = fileInput.files[0];
+      const statusMessage = document.getElementById('statusMessage');
+      const mobileInstructions = document.getElementById('mobileInstructions');
+      const desktopInstructions = document.getElementById('desktopInstructions');
+      const loadingContainer = document.getElementById('loadingContainer');
+      const uploadProgress = document.getElementById('uploadProgress');
+      const icWarning = document.getElementById('icWarning');
+      
+      // Reset
+      mobileInstructions.style.display = 'none';
+      desktopInstructions.style.display = 'none';
+      statusMessage.innerHTML = '';
+      statusMessage.className = 'status-message';
+      icWarning.style.display = 'none';
+      
+      // Validasi
+      if (!userName) {
+        statusMessage.textContent = "Sila isi nama anda terlebih dahulu.";
+        statusMessage.classList.add('error');
+        return;
+      }
+      if (!userType) {
+        statusMessage.textContent = "Sila pilih jenis pengguna anda.";
+        statusMessage.classList.add('error');
+        return;
+      }
+      if (!userIC) {
+        statusMessage.textContent = "Sila isi nombor IC anda.";
+        statusMessage.classList.add('error');
+        return;
+      }
+      const icValidation = validateIC(userIC);
+      if (!icValidation.valid) {
+        icWarning.textContent = icValidation.message;
+        icWarning.style.display = 'block';
+        statusMessage.textContent = "Sila betulkan nombor IC mengikut format yang ditetapkan.";
+        statusMessage.classList.add('error');
+        return;
+      }
+      if (userType === 'pelajar' && (!userYear || !userProgram)) {
+        statusMessage.textContent = "Sila lengkapkan maklumat tahun dan program anda.";
+        statusMessage.classList.add('error');
+        return;
+      }
+      if (!file) {
+        statusMessage.textContent = "Sila pilih fail dahulu.";
+        statusMessage.classList.add('error');
+        return;
+      }
+
+      // ===== SIMULASI PROSES =====
+      loadingContainer.style.display = 'block';
+      uploadProgress.style.width = '0%';
+      
+      // Format IC untuk paparan
+      const cleanIC = userIC.replace(/\D/g, '');
+      const formattedIC = `${cleanIC.substr(0,6)}-${cleanIC.substr(6,2)}-${cleanIC.substr(8,4)}`;
+      
+      // Simulasi progress
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += Math.random() * 15 + 5;
+        if (progress > 100) progress = 100;
+        uploadProgress.style.width = progress + '%';
+        if (progress >= 100) {
+          clearInterval(interval);
+          // Selesai
+          loadingContainer.style.display = 'none';
+          statusMessage.innerHTML = `
+            <p class="success">✅ Permintaan cetakan BERJAYA dihantar ke sistem!</p>
+            <p style="font-size:0.9rem; color:#155724;">Nama: ${userName}<br>IC: ${formattedIC}<br>Jenis: ${userType.toUpperCase()}<br>Fail: ${file.name}</p>
+            <p style="font-size:0.9rem; color:#155724; margin-top:8px;">Sila ambil cetakan dalam masa 1 jam bekerja.</p>
+          `;
+          statusMessage.className = 'status-message success';
+          
+          // Tunjukkan arahan (simulasi)
+          if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            mobileInstructions.style.display = 'block';
+          } else {
+            desktopInstructions.style.display = 'block';
+          }
+        }
+      }, 200);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portfolio | Azhar</title>
+
+    <!-- Font & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <style>
+        /* ===== SEMUA CSS DI SINI ===== */
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Inter',sans-serif; background:#f8fafc; color:#0b1a2e; line-height:1.6; }
+        a { text-decoration:none; color:inherit; }
+        ul { list-style:none; }
+        .container { max-width:1200px; margin:0 auto; padding:0 24px; }
+        .highlight { color:#c9a227; }
+
+        /* NAVBAR */
+        .navbar { background:rgba(255,255,255,0.85); backdrop-filter:blur(12px); border-bottom:1px solid #e9edf2; padding:16px 0; position:sticky; top:0; z-index:100; }
+        .nav-container { display:flex; align-items:center; justify-content:space-between; gap:16px; }
+        .nav-logo { font-weight:800; font-size:1.4rem; display:flex; align-items:center; gap:8px; }
+        .logo-icon { color:#c9a227; font-size:1.6rem; }
+        .nav-links { display:flex; gap:32px; align-items:center; }
+        .nav-links a { font-weight:600; font-size:0.95rem; color:#2c3e50; transition:color 0.2s; }
+        .nav-links a:hover { color:#c9a227; }
+        .nav-toggle { display:none; background:none; border:none; font-size:1.5rem; cursor:pointer; color:#0b1a2e; }
+        .nav-left { display:flex; align-items:center; gap:14px; }
+
+        /* LANGUAGE SWITCHER */
+        .lang-switcher { display:flex; gap:6px; }
+        .lang-btn { background:transparent; border:1.5px solid #d0d7e0; padding:4px 10px; border-radius:20px; font-size:0.75rem; font-weight:700; cursor:pointer; color:#2c3e50; transition:all 0.2s; }
+        .lang-btn.active { background:#0b1a2e; color:#fff; border-color:#0b1a2e; }
+        .lang-btn:hover { border-color:#c9a227; color:#c9a227; }
+
+        @media (max-width:768px) {
+            .nav-links { display:none; flex-direction:column; gap:16px; background:white; padding:20px; border-radius:12px; box-shadow:0 8px 30px rgba(0,0,0,0.1); position:absolute; top:70px; right:24px; min-width:180px; }
+            .nav-links.open { display:flex; }
+            .nav-toggle { display:block; }
+        }
+
+        /* HERO */
+        .hero { padding:80px 0 60px; background:linear-gradient(135deg,#f1f5f9,#ffffff); }
+        .hero-container { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center; }
+        .hero-badge { display:inline-block; background:#c9a22720; color:#c9a227; padding:6px 16px; border-radius:30px; font-weight:700; font-size:0.8rem; letter-spacing:0.5px; margin-bottom:16px; }
+        .hero-title { font-size:3rem; font-weight:800; line-height:1.2; margin-bottom:20px; }
+        .hero-desc { font-size:1.1rem; color:#475569; max-width:480px; margin-bottom:28px; }
+        .hero-actions { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:40px; }
+        .btn { display:inline-flex; align-items:center; gap:8px; padding:12px 28px; border-radius:40px; font-weight:700; font-size:0.95rem; border:none; cursor:pointer; transition:all 0.2s; }
+        .btn-primary { background:#0b1a2e; color:#fff; }
+        .btn-primary:hover { background:#1e2f44; transform:translateY(-2px); box-shadow:0 8px 24px rgba(11,26,46,0.15); }
+        .btn-outline { background:transparent; color:#0b1a2e; border:2px solid #d0d7e0; }
+        .btn-outline:hover { border-color:#0b1a2e; background:#f1f5f9; }
+        .btn-block { width:100%; justify-content:center; }
+        .hero-stats { display:flex; gap:40px; }
+        .stat { display:flex; flex-direction:column; }
+        .stat-number { font-size:2rem; font-weight:800; color:#0b1a2e; }
+        .stat-label { font-size:0.85rem; color:#64748b; }
+        .hero-visual { position:relative; display:flex; justify-content:center; align-items:center; }
+        .hero-orb { width:280px; height:280px; border-radius:50%; background:radial-gradient(circle at 30% 30%, #c9a22740, #0b1a2e10); position:absolute; z-index:0; animation:pulse 6s ease-in-out infinite; }
+        .hero-orb-secondary { width:200px; height:200px; border-radius:50%; background:radial-gradient(circle at 70% 70%, #0b1a2e20, #c9a22710); position:absolute; z-index:0; animation:pulse 8s ease-in-out infinite reverse; }
+        @keyframes pulse { 0%{transform:scale(1);opacity:0.7;} 50%{transform:scale(1.1);opacity:1;} 100%{transform:scale(1);opacity:0.7;} }
+        .hero-code-block { background:#0b1a2e; color:#e2e8f0; padding:24px 28px; border-radius:16px; font-family:'Roboto Mono',monospace; font-size:0.9rem; line-height:1.8; box-shadow:0 20px 60px rgba(0,0,0,0.15); position:relative; z-index:1; width:100%; max-width:420px; }
+        .code-line { white-space:pre; }
+        .code-indent { padding-left:20px; }
+        .code-keyword { color:#f472b6; }
+        .code-var { color:#60a5fa; }
+        .code-string { color:#34d399; }
+        .code-method { color:#c9a227; }
+        @media (max-width:900px) {
+            .hero-container { grid-template-columns:1fr; text-align:center; }
+            .hero-desc { margin-left:auto; margin-right:auto; }
+            .hero-actions { justify-content:center; }
+            .hero-stats { justify-content:center; }
+            .hero-code-block { margin:0 auto; }
+        }
+
+        /* PROJECTS */
+        .projects { padding:80px 0; background:#ffffff; }
+        .section-header { text-align:center; margin-bottom:48px; }
+        .section-tag { display:inline-block; background:#c9a22720; color:#c9a227; padding:4px 16px; border-radius:30px; font-weight:700; font-size:0.75rem; letter-spacing:0.5px; text-transform:uppercase; }
+        .section-title { font-size:2.6rem; font-weight:800; margin:8px 0 12px; }
+        .section-desc { color:#64748b; max-width:600px; margin:0 auto; font-size:1.05rem; }
+        .projects-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:32px; }
+        .project-card { background:#f8fafc; border-radius:20px; overflow:hidden; border:1px solid #e9edf2; transition:all 0.3s; display:flex; flex-direction:column; }
+        .project-card:hover { transform:translateY(-8px); box-shadow:0 20px 50px rgba(0,0,0,0.08); }
+        .project-thumb { width:100%; height:180px; background:#e2e8f0; display:flex; align-items:center; justify-content:center; font-size:3rem; color:#94a3b8; overflow:hidden; }
+        .project-thumb img { width:100%; height:100%; object-fit:cover; }
+        .project-body { padding:20px 24px 24px; flex:1; display:flex; flex-direction:column; }
+        .project-name { font-size:1.25rem; font-weight:700; margin-bottom:6px; }
+        .project-desc { color:#475569; font-size:0.95rem; flex:1; margin-bottom:16px; }
+        .project-link { display:inline-flex; align-items:center; gap:6px; background:#0b1a2e; color:#fff; padding:10px 20px; border-radius:40px; font-weight:700; font-size:0.9rem; border:none; cursor:pointer; transition:background 0.2s; align-self:flex-start; }
+        .project-link:hover { background:#1e2f44; }
+        .project-link i { font-size:0.85rem; }
+
+        /* ABOUT */
+        .about { padding:80px 0; background:#f8fafc; }
+        .about-container { display:grid; grid-template-columns:1fr 1.5fr; gap:60px; align-items:center; }
+        .about-placeholder { width:100%; aspect-ratio:1/1; max-width:360px; border-radius:30px; background:linear-gradient(135deg,#c9a22720,#0b1a2e10); display:flex; align-items:center; justify-content:center; font-size:6rem; color:#c9a227; }
+        .profile-img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center top;
+    display:block;
+    border-radius:inherit;
+}
+        .about-content p { margin-bottom:16px; color:#334155; }
+        .about-skills { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+        .skill-tag { background:#e9edf2; padding:6px 16px; border-radius:30px; font-size:0.85rem; font-weight:600; color:#0b1a2e; }
+
+        /* AGE COUNTER */
+        .age-counter { margin:20px auto 0; max-width:360px; background:#ffffff; border:1px solid #e9edf2; border-radius:16px; padding:16px 20px; text-align:center; box-shadow:0 8px 24px rgba(11,26,46,0.05); }
+        .age-counter-label { font-size:0.75rem; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; color:#94a3b8; margin-bottom:6px; }
+        .age-counter-value { font-size:0.95rem; font-weight:700; color:#0b1a2e; line-height:1.5; }
+        .age-counter-value strong { color:#c9a227; }
+
+        @media (max-width:768px) {
+            .about-container { grid-template-columns:1fr; text-align:center; }
+            .about-placeholder { margin:0 auto; }
+            .about-skills { justify-content:center; }
+        }
+
+        /* CONTACT */
+        .contact { padding:80px 0; background:#ffffff; }
+        .contact-container { display:grid; grid-template-columns:1fr 1fr; gap:60px; }
+        .contact-content p { color:#475569; margin:12px 0 24px; }
+        .contact-links { display:flex; flex-wrap:wrap; gap:16px; }
+        .contact-link { display:inline-flex; align-items:center; gap:8px; padding:8px 20px; border:1px solid #e9edf2; border-radius:40px; font-weight:600; transition:all 0.2s; }
+        .contact-link:hover { background:#f1f5f9; border-color:#c9a227; color:#c9a227; }
+        .spotify-note { width:100%; font-size:0.85rem; color:#94a3b8; margin-top:4px; }
+        .contact-form-wrapper { background:#f8fafc; padding:32px; border-radius:24px; border:1px solid #e9edf2; }
+        .contact-form .form-group { margin-bottom:18px; }
+        .contact-form label { display:block; font-weight:600; font-size:0.9rem; margin-bottom:4px; }
+        .contact-form input, .contact-form textarea { width:100%; padding:12px 16px; border:1.5px solid #e2e8f0; border-radius:12px; font-family:inherit; font-size:0.95rem; transition:border 0.2s; background:#fff; }
+        .contact-form input:focus, .contact-form textarea:focus { border-color:#c9a227; outline:none; }
+        .contact-form .btn { margin-top:8px; }
+        .form-note { font-size:0.85rem; color:#94a3b8; margin-top:12px; text-align:center; }
+        @media (max-width:768px) {
+            .contact-container { grid-template-columns:1fr; }
+            .contact-links { justify-content:center; }
+        }
+
+        /* FOOTER */
+        .footer { background:#0b1a2e; color:#cbd5e1; padding:32px 0; text-align:center; }
+        .footer-container p { margin-bottom:4px; }
+        .footer strong { color:#f8fafc; }
+        .footer-sub { font-size:0.85rem; opacity:0.7; }
+
+        /* MUSIC STOP BUTTON */
+        .music-stop-btn { position:fixed; bottom:20px; right:20px; z-index:200; background:#0b1a2e; color:#fff; border:none; padding:12px 20px; border-radius:40px; font-weight:700; font-size:0.85rem; cursor:pointer; box-shadow:0 8px 24px rgba(0,0,0,0.2); display:flex; align-items:center; gap:8px; transition:all 0.2s; }
+        .music-stop-btn:hover { background:#1e2f44; transform:translateY(-2px); }
+        #ytPlayerWrap { position:absolute; width:1px; height:1px; overflow:hidden; opacity:0; pointer-events:none; }
+    </style>
+</head>
+<body>
+
+    <!-- ========== NAVBAR ========== -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="nav-left">
+                <a href="#" class="nav-logo">
+                    <span class="logo-icon">✦</span>
+                    <span>Azhar.dev</span>
+                </a>
+                <div class="lang-switcher" id="langSwitcher">
+                    <button class="lang-btn active" data-lang="ms">MY</button>
+                    <button class="lang-btn" data-lang="en">EN</button>
+                    <button class="lang-btn" data-lang="zh">中</button>
+                </div>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#projects" data-i18n="nav_projects">Projek</a></li>
+                <li><a href="#about" data-i18n="nav_about">Tentang</a></li>
+                <li><a href="#contact" data-i18n="nav_contact">Hubungi</a></li>
+            </ul>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ========== HERO ========== -->
+    <section class="hero">
+        <div class="container hero-container">
+            <div class="hero-content">
+                <div class="hero-badge" data-i18n="hero_badge">✦ Portfolio</div>
+                <h1 class="hero-title" data-i18n-html="hero_title">
+                    Hi, saya <span class="highlight">Azhar</span>.<br />
+                    Pembangun <span class="highlight">Frontend</span>.
+                </h1>
+                <p class="hero-desc" data-i18n="hero_desc">
+                    Saya berkebolehan dalam pembangunan projek tahun akhir/penyambungan mikrokontroler/programming ide/ web app/web/penyusunan data (db), interaktif &amp; mesra pengguna.
+                    Terokai projek-projek yang telah saya bina dibawah. Kesemua projek telah diubah kepada mood demostrasi (demo) hanya paparan UI frontend sahaja dan anda boleh mencuba kesemua web demo dengan click button untuk pengalaman sendiri.
+                </p>
+                <div class="hero-actions">
+                    <a href="#projects" class="btn btn-primary">
+                        <i class="fas fa-rocket"></i> <span data-i18n="btn_view_projects">Lihat Projek</span>
+                    </a>
+                    <a href="#contact" class="btn btn-outline">
+                        <i class="fas fa-envelope"></i> <span data-i18n="btn_contact">Hubungi</span>
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number" data-count="10">0</span>
+                        <span class="stat-label" data-i18n="stat_projects">Projek</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number" data-count="6">0</span>
+                        <span class="stat-label" data-i18n="stat_done">Siap</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number" data-count="4">0</span>
+                        <span class="stat-label" data-i18n="stat_progress">Dalam Proses</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-orb"></div>
+                <div class="hero-orb-secondary"></div>
+                <div class="hero-code-block">
+                    <div class="code-line"><span class="code-keyword">const</span> <span class="code-var">dev</span> = <span class="code-string">"Azhar"</span>;</div>
+                    <div class="code-line"><span class="code-keyword">const</span> <span class="code-var">role</span> = <span class="code-string">"Frontend"</span>;</div>
+                    <div class="code-line"><span class="code-keyword">const</span> <span class="code-var">passion</span> = <span class="code-string">"UI/UX"</span>;</div>
+                    <div class="code-line"><span class="code-keyword">while</span> (<span class="code-var">alive</span>) {</div>
+                    <div class="code-line code-indent"><span class="code-var">create</span>.<span class="code-method">awesome</span>();</div>
+                    <div class="code-line">}</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== PROJECTS ========== -->
+    <section class="projects" id="projects">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" data-i18n="tag_portfolio">✦ Portfolio</span>
+                <h2 class="section-title" data-i18n-html="projects_title">Projek <span class="highlight">Saya</span></h2>
+                <p class="section-desc" data-i18n-html="projects_desc">
+                    Setiap kad membawa kepada demo frontend yang dibina sepenuhnya
+                    dengan data contoh. Klik <strong>"Live Demo"</strong> untuk meneroka(Gambaran UI yang sebenar agak lain kerana telah diubah strukturnya sebagai demo).
+                </p>
+            </div>
+
+            <div class="projects-grid" id="projectsGrid">
+                <!-- Cards akan diisi oleh JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== ABOUT ========== -->
+    <section class="about" id="about">
+        <div class="container about-container">
+           <div class="about-image">
+                <div class="about-placeholder">
+                    <img src="imagesprofile.jpg" alt="Muhammad Azhar" class="profile-img">
+                </div>
+                <div class="age-counter">
+                    <div class="age-counter-label" data-i18n="age_label">Umur</div>
+                    <div class="age-counter-value" id="ageCounterValue">Mengira...</div>
+                </div>
+                <!-- ===== TAMBAHAN: MINAT DALAM DUNIA KOMPUTER ===== -->
+                <div class="age-counter" style="margin-top:12px;">
+                    <div class="age-counter-label" data-i18n="interest_label">Minat dalam Dunia Komputer</div>
+                    <div class="age-counter-value" id="interestCounterValue">Mengira...</div>
+                </div>
+                <!-- ===== TAMAT TAMBAHAN ===== -->
+           </div>
+            <div class="about-content">
+                <span class="section-tag" data-i18n="tag_about">✦ Tentang</span>
+                <h2 class="section-title" data-i18n-html="about_title">Saya <span class="highlight">Azhar</span></h2>
+                <p data-i18n="about_p1">
+                    Saya seorang yang sukakan sesuatu yang mencabar dan benda baru untuk diterokai, selain  berpengalaman dalam  bidang Elektrik & Elektronik, saya suka mengisi masa lapang dengan memahami & belajar programing sekali gus saya gemar mencipta pengalaman digital dengan fokus pada reka bentuk yang menarik, prestasi tinggi,
+                    dan kebolehpasaran.
+                </p>
+                <p data-i18n="about_p2">
+                    Web  ini dibina  sebagai tempat pameran untuk projek-projek yang pernah saya
+                    bina dan sedang digunakan — semuanya telah diubah dalam bentuk demo frontend tanpa backend, supaya mudah
+                    diperlihatkan.
+                </p>
+                <div class="about-skills">
+                    <span class="skill-tag">HTML</span>
+                    <span class="skill-tag">CSS</span>
+                    <span class="skill-tag">JavaScript</span>
+                    <span class="skill-tag">App Script</span>
+                    <span class="skill-tag">C++</span>
+                    <span class="skill-tag">db</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CONTACT ========== -->
+    <section class="contact" id="contact">
+        <div class="container contact-container">
+            <div class="contact-content">
+                <span class="section-tag" data-i18n="tag_contact">✦ Hubungi</span>
+                <h2 class="section-title" data-i18n-html="contact_title">Jom <span class="highlight">Get In Touch With Me</span></h2>
+                <p data-i18n="contact_desc">
+                    Ada projek atau pertanyaan? Saya sentiasa terbuka untuk berkolaborasi
+                    dan membina perkara yang menarik bersama.Mari sama-sama kita merialisasikan impian anda.
+                </p>
+                <div class="contact-links">
+                    <a href="https://www.facebook.com/share/1E8NHuUyiY/" target="_blank" rel="noopener noreferrer" class="contact-link"><i class="fab fa-facebook"></i> Facebook</a>
+<a href="https://wa.me/601169387861" target="_blank" rel="noopener noreferrer" class="contact-link"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                    <a href="https://www.instagram.com/zaha_camemg?igsh=cGN6dTkwNWZ3MW44" target="_blank" rel="noopener noreferrer" class="contact-link"><i class="fab fa-instagram"></i> Instagram</a>
+                    <a href="mailto:muhammad88628@gmail.com" class="contact-link"><i class="fas fa-envelope"></i> Email</a>
+                    <a href="https://www.linkedin.com/in/zaharmazlan?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" rel="noopener noreferrer" class="contact-link"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                    <a href="https://open.spotify.com/user/31reltl2vg6546gyyh7xe6u4afze?si=y9EeKPSERjOeCXwqmRVtAw&utm_source=copy-link" target="_blank" rel="noopener noreferrer" class="contact-link"><i class="fab fa-spotify"></i> Spotify</a>
+<p class="spotify-note" data-i18n="spotify_note">🎧 Songs that I listen to while programming.</p>
+                </div>
+            </div>
+            <div class="contact-form-wrapper">
+                <form class="contact-form" id="contactForm">
+                    <div class="form-group">
+                        <label for="formName" data-i18n="form_name">Nama</label>
+                        <input type="text" id="formName" placeholder="Nama anda" required data-i18n-placeholder="form_name_ph" />
+                    </div>
+                    <div class="form-group">
+                        <label for="formEmail" data-i18n="form_email">Email</label>
+                        <input type="email" id="formEmail" placeholder="email@anda.com" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="formMessage" data-i18n="form_message">Mesej</label>
+                        <textarea id="formMessage" rows="4" placeholder="Tulis mesej anda..." required data-i18n-placeholder="form_message_ph"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-paper-plane"></i> <span data-i18n="form_send">Hantar</span>
+                    </button>
+                    <p class="form-note"><i class="fas fa-info-circle"></i> <span data-i18n="form_note">Demo sahaja — tiada data dihantar.</span></p>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <div class="container footer-container">
+            <p data-i18n-html="footer_text">&copy; 2026 <strong>Azhar.dev</strong> — Dibina dengan <i class="fas fa-heart" style="color:#f472b6;"></i> untuk web.</p>
+            <p class="footer-sub" data-i18n-html="footer_sub">Dihoskan dengan <i class="fab fa-github"></i> GitHub Pages</p>
+        </div>
+    </footer>
+
+    <!-- ========== MUSIC PLAYER (YouTube, tersembunyi) ========== -->
+    <div id="ytPlayerWrap"><div id="ytPlayer"></div></div>
+    <button class="music-stop-btn" id="musicToggleBtn">
+        <i class="fas fa-pause" id="musicIcon"></i> <span id="musicBtnLabel">Stop Muzik</span>
+    </button>
+
+    <!-- ========== JAVASCRIPT (SEMUA DALAM SATU) ========== -->
+    <script>
+        // ===== DATA PROJEK =====
+        const projectsData = [
+            {
+                id: 'Sistem Komplex',
+                name: 'SPaWGSA',
+                description: 'Sistem pemantauan alam sekitar IoT menggunakan ESP32, penderia DHT22, MQ2, PMS5003. Paparan data suhu, kelembapan, gas, PM dengan kawalan relay dan buzzer. Demo data simulasi(DASHBOARD).',
+                image: '1.png', // Kosongkan jika tiada gambar – akan guna ikon
+                demoLink: '1index.html'
+            },
+            {
+                id: 'nilam-digital',
+                name: 'NILAM Digital',
+                description: 'Sistem rekod bacaan pelajar dengan data contoh. Demo lengkap dengan dashboard, rekod, dan notifikasi Telegram.',
+                image: '2.jpg', // Kosongkan jika tiada gambar – akan guna ikon
+                demoLink: '2index.html'
+            },
+             {
+                id: 'Sistem Komplex',
+                name: 'Sistem Pengurusan Pusat Sumber Alamanda',
+                description: 'Sistem bersepadu untuk mengurus kehadiran (NFC), sistem queue (giliran), pinjaman/pemulangan buku, pengurusan point ahli, dan panel admin. Direka untuk pusat sumber sekolah/kolej. Demo menggunakan data contoh – semua operasi berfungsi seperti asal tanpa backend sebenar.',
+                image: '3.png',
+                demoLink: '3index.html'
+            },
+            {
+                id: 'Sistem Komplex',
+                name: 'Fast Lane Printing',
+                description: 'Sistem yang membolehkan pengguna (pelajar, guru, kakitangan) menghantar dokumen untuk dicetak. Pengguna perlu mengisi nama, jenis pengguna, nombor IC (dengan validasi format Malaysia), dan memilih fail (PDF/Word). Untuk pelajar, perlu mengisi tahun dan program pengajian. Sistem akan memproses permintaan cetakan dan memberikan maklum balas.Demo ini menggunakan simulasi – tiada sambungan ke Telegram atau mana-mana backend. Semua operasi dipaparkan sebagai simulasi dengan animasi muat naik dan mesej berjaya.',
+                image: '4.png',
+                demoLink: '4index.html'
+            },
+            {
+                id: 'Sistem Komplex',
+                name: 'Tempahan Bilik',
+                description: 'Projek Sistem Tempahan Bilik telah disertakan dalam portfolio dengan demo menggunakan localStorage. Anda hanya perlu pastikan fail projects/tempahan-bilik/index.html (yang saya berikan sebelum ini) berada di lokasi tersebut.',
+                image: '5.png',
+                demoLink: '5index.html'
+            },
+            {
+                id: 'Sistem Komplex',
+                name: 'Daftar Buku ',
+                description: 'Sistem untuk mendaftarkan buku baharu ke dalam sistem perpustakaan/pusat sumber. Pengguna perlu mengisi No. Panggilan (dijana automatik), Judul, Harga, Tahun, dan Catatan (dengan ciri shortcode). Data disimpan dalam localStorage dan boleh dilihat pada bila-bila masa. Demo ini menggunakan data contoh – tiada sambungan ke Google Forms atau mana-mana backend.',
+                image: '6.png',
+                demoLink: '6index.html'
+            },
+            {
+                id: 'Sistem Komplex',
+                name: 'Sistem Kehadiran',
+                description: 'sistem dalam proses kelulusan publish.',
+                demoLink: 'projects/fast lane print/index.html'
+            },
+        ];
+
+        // ===== RENDER PROJECT CARDS =====
+        function renderProjects() {
+            const grid = document.getElementById('projectsGrid');
+            if (!grid) return;
+
+            if (projectsData.length === 0) {
+                grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#64748b;">Tiada projek buat masa ini.</p>';
+                return;
+            }
+
+            grid.innerHTML = projectsData.map(proj => `
+                <div class="project-card">
+                    <div class="project-thumb">
+                        ${proj.image ? `<img src="${proj.image}" alt="${proj.name}">` : `<span>📁</span>`}
+                    </div>
+                    <div class="project-body">
+                        <h3 class="project-name">${proj.name}</h3>
+                        <p class="project-desc">${proj.description}</p>
+                        <a href="${proj.demoLink}" target="_blank" class="project-link">
+                            <i class="fas fa-play"></i> Live Demo
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ===== UMUR REAL-TIME =====
+        // Tarikh lahir: 5 Jun 2006
+        const birthDate = new Date(2006, 5, 5, 0, 0, 0);
+        // Tarikh mula minat komputer: 16 Jun 2020
+        const interestStart = new Date(2020, 5, 16, 0, 0, 0);
+
+        const ageLabels = {
+            ms: { title: 'Umur', years: 'tahun', months: 'bulan', days: 'hari', hours: 'jam', minutes: 'minit', seconds: 'saat' },
+            en: { title: 'Age', years: 'years', months: 'months', days: 'days', hours: 'hours', minutes: 'minutes', seconds: 'seconds' },
+            zh: { title: '年龄', years: '岁', months: '个月', days: '天', hours: '小时', minutes: '分钟', seconds: '秒' }
+        };
+
+        const interestLabels = {
+            ms: { title: 'Minat dalam Dunia Komputer', years: 'tahun', months: 'bulan', days: 'hari', hours: 'jam', minutes: 'minit', seconds: 'saat' },
+            en: { title: 'Interest in Computers', years: 'years', months: 'months', days: 'days', hours: 'hours', minutes: 'minutes', seconds: 'seconds' },
+            zh: { title: '对计算机的兴趣', years: '年', months: '个月', days: '天', hours: '小时', minutes: '分钟', seconds: '秒' }
+        };
+
+        function computeDiff(fromDate, toDate) {
+            let years = toDate.getFullYear() - fromDate.getFullYear();
+            let months = toDate.getMonth() - fromDate.getMonth();
+            let days = toDate.getDate() - fromDate.getDate();
+            let hours = toDate.getHours() - fromDate.getHours();
+            let minutes = toDate.getMinutes() - fromDate.getMinutes();
+            let seconds = toDate.getSeconds() - fromDate.getSeconds();
+
+            if (seconds < 0) { seconds += 60; minutes--; }
+            if (minutes < 0) { minutes += 60; hours--; }
+            if (hours < 0) { hours += 24; days--; }
+            if (days < 0) {
+                const prevMonthLastDay = new Date(toDate.getFullYear(), toDate.getMonth(), 0).getDate();
+                days += prevMonthLastDay;
+                months--;
+            }
+            if (months < 0) { months += 12; years--; }
+
+            return { years, months, days, hours, minutes, seconds };
+        }
+
+        function updateAge() {
+            const now = new Date();
+            const diff = computeDiff(birthDate, now);
+            const L = ageLabels[currentLang] || ageLabels.ms;
+            const el = document.getElementById('ageCounterValue');
+            if (el) {
+                el.innerHTML = `<strong>${diff.years}</strong> ${L.years} &nbsp;
+                                 <strong>${diff.months}</strong> ${L.months} &nbsp;
+                                 <strong>${diff.days}</strong> ${L.days}<br>
+                                 <strong>${diff.hours}</strong> ${L.hours} &nbsp;
+                                 <strong>${diff.minutes}</strong> ${L.minutes} &nbsp;
+                                 <strong>${diff.seconds}</strong> ${L.seconds}`;
+            }
+        }
+
+        // ===== FUNGSI UNTUK KIRA MINAT KOMPUTER =====
+        function updateInterest() {
+            const now = new Date();
+            // Jika tarikh mula masih akan datang, papar "Belum bermula"
+            if (now < interestStart) {
+                const el = document.getElementById('interestCounterValue');
+                if (el) {
+                    const L = interestLabels[currentLang] || interestLabels.ms;
+                    el.innerHTML = `<span style="color:#94a3b8;font-weight:400;">⏳ ${L.title} akan bermula...</span>`;
+                }
+                return;
+            }
+
+            const diff = computeDiff(interestStart, now);
+            const L = interestLabels[currentLang] || interestLabels.ms;
+            const el = document.getElementById('interestCounterValue');
+            if (el) {
+                el.innerHTML = `<strong>${diff.years}</strong> ${L.years} &nbsp;
+                                 <strong>${diff.months}</strong> ${L.months} &nbsp;
+                                 <strong>${diff.days}</strong> ${L.days}<br>
+                                 <strong>${diff.hours}</strong> ${L.hours} &nbsp;
+                                 <strong>${diff.minutes}</strong> ${L.minutes} &nbsp;
+                                 <strong>${diff.seconds}</strong> ${L.seconds}`;
+            }
+        }
+
+        // ===== TERJEMAHAN / LANGUAGE SWITCHER =====
+        let currentLang = 'ms';
+
+        const translations = {
+            ms: {
+                nav_projects: 'Projek', nav_about: 'Tentang', nav_contact: 'Hubungi',
+                hero_badge: '✦ Portfolio',
+                hero_title: 'Hi, saya <span class="highlight">Azhar</span>.<br />Pembangun <span class="highlight">Frontend</span>.',
+                hero_desc: 'Saya membina antara muka yang pantas, interaktif & mesra pengguna. Terokai projek-projek demo saya di bawah.',
+                btn_view_projects: 'Lihat Projek', btn_contact: 'Hubungi',
+                stat_projects: 'Projek', stat_done: 'Siap', stat_progress: 'Dalam Proses',
+                tag_portfolio: '✦ Portfolio',
+                projects_title: 'Projek <span class="highlight">Saya</span>',
+                projects_desc: 'Setiap kad membawa kepada demo frontend yang dibina sepenuhnya dengan data contoh. Klik <strong>"Live Demo"</strong> untuk meneroka.',
+                tag_about: '✦ Tentang',
+                about_title: 'Saya <span class="highlight">Azhar</span>',
+                about_p1: 'Saya seorang yang sukakan sesuatu yang mencabar dan benda baru untuk diterokai, selain berpengalaman dalam bidang Elektrik & Elektronik, saya suka mengisi masa lapang dengan memahami & belajar programing sekali gus saya gemar mencipta pengalaman digital dengan fokus pada reka bentuk yang menarik, prestasi tinggi, dan kebolehpasaran.',
+                about_p2: 'Web ini dibina sebagai tempat pameran untuk projek-projek yang pernah saya bina dan sedang digunakan — semuanya telah diubah dalam bentuk demo frontend tanpa backend, supaya mudah diperlihatkan.',
+                age_label: 'Umur Sebenar',
+                interest_label: 'Minat dalam Dunia Komputer',
+                tag_contact: '✦ Hubungi',
+                contact_title: 'Jom <span class="highlight">Get In Touch With Me</span>',
+                contact_desc: 'Ada projek atau pertanyaan? Saya sentiasa terbuka untuk berkolaborasi dan membina perkara yang menarik bersama. Mari sama-sama kita merialisasikan impian anda.',
+                spotify_note: '🎧 Lagu-lagu yang saya dengar semasa programming.',
+                form_name: 'Nama', form_name_ph: 'Nama anda',
+                form_email: 'Email',
+                form_message: 'Mesej', form_message_ph: 'Tulis mesej anda...',
+                form_send: 'Hantar',
+                form_note: 'Demo sahaja — tiada data dihantar.',
+                footer_text: '&copy; 2026 <strong>Azhar.dev</strong> — Dibina dengan <i class="fas fa-heart" style="color:#f472b6;"></i> untuk web.',
+                footer_sub: 'Dihoskan dengan <i class="fab fa-github"></i> GitHub Pages',
+                music_stop: 'Stop Muzik', music_play: 'Main Muzik'
+            },
+            en: {
+                nav_projects: 'Projects', nav_about: 'About', nav_contact: 'Contact',
+                hero_badge: '✦ Portfolio',
+                hero_title: 'Hi, I\'m <span class="highlight">Azhar</span>.<br />Frontend <span class="highlight">Developer</span>.',
+                hero_desc: 'I build fast, interactive & user-friendly interfaces. Explore my demo projects below.',
+                btn_view_projects: 'View Projects', btn_contact: 'Contact Me',
+                stat_projects: 'Projects', stat_done: 'Completed', stat_progress: 'In Progress',
+                tag_portfolio: '✦ Portfolio',
+                projects_title: 'My <span class="highlight">Projects</span>',
+                projects_desc: 'Every card leads to a fully built frontend demo with sample data. Click <strong>"Live Demo"</strong> to explore.',
+                tag_about: '✦ About',
+                about_title: 'I\'m <span class="highlight">Azhar</span>',
+                about_p1: 'I enjoy challenges and exploring new things. Besides experience in Electrical & Electronics, I like to spend my free time learning programming, and I love creating digital experiences focused on great design, high performance, and marketability.',
+                about_p2: 'This website was built as a showcase for projects I have built and are in use — all converted into frontend-only demos without a backend, so they can be easily viewed.',
+                age_label: 'Real-Time Age',
+                interest_label: 'Interest in Computers',
+                tag_contact: '✦ Contact',
+                contact_title: 'Let\'s <span class="highlight">Get In Touch With Me</span>',
+                contact_desc: 'Have a project or a question? I\'m always open to collaborating and building interesting things together. Let\'s bring your ideas to life.',
+                spotify_note: '🎧 Songs that I listen to while programming.',
+                form_name: 'Name', form_name_ph: 'Your name',
+                form_email: 'Email',
+                form_message: 'Message', form_message_ph: 'Write your message...',
+                form_send: 'Send',
+                form_note: 'Demo only — no data is sent.',
+                footer_text: '&copy; 2026 <strong>Azhar.dev</strong> — Built with <i class="fas fa-heart" style="color:#f472b6;"></i> for the web.',
+                footer_sub: 'Hosted with <i class="fab fa-github"></i> GitHub Pages',
+                music_stop: 'Stop Music', music_play: 'Play Music'
+            },
+            zh: {
+                nav_projects: '项目', nav_about: '关于', nav_contact: '联系',
+                hero_badge: '✦ 作品集',
+                hero_title: '嗨，我是 <span class="highlight">Azhar</span>。<br />前端 <span class="highlight">开发者</span>。',
+                hero_desc: '我构建快速、互动且用户友好的界面。探索下面的演示项目。',
+                btn_view_projects: '查看项目', btn_contact: '联系我',
+                stat_projects: '项目', stat_done: '已完成', stat_progress: '进行中',
+                tag_portfolio: '✦ 作品集',
+                projects_title: '我的 <span class="highlight">项目</span>',
+                projects_desc: '每张卡片都会带你进入一个使用示例数据完整构建的前端演示。点击 <strong>"Live Demo"</strong> 进行探索。',
+                tag_about: '✦ 关于',
+                about_title: '我是 <span class="highlight">Azhar</span>',
+                about_p1: '我喜欢挑战和探索新事物，除了在电气与电子领域有经验外，我也喜欢利用空闲时间学习编程，热衷于打造注重精美设计、高性能与市场适应性的数字体验。',
+                about_p2: '这个网站是为展示我曾经开发并正在使用的项目而建立的——全部都转换成了没有后端的纯前端演示，方便浏览查看。',
+                age_label: '实时年龄',
+                interest_label: '对计算机的兴趣',
+                tag_contact: '✦ 联系',
+                contact_title: '让我们 <span class="highlight">保持联系</span>',
+                contact_desc: '有项目或问题吗？我一直乐于合作，一起打造有趣的东西。让我们一起实现你的想法。',
+                spotify_note: '🎧 编程时我常听的歌曲。',
+                form_name: '姓名', form_name_ph: '您的姓名',
+                form_email: '电子邮件',
+                form_message: '留言', form_message_ph: '写下您的留言...',
+                form_send: '发送',
+                form_note: '仅为演示 — 不会发送任何数据。',
+                footer_text: '&copy; 2026 <strong>Azhar.dev</strong> — 用 <i class="fas fa-heart" style="color:#f472b6;"></i> 为网络而建。',
+                footer_sub: '托管于 <i class="fab fa-github"></i> GitHub Pages',
+                music_stop: '停止音乐', music_play: '播放音乐'
+            }
+        };
+
+        function applyLanguage(lang) {
+            currentLang = lang;
+            const dict = translations[lang];
+            if (!dict) return;
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dict[key] !== undefined) el.textContent = dict[key];
+            });
+            document.querySelectorAll('[data-i18n-html]').forEach(el => {
+                const key = el.getAttribute('data-i18n-html');
+                if (dict[key] !== undefined) el.innerHTML = dict[key];
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (dict[key] !== undefined) el.setAttribute('placeholder', dict[key]);
+            });
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+            });
+
+            document.documentElement.lang = lang;
+
+            const label = document.getElementById('musicBtnLabel');
+            if (label) label.textContent = isPlaying ? dict.music_stop : dict.music_play;
+
+            updateAge();
+            updateInterest();
+        }
+
+        // ===== MUZIK AUTOPLAY (YouTube) =====
+        let ytPlayer;
+        let isPlaying = true;
+        const YT_VIDEO_ID = 'AfIDRkYQD-w';
+
+        function onYouTubeIframeAPIReady() {
+            ytPlayer = new YT.Player('ytPlayer', {
+                height: '1',
+                width: '1',
+                videoId: YT_VIDEO_ID,
+                playerVars: {
+                    autoplay: 1,
+                    mute: 1,
+                    controls: 0,
+                    loop: 1,
+                    playlist: YT_VIDEO_ID
+                },
+                events: {
+                    onReady: (e) => {
+                        e.target.playVideo();
+                        // Cuba nyahsenyap selepas mula main (mungkin disekat oleh sesetengah browser)
+                        setTimeout(() => {
+                            try { e.target.unMute(); e.target.setVolume(50); } catch (err) {}
+                        }, 800);
+                    }
+                }
+            });
+        }
+
+        const ytScript = document.createElement('script');
+        ytScript.src = 'https://www.youtube.com/iframe_api';
+        document.head.appendChild(ytScript);
+
+        document.getElementById('musicToggleBtn').addEventListener('click', () => {
+            if (!ytPlayer) return;
+            const dict = translations[currentLang];
+            const icon = document.getElementById('musicIcon');
+            const label = document.getElementById('musicBtnLabel');
+
+            if (isPlaying) {
+                ytPlayer.pauseVideo();
+                isPlaying = false;
+                if (icon) icon.className = 'fas fa-play';
+                if (label) label.textContent = dict.music_play;
+            } else {
+                ytPlayer.playVideo();
+                try { ytPlayer.unMute(); } catch (err) {}
+                isPlaying = true;
+                if (icon) icon.className = 'fas fa-pause';
+                if (label) label.textContent = dict.music_stop;
+            }
+        });
+
+        // ===== NAV TOGGLE, RENDER & INIT =====
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggle = document.getElementById('navToggle');
+            const navLinks = document.querySelector('.nav-links');
+            if (toggle && navLinks) {
+                toggle.addEventListener('click', () => {
+                    navLinks.classList.toggle('open');
+                });
+            }
+
+            // Language switcher buttons
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.addEventListener('click', () => applyLanguage(btn.getAttribute('data-lang')));
+            });
+
+            // Render projects
+            renderProjects();
+
+            // Umur real-time
+            updateAge();
+            updateInterest();
+            setInterval(() => {
+                updateAge();
+                updateInterest();
+            }, 1000);
+
+            // Animate stats
+            const stats = document.querySelectorAll('.stat-number');
+            stats.forEach(stat => {
+                const target = parseInt(stat.getAttribute('data-count'), 10);
+                let current = 0;
+                const increment = Math.ceil(target / 30);
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    stat.textContent = current;
+                }, 50);
+            });
+
+            // Contact form demo
+            const form = document.getElementById('contactForm');
+            if (form) {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    alert('Terima kasih! Mesej anda telah dihantar (demo sahaja).');
+                    form.reset();
+                });
+            }
+        });
+    </script>
+</body>
+</html>

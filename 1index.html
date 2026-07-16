@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZJad – IoT Environmental Monitor (Demo)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* ===== CSS penuh sama seperti kod ESP32, tetapi saya akan ringkaskan di sini ===== */
+        /* Saya akan gunakan CSS yang sama seperti yang dihasilkan oleh ESP32, dengan beberapa tweak */
+        :root {
+            --primary-cyan: #00d4ff;
+            --secondary-cyan: #00a8cc;
+            --accent-blue: #0099ff;
+            --neon-green: #39ff14;
+            --warning-orange: #ff8c00;
+            --danger-red: #ff0040;
+            --dark-bg: #0a0a0f;
+            --card-bg: linear-gradient(145deg, rgba(15,15,25,0.95), rgba(25,25,40,0.98));
+            --card-border: rgba(0,212,255,0.3);
+            --text-primary: #e8f4f8;
+            --text-secondary: #b0c4de;
+            --shadow-primary: 0 8px 32px rgba(0,212,255,0.15);
+            --shadow-hover: 0 12px 48px rgba(0,212,255,0.25);
+            --glow-primary: 0 0 20px rgba(0,212,255,0.5);
+        }
+        * { box-sizing:border-box; margin:0; padding:0; }
+        body {
+            font-family:'Rajdhani',sans-serif;
+            background:var(--dark-bg);
+            background-image: radial-gradient(circle at 20% 50%, rgba(0,212,255,0.1) 0%, transparent 50%),
+                              radial-gradient(circle at 80% 20%, rgba(57,255,20,0.1) 0%, transparent 50%),
+                              radial-gradient(circle at 40% 80%, rgba(0,153,255,0.1) 0%, transparent 50%);
+            color:var(--text-primary);
+            min-height:100vh;
+            padding:20px;
+            overflow-x:hidden;
+        }
+        body::before {
+            content:'';
+            position:fixed;
+            top:0;left:0;right:0;bottom:0;
+            background-image: radial-gradient(2px 2px at 20px 30px, var(--primary-cyan), transparent),
+                              radial-gradient(2px 2px at 40px 70px, var(--neon-green), transparent),
+                              radial-gradient(1px 1px at 90px 40px, var(--accent-blue), transparent),
+                              radial-gradient(1px 1px at 130px 80px, var(--primary-cyan), transparent);
+            background-repeat:repeat;
+            background-size:150px 100px;
+            animation:particleFloat 20s linear infinite;
+            opacity:0.3;
+            pointer-events:none;
+            z-index:-1;
+        }
+        @keyframes particleFloat { 0%{transform:translateY(0)} 100%{transform:translateY(-100vh)} }
+        .container { max-width:1600px; margin:0 auto; position:relative; z-index:1; }
+        .header { text-align:center; margin-bottom:40px; position:relative; }
+        .header h1 {
+            font-family:'Orbitron',monospace;
+            font-size:3.5rem;
+            font-weight:900;
+            background:linear-gradient(45deg, var(--primary-cyan), var(--neon-green), var(--accent-blue));
+            background-size:200% 200%;
+            animation:gradientShift 4s ease-in-out infinite;
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+            text-shadow:var(--glow-primary);
+            margin-bottom:10px;
+        }
+        @keyframes gradientShift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+        .header p { font-size:1.2rem; color:var(--text-secondary); font-weight:300; text-transform:uppercase; letter-spacing:2px; }
+        .dashboard { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:25px; margin-bottom:40px; }
+        .card {
+            background:var(--card-bg);
+            padding:25px;
+            border-radius:16px;
+            border:1px solid var(--card-border);
+            position:relative;
+            overflow:hidden;
+            transition:all 0.4s cubic-bezier(0.4,0,0.2,1);
+            box-shadow:var(--shadow-primary);
+            backdrop-filter:blur(10px);
+        }
+        .card:hover { transform:translateY(-8px) scale(1.02); box-shadow:var(--shadow-hover); border-color:var(--primary-cyan); }
+        .card h3 {
+            font-family:'Orbitron',monospace;
+            font-size:1.4rem;
+            font-weight:600;
+            color:var(--primary-cyan);
+            margin-bottom:20px;
+            display:flex;
+            align-items:center;
+            gap:10px;
+            text-transform:uppercase;
+            letter-spacing:1px;
+        }
+        .icon { font-size:1.6rem; color:var(--primary-cyan); filter:drop-shadow(var(--glow-primary)); }
+        .reading-value {
+            font-family:'Orbitron',monospace;
+            font-size:1.3rem;
+            font-weight:700;
+            color:var(--primary-cyan);
+            text-shadow:var(--glow-primary);
+            margin-left:auto;
+            background:rgba(0,212,255,0.1);
+            padding:5px 12px;
+            border-radius:8px;
+            border:1px solid rgba(0,212,255,0.3);
+        }
+        .status-indicator {
+            position:absolute;
+            top:20px;right:20px;
+            width:20px;height:20px;
+            border-radius:50%;
+            z-index:3;
+            animation:statusPulse 2s ease-in-out infinite;
+            box-shadow:0 0 15px currentColor;
+        }
+        .status-good { background:var(--neon-green); color:var(--neon-green); }
+        .status-moderate { background:var(--warning-orange); color:var(--warning-orange); }
+        .status-danger { background:var(--danger-red); color:var(--danger-red); }
+        @keyframes statusPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.7;transform:scale(1.2)} }
+        .status-text {
+            font-family:'Orbitron',monospace;
+            font-size:0.9rem;
+            font-weight:600;
+            text-transform:uppercase;
+            letter-spacing:1px;
+            margin-top:15px;
+            padding:10px 16px;
+            border-radius:10px;
+            text-align:center;
+            border:1px solid;
+        }
+        .status-text.good { background:rgba(57,255,20,0.1); color:var(--neon-green); border-color:var(--neon-green); box-shadow:0 0 10px rgba(57,255,20,0.3); }
+        .status-text.moderate { background:rgba(255,140,0,0.1); color:var(--warning-orange); border-color:var(--warning-orange); box-shadow:0 0 10px rgba(255,140,0,0.3); }
+        .status-text.danger { background:rgba(255,0,64,0.1); color:var(--danger-red); border-color:var(--danger-red); box-shadow:0 0 10px rgba(255,0,64,0.3); animation:dangerBlink 1s ease-in-out infinite; }
+        @keyframes dangerBlink { 0%,100%{opacity:1} 50%{opacity:0.7} }
+        .thermometer-container { position:relative; width:60px; height:200px; margin:20px auto; }
+        .thermometer { background:linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,50,100,0.3) 100%); border:2px solid var(--primary-cyan); border-radius:30px; width:100%; height:100%; position:relative; overflow:hidden; box-shadow:var(--glow-primary), inset 0 0 20px rgba(0,0,0,0.5); }
+        .thermometer-fill { position:absolute; bottom:0; width:100%; background:linear-gradient(0deg, var(--neon-green) 0%, var(--warning-orange) 50%, var(--danger-red) 100%); transition:height 1s cubic-bezier(0.4,0,0.2,1); border-radius:25px; box-shadow:0 0 20px currentColor; }
+        .gauge-container { position:relative; width:180px; height:180px; margin:20px auto; }
+        .gauge-svg { width:100%; height:100%; }
+        .gauge-bg { fill:none; stroke:rgba(255,255,255,0.1); stroke-width:12; }
+        .gauge-arc { fill:none; stroke-width:12; transition:all 0.8s cubic-bezier(0.4,0,0.2,1); filter:drop-shadow(0 0 10px currentColor); }
+        .gauge-needle { transform-origin:50% 50%; transition:transform 0.8s cubic-bezier(0.4,0,0.2,1); filter:drop-shadow(var(--glow-primary)); }
+        .gauge-center { fill:var(--primary-cyan); filter:drop-shadow(var(--glow-primary)); animation:centerPulse 3s ease-in-out infinite; }
+        .gauge-label { fill:var(--text-secondary); font-size:8px; font-family:'Rajdhani',sans-serif; font-weight:500; text-anchor:middle; }
+        @keyframes centerPulse { 0%,100%{r:5} 50%{r:7} }
+        .slider-container { display:flex; align-items:center; justify-content:space-between; margin:15px 0; padding:10px; background:rgba(255,255,255,0.02); border-radius:10px; border:1px solid rgba(255,255,255,0.1); }
+        .slider-label { font-family:'Orbitron',monospace; font-size:1rem; font-weight:500; color:var(--primary-cyan); text-transform:uppercase; letter-spacing:1px; }
+        .slider { position:relative; display:inline-block; width:60px; height:32px; }
+        .slider input { display:none; }
+        .slider .slider-bg { position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:linear-gradient(45deg, var(--danger-red), #cc0033); border-radius:32px; transition:all 0.4s cubic-bezier(0.4,0,0.2,1); box-shadow:inset 0 2px 4px rgba(0,0,0,0.2), 0 0 10px rgba(255,0,64,0.3); }
+        .slider .slider-bg:before { position:absolute; content:''; height:26px; width:26px; left:3px; bottom:3px; background:linear-gradient(145deg, #ffffff, #e0e0e0); border-radius:50%; transition:all 0.4s cubic-bezier(0.4,0,0.2,1); box-shadow:0 2px 8px rgba(0,0,0,0.3); }
+        input:checked + .slider-bg { background:linear-gradient(45deg, var(--neon-green), #2ecc2e); box-shadow:inset 0 2px 4px rgba(0,0,0,0.2), 0 0 10px rgba(57,255,20,0.4); }
+        input:checked + .slider-bg:before { transform:translateX(28px); box-shadow:0 2px 8px rgba(0,0,0,0.4); }
+        .btn { padding:12px 24px; margin:8px 4px; border:2px solid; border-radius:10px; cursor:pointer; font-size:1rem; font-weight:600; font-family:'Orbitron',monospace; text-transform:uppercase; letter-spacing:1px; transition:all 0.3s cubic-bezier(0.4,0,0.2,1); background:transparent; }
+        .btn-on { border-color:var(--neon-green); color:var(--neon-green); box-shadow:0 0 20px rgba(57,255,20,0.3); }
+        .btn-on:hover { background:rgba(57,255,20,0.1); transform:translateY(-2px); box-shadow:0 0 30px rgba(57,255,20,0.5); }
+        .btn-off { border-color:var(--danger-red); color:var(--danger-red); box-shadow:0 0 20px rgba(255,0,64,0.3); }
+        .btn-off:hover { background:rgba(255,0,64,0.1); transform:translateY(-2px); box-shadow:0 0 30px rgba(255,0,64,0.5); }
+        .wifi-current { background:rgba(0,212,255,0.05); border:2px solid rgba(0,212,255,0.3); padding:20px; border-radius:12px; margin-bottom:20px; backdrop-filter:blur(10px); }
+        .wifi-current h4 { color:var(--primary-cyan); font-family:'Orbitron',monospace; font-size:1.2rem; margin-bottom:15px; text-transform:uppercase; letter-spacing:1px; }
+        .wifi-current div { margin:8px 0; font-weight:500; }
+        .wifi-current strong { color:var(--neon-green); }
+        .status { padding:12px 16px; border-radius:8px; margin:10px 0; font-weight:600; font-family:'Orbitron',monospace; text-transform:uppercase; letter-spacing:1px; border:1px solid; }
+        .status-normal { background:rgba(57,255,20,0.1); color:var(--neon-green); border-color:var(--neon-green); }
+        .status-warning { background:rgba(255,140,0,0.1); color:var(--warning-orange); border-color:var(--warning-orange); }
+        .status-info { background:rgba(0,212,255,0.1); color:var(--primary-cyan); border-color:var(--primary-cyan); }
+        @media (max-width:768px) {
+            .header h1 { font-size:2.5rem; }
+            .dashboard { grid-template-columns:1fr; }
+            .gauge-container { width:150px; height:150px; }
+            .thermometer-container { width:50px; height:160px; }
+        }
+        @media (max-width:480px) {
+            .header h1 { font-size:2rem; }
+            .card { padding:15px; }
+        }
+        .demo-badge {
+            background:rgba(255,255,255,0.1);
+            color:var(--neon-green);
+            padding:6px 16px;
+            border-radius:30px;
+            font-size:0.9rem;
+            font-weight:600;
+            display:inline-block;
+            margin-top:10px;
+            border:1px solid var(--neon-green);
+            animation:statusPulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>AZJad</h1>
+            <p>Advanced IoT Environmental Intelligence System</p>
+            <div class="demo-badge"><i class="fas fa-sync-alt fa-spin"></i> Demo – Data Simulasi</div>
+        </header>
+
+        <main class="dashboard" id="dashboard">
+            <!-- Temperature Card -->
+            <section class="card">
+                <div class="status-indicator status-good" id="ti"></div>
+                <h3><span class="icon">🌡️</span>Temperature <span class="reading-value" id="tv">--°C</span></h3>
+                <div class="thermometer-container">
+                    <div class="thermometer"><div class="thermometer-fill" id="tf" style="height:0%"></div></div>
+                </div>
+                <div class="status-text good" id="ts">INITIALIZING</div>
+            </section>
+
+            <!-- Humidity Card -->
+            <section class="card">
+                <div class="status-indicator status-good" id="hi"></div>
+                <h3><span class="icon">💧</span>Humidity <span class="reading-value" id="hv">--%</span></h3>
+                <div class="gauge-container">
+                    <svg class="gauge-svg" viewBox="0 0 160 160">
+                        <defs>
+                            <linearGradient id="humgrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#00bfff" />
+                                <stop offset="50%" stop-color="#0099ff" />
+                                <stop offset="100%" stop-color="#0066cc" />
+                            </linearGradient>
+                        </defs>
+                        <path class="gauge-bg" d="M10 80 A70 70 0 0 0 150 80" />
+                        <path class="gauge-arc" id="h-arc" d="M10 80 A70 70 0 0 0 150 80" stroke="url(#humgrad)" stroke-dasharray="0 219.8" />
+                        <line class="gauge-needle" id="h-needle" x1="80" y1="80" x2="80" y2="15" stroke="#00d4ff" stroke-width="3" />
+                        <circle class="gauge-center" cx="80" cy="80" r="6" />
+                        <text x="15" y="75" class="gauge-label">Dry</text>
+                        <text x="80" y="12" class="gauge-label">Optimal</text>
+                        <text x="145" y="75" class="gauge-label">Humid</text>
+                    </svg>
+                </div>
+                <div class="status-text good" id="hs">INITIALIZING</div>
+            </section>
+
+            <!-- Gas Card -->
+            <section class="card">
+                <div class="status-indicator status-good" id="gi"></div>
+                <h3><span class="icon">🔥</span>Gas Level <span class="reading-value" id="gv">--</span></h3>
+                <div class="gauge-container">
+                    <svg class="gauge-svg" viewBox="0 0 160 160">
+                        <defs>
+                            <linearGradient id="gasgrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#39ff14" />
+                                <stop offset="50%" stop-color="#ff8c00" />
+                                <stop offset="100%" stop-color="#ff0040" />
+                            </linearGradient>
+                        </defs>
+                        <path class="gauge-bg" d="M10 80 A70 70 0 0 0 150 80" />
+                        <path class="gauge-arc" id="g-arc" d="M10 80 A70 70 0 0 0 150 80" stroke="url(#gasgrad)" stroke-dasharray="0 219.8" />
+                        <line class="gauge-needle" id="g-needle" x1="80" y1="80" x2="80" y2="15" stroke="#00d4ff" stroke-width="3" />
+                        <circle class="gauge-center" cx="80" cy="80" r="6" />
+                        <text x="15" y="75" class="gauge-label">Safe</text>
+                        <text x="80" y="12" class="gauge-label">Level</text>
+                        <text x="145" y="75" class="gauge-label">Risk</text>
+                    </svg>
+                </div>
+                <div class="status-text good" id="gs">INITIALIZING</div>
+            </section>
+
+            <!-- PM1.0 Card -->
+            <section class="card">
+                <div class="status-indicator status-good" id="p1i"></div>
+                <h3><span class="icon">🌀</span>ULTRA FINE <span class="reading-value" id="p1v">-- µg/m³</span></h3>
+                <div class="gauge-container">
+                    <svg class="gauge-svg" viewBox="0 0 160 160">
+                        <defs>
+                            <linearGradient id="pm1grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#39ff14" />
+                                <stop offset="50%" stop-color="#ff8c00" />
+                                <stop offset="100%" stop-color="#ff0040" />
+                            </linearGradient>
+                        </defs>
+                        <path class="gauge-bg" d="M10 80 A70 70 0 0 0 150 80" />
+                        <path class="gauge-arc" id="p1-arc" d="M10 80 A70 70 0 0 0 150 80" stroke="url(#pm1grad)" stroke-dasharray="0 219.8" />
+                        <line class="gauge-needle" id="p1-needle" x1="80" y1="80" x2="80" y2="15" stroke="#00d4ff" stroke-width="3" />
+                        <circle class="gauge-center" cx="80" cy="80" r="6" />
+                        <text x="15" y="75" class="gauge-label">Clean</text>
+                        <text x="80" y="12" class="gauge-label">PM 1.0</text>
+                        <text x="145" y="75" class="gauge-label">Polluted</text>
+                    </svg>
+                </div>
+                <div class="status-text good" id="p1s">INITIALIZING</div>
+            </section>
+
+            <!-- PM2.5 Card -->
+            <section class="card">
+                <div class="status-indicator status-good" id="p2i"></div>
+                <h3><span class="icon">🌀</span>FINE <span class="reading-value" id="p2v">-- µg/m³</span></h3>
+                <div class="gauge-container">
+                    <svg class="gauge-svg" viewBox="0 0 160 160">
+                        <defs>
+                            <linearGradient id="pm25grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#39ff14" />
+                                <stop offset="50%" stop-color="#ff8c00" />
+                                <stop offset="100%" stop-color="#ff0040" />
+                            </linearGradient>
+                        </defs>
+                        <path class="gauge-bg" d="M10 80 A70 70 0 0 0 150 80" />
+                        <path class="gauge-arc" id="p2-arc" d="M10 80 A70 70 0 0 0 150 80" stroke="url(#pm25grad)" stroke-dasharray="0 219.8" />
+                        <line class="gauge-needle" id="p2-needle" x1="80" y1="80" x2="80" y2="15" stroke="#00d4ff" stroke-width="3" />
+                        <circle class="gauge-center" cx="80" cy="80" r="6" />
+                        <text x="15" y="75" class="gauge-label">Excellent</text>
+                        <text x="80" y="12" class="gauge-label">PM 2.5</text>
+                        <text x="145" y="75" class="gauge-label">Hazardous</text>
+                    </svg>
+                </div>
+                <div class="status-text good" id="p2s">INITIALIZING</div>
+            </section>
+
+            <!-- PM10 Card -->
+            <section class="card">
+                <div class="status-indicator status-good" id="p10i"></div>
+                <h3><span class="icon">🌀</span>COARSE <span class="reading-value" id="p10v">-- µg/m³</span></h3>
+                <div class="gauge-container">
+                    <svg class="gauge-svg" viewBox="0 0 160 160">
+                        <defs>
+                            <linearGradient id="pm10grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#39ff14" />
+                                <stop offset="50%" stop-color="#ff8c00" />
+                                <stop offset="100%" stop-color="#ff0040" />
+                            </linearGradient>
+                        </defs>
+                        <path class="gauge-bg" d="M10 80 A70 70 0 0 0 150 80" />
+                        <path class="gauge-arc" id="p10-arc" d="M10 80 A70 70 0 0 0 150 80" stroke="url(#pm10grad)" stroke-dasharray="0 219.8" />
+                        <line class="gauge-needle" id="p10-needle" x1="80" y1="80" x2="80" y2="15" stroke="#00d4ff" stroke-width="3" />
+                        <circle class="gauge-center" cx="80" cy="80" r="6" />
+                        <text x="15" y="75" class="gauge-label">Good</text>
+                        <text x="80" y="12" class="gauge-label">PM 10</text>
+                        <text x="145" y="75" class="gauge-label">Poor</text>
+                    </svg>
+                </div>
+                <div class="status-text good" id="p10s">INITIALIZING</div>
+            </section>
+
+            <!-- Relay Controls -->
+            <section class="card">
+                <h3><span class="icon">⚙️</span>Device Controls</h3>
+                <div id="relay-container">
+                    <div class="slider-container"><label class="slider-label">Exhaust Fan</label><label class="slider"><input type="checkbox" id="r1"><span class="slider-bg"></span></label></div>
+                    <div class="slider-container"><label class="slider-label">Air Purifier</label><label class="slider"><input type="checkbox" id="r2"><span class="slider-bg"></span></label></div>
+                    <div class="slider-container"><label class="slider-label">Humidifier</label><label class="slider"><input type="checkbox" id="r3"><span class="slider-bg"></span></label></div>
+                    <div class="slider-container"><label class="slider-label">Alert System</label><label class="slider"><input type="checkbox" id="r4"><span class="slider-bg"></span></label></div>
+                    <div class="slider-container"><label class="slider-label">Relay 5</label><label class="slider"><input type="checkbox" id="r5"><span class="slider-bg"></span></label></div>
+                    <div class="slider-container"><label class="slider-label">Relay 6</label><label class="slider"><input type="checkbox" id="r6"><span class="slider-bg"></span></label></div>
+                    <div class="slider-container"><label class="slider-label">Relay 7</label><label class="slider"><input type="checkbox" id="r7"><span class="slider-bg"></span></label></div>
+                    <div class="slider-container"><label class="slider-label">Relay 8</label><label class="slider"><input type="checkbox" id="r8"><span class="slider-bg"></span></label></div>
+                    <div class="slider-container"><label class="slider-label">Relay 9</label><label class="slider"><input type="checkbox" id="r9"><span class="slider-bg"></span></label></div>
+                </div>
+                <div style="margin-top:16px; text-align:center; color:var(--text-secondary); font-size:0.8rem;">
+                    <i class="fas fa-info-circle"></i> Togol relay untuk simulasi (tiada perkakasan sebenar)
+                </div>
+            </section>
+
+            <!-- WiFi / Network -->
+            <section class="card">
+                <h3><span class="icon">📡</span>Network Configuration</h3>
+                <div class="wifi-current">
+                    <h4>Active Connection (Demo)</h4>
+                    <div>Network: <strong>AZJad-Demo</strong></div>
+                    <div>Signal: <strong>-45 dBm</strong></div>
+                    <div>IP Address: <strong>192.168.1.100</strong></div>
+                    <div>mDNS: <strong>esp32.local</strong></div>
+                </div>
+                <div class="status status-normal" role="status">STATUS: CONNECTED</div>
+                <div class="status status-info" role="status">IP: 192.168.1.100</div>
+                <div style="margin-top:12px; font-size:0.9rem; color:var(--text-secondary);">
+                    <i class="fas fa-wifi"></i> Simulasi Wi-Fi – tiada perkakasan sebenar.
+                </div>
+            </section>
+        </main>
+
+        <footer style="text-align:center; margin-top:40px; color:var(--text-secondary); font-size:0.9rem; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px;">
+            <p>AZJad – Demo Frontend | Data simulasi dikemas kini setiap 3 saat</p>
+            <p style="margin-top:8px;">&copy; 2026 VocKAF · powered by <strong>AzharMazlanEtn</strong></p>
+        </footer>
+    </div>
+
+    <script>
+        // ===== Data simulasi =====
+        function random(min, max) { return Math.random() * (max - min) + min; }
+
+        function getStatus(value, thresholds) {
+            if (value > thresholds.danger) return 'danger';
+            if (value > thresholds.moderate) return 'moderate';
+            return 'good';
+        }
+
+        function updateDashboard() {
+            // Generate random sensor values
+            const temp = random(22, 38);
+            const hum = random(40, 90);
+            const gas = random(100, 2500);
+            const pm1 = random(5, 120);
+            const pm25 = random(5, 120);
+            const pm10 = random(5, 120);
+
+            // Temperature
+            const tempStatus = getStatus(temp, { moderate: 30, danger: 35 });
+            document.getElementById('tv').textContent = temp.toFixed(1) + '°C';
+            document.getElementById('tf').style.height = Math.min((temp/50)*100, 100) + '%';
+            document.getElementById('ti').className = 'status-indicator status-' + tempStatus;
+            document.getElementById('ts').className = 'status-text ' + tempStatus;
+            document.getElementById('ts').textContent = tempStatus === 'good' ? 'OPTIMAL' : tempStatus === 'moderate' ? 'ACCEPTABLE' : 'EXTREME';
+
+            // Humidity
+            const humStatus = getStatus(hum, { moderate: 60, danger: 90 });
+            document.getElementById('hv').textContent = hum.toFixed(0) + '%';
+            const humAngle = (hum/100 * 180) - 90;
+            document.getElementById('h-needle').setAttribute('transform', 'rotate(' + humAngle + ' 80 80)');
+            document.getElementById('h-arc').setAttribute('stroke-dasharray', (hum/100 * 219.8) + ' 219.8');
+            document.getElementById('hi').className = 'status-indicator status-' + humStatus;
+            document.getElementById('hs').className = 'status-text ' + humStatus;
+            document.getElementById('hs').textContent = humStatus === 'good' ? 'COMFORTABLE' : humStatus === 'moderate' ? 'MODERATE' : 'UNHEALTHY';
+
+            // Gas
+            const gasStatus = getStatus(gas, { moderate: 1000, danger: 2000 });
+            document.getElementById('gv').textContent = gas.toFixed(0);
+            const gasAngle = (Math.min(gas/4095, 1) * 180) - 90;
+            document.getElementById('g-needle').setAttribute('transform', 'rotate(' + gasAngle + ' 80 80)');
+            document.getElementById('g-arc').setAttribute('stroke-dasharray', (Math.min(gas/4095, 1) * 219.8) + ' 219.8');
+            document.getElementById('gi').className = 'status-indicator status-' + gasStatus;
+            document.getElementById('gs').className = 'status-text ' + gasStatus;
+            document.getElementById('gs').textContent = gasStatus === 'good' ? 'CLEAN' : gasStatus === 'moderate' ? 'MODERATE' : 'HAZARDOUS';
+
+            // PM1.0
+            const p1Status = getStatus(pm1, { moderate: 35, danger: 75 });
+            document.getElementById('p1v').textContent = pm1.toFixed(0) + ' µg/m³';
+            const p1Angle = (Math.min(pm1/150, 1) * 180) - 90;
+            document.getElementById('p1-needle').setAttribute('transform', 'rotate(' + p1Angle + ' 80 80)');
+            document.getElementById('p1-arc').setAttribute('stroke-dasharray', (Math.min(pm1/150, 1) * 219.8) + ' 219.8');
+            document.getElementById('p1i').className = 'status-indicator status-' + p1Status;
+            document.getElementById('p1s').className = 'status-text ' + p1Status;
+            document.getElementById('p1s').textContent = p1Status === 'good' ? 'EXCELLENT' : p1Status === 'moderate' ? 'MODERATE' : 'UNHEALTHY';
+
+            // PM2.5
+            const p2Status = getStatus(pm25, { moderate: 35, danger: 75 });
+            document.getElementById('p2v').textContent = pm25.toFixed(0) + ' µg/m³';
+            const p2Angle = (Math.min(pm25/150, 1) * 180) - 90;
+            document.getElementById('p2-needle').setAttribute('transform', 'rotate(' + p2Angle + ' 80 80)');
+            document.getElementById('p2-arc').setAttribute('stroke-dasharray', (Math.min(pm25/150, 1) * 219.8) + ' 219.8');
+            document.getElementById('p2i').className = 'status-indicator status-' + p2Status;
+            document.getElementById('p2s').className = 'status-text ' + p2Status;
+            document.getElementById('p2s').textContent = p2Status === 'good' ? 'EXCELLENT' : p2Status === 'moderate' ? 'MODERATE' : 'UNHEALTHY';
+
+            // PM10
+            const p10Status = getStatus(pm10, { moderate: 35, danger: 75 });
+            document.getElementById('p10v').textContent = pm10.toFixed(0) + ' µg/m³';
+            const p10Angle = (Math.min(pm10/150, 1) * 180) - 90;
+            document.getElementById('p10-needle').setAttribute('transform', 'rotate(' + p10Angle + ' 80 80)');
+            document.getElementById('p10-arc').setAttribute('stroke-dasharray', (Math.min(pm10/150, 1) * 219.8) + ' 219.8');
+            document.getElementById('p10i').className = 'status-indicator status-' + p10Status;
+            document.getElementById('p10s').className = 'status-text ' + p10Status;
+            document.getElementById('p10s').textContent = p10Status === 'good' ? 'EXCELLENT' : p10Status === 'moderate' ? 'MODERATE' : 'UNHEALTHY';
+        }
+
+        // Update every 3 seconds
+        setInterval(updateDashboard, 3000);
+        updateDashboard();
+
+        // Relay toggle – simulasi (hanya tukar warna slider)
+        document.querySelectorAll('.slider input').forEach(input => {
+            input.addEventListener('change', function() {
+                const label = this.closest('.slider-container').querySelector('.slider-label');
+                const status = this.checked ? 'ON' : 'OFF';
+                // No actual hardware, just show notification
+                const msg = document.createElement('div');
+                msg.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.8);color:var(--neon-green);padding:12px 24px;border-radius:12px;font-family:Orbitron,monospace;font-size:0.9rem;z-index:999;border:1px solid var(--neon-green);';
+                msg.textContent = `🔘 ${label.textContent} → ${status} (demo)`;
+                document.body.appendChild(msg);
+                setTimeout(() => msg.remove(), 2000);
+            });
+        });
+
+        console.log('AZJad Demo started – data simulasi berjalan.');
+    </script>
+</body>
+</html>
