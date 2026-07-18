@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Muhammad Azhar · Frontend Developer</title>
+    <title>Muhammad Azhar · Portfolio</title>
 
     <!-- Font & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -11,16 +11,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-    <!-- PDF.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js">
-    </script>
-
-    <!-- EmailJS -->
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
-    </script>
-
     <style>
-        /* ===== RESET & BASE ===== */
+        /* ============================
+                   GLOBAL RESET & BASE
+                   ============================ */
         * {
             margin: 0;
             padding: 0;
@@ -51,244 +45,314 @@
         .highlight {
             color: #c9a227;
         }
+        .section-tag {
+            display: inline-block;
+            background: #c9a22720;
+            color: #c9a227;
+            padding: 4px 16px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .section-title {
+            font-size: 2.6rem;
+            font-weight: 800;
+            margin: 8px 0 12px;
+        }
+        .section-desc {
+            color: #64748b;
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1.05rem;
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
 
-        /* ===== SCROLLBAR ===== */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #c9a227;
-            border-radius: 10px;
-        }
-
-        /* ===== LANDING PAGE ===== */
-        #landingPage {
+        /* ============================
+                   LANDING PAGE (overlay)
+                   ============================ */
+        #landing {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 9999;
-            background: #0b1a2e;
+            inset: 0;
+            z-index: 1000;
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-direction: column;
-            transition: opacity 1.2s cubic-bezier(0.65, 0, 0.35, 1), transform 1.2s cubic-bezier(0.65, 0, 0.35, 1);
+            background: #0b1a2e;
+            color: #fff;
+            transition: opacity 0.9s ease, transform 0.9s ease;
             overflow: hidden;
         }
-        #landingPage.hide {
+        #landing.hidden {
             opacity: 0;
             transform: scale(1.05);
             pointer-events: none;
         }
 
-        /* Particles */
-        #particlesCanvas {
+        /* landing background */
+        #landing-bg {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
+            inset: 0;
+            background: radial-gradient(ellipse at 30% 40%, #1a2a44 0%, #0b1a2e 70%);
             z-index: 0;
+        }
+        /* particles canvas */
+        #particles-canvas {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+        /* glowing orbs */
+        .landing-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.25;
+            z-index: 0;
+            animation: orbFloat 12s ease-in-out infinite alternate;
+        }
+        .landing-orb--1 {
+            width: 400px;
+            height: 400px;
+            background: #c9a227;
+            top: -10%;
+            right: -5%;
+        }
+        .landing-orb--2 {
+            width: 300px;
+            height: 300px;
+            background: #4f7cff;
+            bottom: -10%;
+            left: -5%;
+            animation-delay: -4s;
+        }
+        .landing-orb--3 {
+            width: 200px;
+            height: 200px;
+            background: #f472b6;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -8s;
+            opacity: 0.12;
+        }
+        @keyframes orbFloat {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                transform: translate(40px, -30px) scale(1.1);
+            }
         }
 
         .landing-content {
             position: relative;
-            z-index: 1;
+            z-index: 2;
             text-align: center;
             padding: 20px;
-            max-width: 720px;
+            max-width: 780px;
         }
         .landing-badge {
             display: inline-block;
-            background: rgba(201, 162, 39, 0.15);
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
             color: #c9a227;
+            border: 1px solid #c9a22740;
             padding: 6px 20px;
             border-radius: 40px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            margin-bottom: 24px;
-            border: 1px solid rgba(201, 162, 39, 0.2);
-            backdrop-filter: blur(4px);
+            margin-bottom: 28px;
+            font-weight: 600;
+            backdrop-filter: blur(6px);
+            background: rgba(201, 162, 39, 0.06);
         }
         .landing-name {
-            font-size: 4.2rem;
+            font-size: 4.8rem;
             font-weight: 800;
-            color: #fff;
             line-height: 1.1;
-            letter-spacing: -0.02em;
-            margin-bottom: 8px;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #f8fafc 30%, #c9a227 80%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             text-shadow: 0 0 60px rgba(201, 162, 39, 0.15);
+            margin-bottom: 12px;
         }
-        .landing-name .highlight {
-            color: #c9a227;
-        }
-        .landing-titles {
-            font-size: 1.2rem;
+        .landing-sub {
+            font-size: 1.3rem;
             font-weight: 400;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 20px;
-            letter-spacing: 0.3px;
+            color: #94a3b8;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
         }
-        .landing-titles span {
-            display: inline-block;
-            padding: 0 12px;
-            position: relative;
-        }
-        .landing-titles span:not(:last-child)::after {
-            content: "·";
-            color: #c9a227;
-            position: absolute;
-            right: -6px;
+        .landing-sub span {
+            color: #e2e8f0;
+            font-weight: 500;
         }
         .landing-tagline {
-            font-size: 1.1rem;
-            color: rgba(255, 255, 255, 0.5);
-            font-weight: 300;
+            font-size: 1.05rem;
+            color: #64748b;
+            margin: 18px 0 40px;
             font-style: italic;
-            margin-bottom: 40px;
-            letter-spacing: 0.5px;
+            border-top: 1px solid #ffffff10;
+            border-bottom: 1px solid #ffffff10;
+            padding: 16px 0;
+            display: inline-block;
         }
-        .landing-tagline::before {
-            content: '"';
-            color: #c9a227;
-            opacity: 0.5;
-        }
-        .landing-tagline::after {
-            content: '"';
-            color: #c9a227;
-            opacity: 0.5;
-        }
-
         .landing-btn {
             display: inline-flex;
             align-items: center;
             gap: 12px;
-            padding: 16px 48px;
+            padding: 18px 48px;
             border-radius: 60px;
-            font-weight: 700;
             font-size: 1.1rem;
-            background: #c9a227;
-            color: #0b1a2e;
+            font-weight: 700;
             border: none;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 0 40px rgba(201, 162, 39, 0.25);
+            background: #c9a227;
+            color: #0b1a2e;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 40px rgba(201, 162, 39, 0.3);
             position: relative;
             overflow: hidden;
         }
-        .landing-btn::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.15), transparent 70%);
-            opacity: 0;
-            transition: opacity 0.6s;
-        }
-        .landing-btn:hover::before {
-            opacity: 1;
-        }
         .landing-btn:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 0 60px rgba(201, 162, 39, 0.4);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 16px 60px rgba(201, 162, 39, 0.4);
+        }
+        .landing-btn:active {
+            transform: scale(0.97);
+        }
+        .landing-btn .btn-glow {
+            position: absolute;
+            inset: -2px;
+            border-radius: 60px;
+            background: linear-gradient(135deg, #c9a227, #f5d742);
+            filter: blur(20px);
+            opacity: 0.4;
+            z-index: -1;
+            animation: btnPulse 2.4s ease-in-out infinite;
+        }
+        @keyframes btnPulse {
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.7;
+                transform: scale(1.04);
+            }
         }
         .landing-btn i {
             font-size: 1.2rem;
-            transition: transform 0.4s;
+            transition: transform 0.3s ease;
         }
         .landing-btn:hover i {
             transform: translateX(6px);
         }
 
-        .glow-orb {
+        /* floating doodle */
+        .doodle {
             position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.4;
-            pointer-events: none;
+            font-size: 2.4rem;
+            opacity: 0.08;
             z-index: 0;
+            pointer-events: none;
+            animation: doodleDrift 18s linear infinite;
         }
-        .glow-orb-1 {
-            width: 400px;
-            height: 400px;
-            background: #c9a227;
-            top: -120px;
-            right: -100px;
-            animation: floatOrb 12s ease-in-out infinite alternate;
+        .doodle--1 {
+            top: 12%;
+            left: 8%;
+            animation-duration: 22s;
         }
-        .glow-orb-2 {
-            width: 300px;
-            height: 300px;
-            background: #0b1a2e;
-            bottom: -80px;
-            left: -80px;
-            animation: floatOrb 16s ease-in-out infinite alternate-reverse;
+        .doodle--2 {
+            bottom: 18%;
+            right: 6%;
+            animation-duration: 26s;
+            animation-delay: -6s;
         }
-        @keyframes floatOrb {
+        .doodle--3 {
+            top: 55%;
+            left: 4%;
+            animation-duration: 20s;
+            animation-delay: -12s;
+        }
+        .doodle--4 {
+            bottom: 40%;
+            right: 3%;
+            animation-duration: 24s;
+            animation-delay: -4s;
+        }
+        @keyframes doodleDrift {
             0% {
-                transform: translate(0, 0) scale(1);
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(30px, -20px) rotate(8deg);
+            }
+            50% {
+                transform: translate(-10px, 30px) rotate(-4deg);
+            }
+            75% {
+                transform: translate(20px, 10px) rotate(6deg);
             }
             100% {
-                transform: translate(40px, 30px) scale(1.2);
+                transform: translate(0, 0) rotate(0deg);
             }
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             .landing-name {
-                font-size: 2.8rem;
+                font-size: 3rem;
             }
-            .landing-titles {
-                font-size: 0.95rem;
-            }
-            .landing-tagline {
-                font-size: 0.95rem;
+            .landing-sub {
+                font-size: 1rem;
             }
             .landing-btn {
                 padding: 14px 32px;
-                font-size: 0.95rem;
+                font-size: 1rem;
             }
-            .glow-orb-1 {
-                width: 200px;
-                height: 200px;
-                top: -60px;
-                right: -40px;
+            .landing-tagline {
+                font-size: 0.9rem;
+                padding: 12px 0;
             }
-            .glow-orb-2 {
-                width: 150px;
-                height: 150px;
-                bottom: -40px;
-                left: -40px;
+        }
+        @media (max-width: 480px) {
+            .landing-name {
+                font-size: 2.2rem;
+            }
+            .landing-sub {
+                font-size: 0.85rem;
+            }
+            .landing-btn {
+                padding: 12px 24px;
+                font-size: 0.9rem;
             }
         }
 
-        /* ===== APP WRAPPER ===== */
-        #app {
-            opacity: 0;
-            transition: opacity 1.2s cubic-bezier(0.65, 0, 0.35, 1);
-        }
-        #app.visible {
-            opacity: 1;
-        }
-
-        /* ===== NAVBAR ===== */
+        /* ============================
+                   NAVBAR (sticky, glass)
+                   ============================ */
         .navbar {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid #e9edf2;
             padding: 14px 0;
             position: sticky;
             top: 0;
             z-index: 100;
+            transition: background 0.3s ease;
+        }
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.04);
         }
         .nav-container {
             display: flex;
@@ -298,59 +362,53 @@
         }
         .nav-logo {
             font-weight: 800;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             display: flex;
             align-items: center;
             gap: 8px;
-            cursor: pointer;
+            color: #0b1a2e;
         }
         .logo-icon {
             color: #c9a227;
-            font-size: 1.6rem;
+            font-size: 1.5rem;
         }
         .nav-links {
             display: flex;
-            gap: 32px;
+            gap: 28px;
             align-items: center;
         }
         .nav-links a {
             font-weight: 600;
             font-size: 0.9rem;
             color: #2c3e50;
-            transition: color 0.3s ease;
+            transition: color 0.2s, transform 0.2s;
             position: relative;
-            cursor: pointer;
-            padding: 4px 0;
         }
-
-        /* Underline animation */
         .nav-links a::after {
             content: '';
             position: absolute;
-            bottom: -2px;
+            bottom: -4px;
             left: 0;
             width: 0;
-            height: 2.5px;
+            height: 2px;
             background: #c9a227;
-            transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            border-radius: 4px;
-        }
-        .nav-links a:hover::after,
-        .nav-links a.active::after {
-            width: 100%;
+            transition: width 0.3s ease;
         }
         .nav-links a:hover {
             color: #c9a227;
+            transform: translateY(-1px);
         }
-        .nav-links a.active {
-            color: #c9a227;
+        .nav-links a:hover::after {
+            width: 100%;
         }
-
-        /* Glow for active */
-        .nav-links a.active {
-            text-shadow: 0 0 20px rgba(201, 162, 39, 0.15);
+        .nav-links a.nav-link-active::after {
+            width: 100%;
         }
-
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
         .nav-toggle {
             display: none;
             background: none;
@@ -359,13 +417,8 @@
             cursor: pointer;
             color: #0b1a2e;
         }
-        .nav-left {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
 
-        /* LANGUAGE SWITCHER */
+        /* Language switcher */
         .lang-switcher {
             display: flex;
             gap: 4px;
@@ -373,7 +426,7 @@
         .lang-btn {
             background: transparent;
             border: 1.5px solid #d0d7e0;
-            padding: 4px 10px;
+            padding: 3px 10px;
             border-radius: 20px;
             font-size: 0.7rem;
             font-weight: 700;
@@ -390,20 +443,26 @@
             border-color: #c9a227;
             color: #c9a227;
         }
+        .lang-btn.active:hover {
+            color: #fff;
+            border-color: #0b1a2e;
+        }
 
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
                 flex-direction: column;
-                gap: 16px;
-                background: white;
-                padding: 20px;
-                border-radius: 12px;
-                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+                gap: 14px;
+                background: rgba(255, 255, 255, 0.98);
+                backdrop-filter: blur(12px);
+                padding: 24px 28px;
+                border-radius: 16px;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
                 position: absolute;
-                top: 70px;
-                right: 24px;
-                min-width: 180px;
+                top: 72px;
+                right: 16px;
+                min-width: 200px;
+                border: 1px solid #e9edf2;
             }
             .nav-links.open {
                 display: flex;
@@ -411,113 +470,26 @@
             .nav-toggle {
                 display: block;
             }
-        }
-
-        /* ===== PAGE TRANSITION OVERLAY ===== */
-        .page-transition-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 999;
-            background: #0b1a2e;
-            pointer-events: none;
-            opacity: 0;
-            transform: scale(0.96);
-            filter: blur(12px);
-            transition: opacity 0.5s cubic-bezier(0.65, 0, 0.35, 1),
-                transform 0.5s cubic-bezier(0.65, 0, 0.35, 1),
-                filter 0.5s cubic-bezier(0.65, 0, 0.35, 1);
-        }
-        .page-transition-overlay.active {
-            opacity: 1;
-            transform: scale(1);
-            filter: blur(0);
-            pointer-events: all;
-        }
-
-        /* ===== PAGES ===== */
-        .page {
-            display: none;
-            animation: pageIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-        }
-        .page.active {
-            display: block;
-        }
-
-        /* Page exit animation (triggered via JS) */
-        .page.exit {
-            animation: pageOut 0.5s cubic-bezier(0.65, 0, 0.35, 1) forwards;
-        }
-        .page.enter {
-            animation: pageIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-        }
-
-        @keyframes pageIn {
-            0% {
-                opacity: 0;
-                transform: translateY(30px) scale(0.97);
-                filter: blur(8px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-                filter: blur(0);
-            }
-        }
-        @keyframes pageOut {
-            0% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-                filter: blur(0);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(-30px) scale(0.97);
-                filter: blur(8px);
+            .lang-btn {
+                font-size: 0.65rem;
+                padding: 2px 8px;
             }
         }
 
-        /* Section scroll animation */
-        .section-target {
-            transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
-                transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        .section-target.highlight-scroll {
-            opacity: 0;
-            transform: translateY(20px) scale(0.98);
-        }
-        .section-target.highlight-scroll.visible {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-        }
-
-        /* ===== HERO ===== */
+        /* ============================
+                   HERO
+                   ============================ */
         .hero {
-            padding: 80px 0 60px;
+            padding: 60px 0 50px;
             background: linear-gradient(135deg, #f1f5f9, #ffffff);
             position: relative;
             overflow: hidden;
         }
-        .hero::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(201, 162, 39, 0.04), transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-        }
         .hero-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 60px;
+            gap: 50px;
             align-items: center;
-            position: relative;
-            z-index: 1;
         }
         .hero-badge {
             display: inline-block;
@@ -546,7 +518,7 @@
             display: flex;
             gap: 16px;
             flex-wrap: wrap;
-            margin-bottom: 40px;
+            margin-bottom: 36px;
         }
         .btn {
             display: inline-flex;
@@ -558,7 +530,7 @@
             font-size: 0.95rem;
             border: none;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 0.25s ease;
         }
         .btn-primary {
             background: #0b1a2e;
@@ -567,7 +539,7 @@
         .btn-primary:hover {
             background: #1e2f44;
             transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(11, 26, 46, 0.2);
+            box-shadow: 0 12px 32px rgba(11, 26, 46, 0.18);
         }
         .btn-outline {
             background: transparent;
@@ -600,6 +572,7 @@
             font-size: 0.85rem;
             color: #64748b;
         }
+
         .hero-visual {
             position: relative;
             display: flex;
@@ -627,7 +600,7 @@
         @keyframes pulse {
             0% {
                 transform: scale(1);
-                opacity: 0.7;
+                opacity: 0.6;
             }
             50% {
                 transform: scale(1.1);
@@ -635,7 +608,7 @@
             }
             100% {
                 transform: scale(1);
-                opacity: 0.7;
+                opacity: 0.6;
             }
         }
         .hero-code-block {
@@ -670,6 +643,7 @@
         .code-method {
             color: #c9a227;
         }
+
         @media (max-width: 900px) {
             .hero-container {
                 grid-template-columns: 1fr;
@@ -689,41 +663,30 @@
                 margin: 0 auto;
             }
         }
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2.2rem;
+            }
+            .hero-stats {
+                gap: 20px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .stat-number {
+                font-size: 1.5rem;
+            }
+        }
 
-        /* ===== PROJECTS ===== */
+        /* ============================
+                   PROJECTS
+                   ============================ */
         .projects {
             padding: 80px 0;
             background: #ffffff;
         }
-        .section-header {
-            text-align: center;
-            margin-bottom: 48px;
-        }
-        .section-tag {
-            display: inline-block;
-            background: #c9a22720;
-            color: #c9a227;
-            padding: 4px 16px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 0.75rem;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-        .section-title {
-            font-size: 2.6rem;
-            font-weight: 800;
-            margin: 8px 0 12px;
-        }
-        .section-desc {
-            color: #64748b;
-            max-width: 600px;
-            margin: 0 auto;
-            font-size: 1.05rem;
-        }
         .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 32px;
         }
         .project-card {
@@ -731,13 +694,20 @@
             border-radius: 20px;
             overflow: hidden;
             border: 1px solid #e9edf2;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             display: flex;
             flex-direction: column;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        .project-card.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
         .project-card:hover {
             transform: translateY(-10px) scale(1.01);
             box-shadow: 0 24px 60px rgba(0, 0, 0, 0.08);
+            border-color: #c9a22740;
         }
         .project-thumb {
             width: 100%;
@@ -754,10 +724,10 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.6s ease;
+            transition: transform 0.5s ease;
         }
         .project-card:hover .project-thumb img {
-            transform: scale(1.05);
+            transform: scale(1.04);
         }
         .project-body {
             padding: 20px 24px 24px;
@@ -766,13 +736,13 @@
             flex-direction: column;
         }
         .project-name {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             font-weight: 700;
             margin-bottom: 6px;
         }
         .project-desc {
             color: #475569;
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             flex: 1;
             margin-bottom: 16px;
         }
@@ -788,18 +758,172 @@
             font-size: 0.9rem;
             border: none;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
             align-self: flex-start;
         }
         .project-link:hover {
             background: #1e2f44;
-            transform: translateX(4px);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(11, 26, 46, 0.15);
+        }
+        .project-link i {
+            font-size: 0.8rem;
         }
 
-        /* ===== ABOUT ===== */
-        .about {
+        /* ============================
+                   ACHIEVEMENTS / GALLERY
+                   ============================ */
+        .achievements {
             padding: 80px 0;
             background: #f8fafc;
+            overflow: hidden;
+        }
+        .gallery-wrapper {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            padding: 20px 0;
+        }
+        .gallery-track {
+            display: flex;
+            gap: 28px;
+            animation: scrollGallery 40s linear infinite;
+            width: max-content;
+        }
+        .gallery-track.paused {
+            animation-play-state: paused;
+        }
+        @keyframes scrollGallery {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+        .gallery-item {
+            flex: 0 0 260px;
+            background: #ffffff;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e9edf2;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            transform: rotate(0deg) scale(1);
+        }
+        .gallery-item:hover {
+            transform: rotate(-1deg) scale(1.04);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+            border-color: #c9a22760;
+            z-index: 5;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 340px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+        .gallery-item:hover img {
+            transform: scale(1.02);
+        }
+        .gallery-item .gallery-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg, rgba(11, 26, 46, 0.6) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: flex-end;
+            padding: 20px;
+        }
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+        .gallery-item .gallery-overlay span {
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.85rem;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            padding: 6px 16px;
+            border-radius: 40px;
+        }
+        /* lightbox */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(11, 26, 46, 0.88);
+            backdrop-filter: blur(20px);
+            z-index: 999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .lightbox.open {
+            display: flex;
+            opacity: 1;
+        }
+        .lightbox img {
+            max-width: 90%;
+            max-height: 85vh;
+            border-radius: 16px;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+            transform: scale(0.95);
+            transition: transform 0.4s ease;
+        }
+        .lightbox.open img {
+            transform: scale(1);
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            font-size: 2.2rem;
+            color: #fff;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            border: none;
+        }
+        .lightbox-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .gallery-item {
+                flex: 0 0 200px;
+            }
+            .gallery-item img {
+                height: 260px;
+            }
+        }
+        @media (max-width: 480px) {
+            .gallery-item {
+                flex: 0 0 160px;
+            }
+            .gallery-item img {
+                height: 210px;
+            }
+        }
+
+        /* ============================
+                   ABOUT
+                   ============================ */
+        .about {
+            padding: 80px 0;
+            background: #ffffff;
         }
         .about-container {
             display: grid;
@@ -819,7 +943,7 @@
             font-size: 6rem;
             color: #c9a227;
             overflow: hidden;
-            position: relative;
+            border: 2px solid #e9edf2;
         }
         .profile-img {
             width: 100%;
@@ -846,7 +970,7 @@
             font-size: 0.85rem;
             font-weight: 600;
             color: #0b1a2e;
-            transition: all 0.3s ease;
+            transition: all 0.2s;
         }
         .skill-tag:hover {
             background: #c9a22720;
@@ -863,10 +987,6 @@
             padding: 16px 20px;
             text-align: center;
             box-shadow: 0 8px 24px rgba(11, 26, 46, 0.05);
-            transition: all 0.3s ease;
-        }
-        .age-counter:hover {
-            box-shadow: 0 12px 36px rgba(11, 26, 46, 0.08);
         }
         .age-counter-label {
             font-size: 0.75rem;
@@ -899,10 +1019,12 @@
             }
         }
 
-        /* ===== CONTACT ===== */
+        /* ============================
+                   CONTACT
+                   ============================ */
         .contact {
             padding: 80px 0;
-            background: #ffffff;
+            background: #f8fafc;
         }
         .contact-container {
             display: grid;
@@ -922,11 +1044,11 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 20px;
+            padding: 8px 18px;
             border: 1px solid #e9edf2;
             border-radius: 40px;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
             font-size: 0.9rem;
         }
         .contact-link:hover {
@@ -942,14 +1064,11 @@
             margin-top: 4px;
         }
         .contact-form-wrapper {
-            background: #f8fafc;
+            background: #ffffff;
             padding: 32px;
             border-radius: 24px;
             border: 1px solid #e9edf2;
-            transition: all 0.3s ease;
-        }
-        .contact-form-wrapper:hover {
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.03);
         }
         .contact-form .form-group {
             margin-bottom: 18px;
@@ -968,54 +1087,33 @@
             border-radius: 12px;
             font-family: inherit;
             font-size: 0.95rem;
-            transition: border 0.3s, box-shadow 0.3s;
+            transition: border 0.2s, box-shadow 0.2s;
             background: #fff;
         }
         .contact-form input:focus,
         .contact-form textarea:focus {
             border-color: #c9a227;
             outline: none;
-            box-shadow: 0 0 0 4px rgba(201, 162, 39, 0.1);
+            box-shadow: 0 0 0 4px #c9a22720;
         }
         .contact-form .btn {
             margin-top: 8px;
-            transition: all 0.3s ease;
-        }
-        .contact-form .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none !important;
         }
         .form-status {
-            margin-top: 12px;
-            padding: 12px 16px;
-            border-radius: 12px;
+            text-align: center;
+            margin-top: 14px;
             font-weight: 600;
-            font-size: 0.9rem;
-            display: none;
-            animation: fadeSlide 0.4s ease;
+            font-size: 0.95rem;
+            min-height: 28px;
         }
         .form-status.success {
-            display: block;
-            background: #dcfce7;
-            color: #166534;
-            border: 1px solid #bbf7d0;
+            color: #16a34a;
         }
         .form-status.error {
-            display: block;
-            background: #fee2e2;
-            color: #991b1b;
-            border: 1px solid #fecaca;
+            color: #dc2626;
         }
-        @keyframes fadeSlide {
-            0% {
-                opacity: 0;
-                transform: translateY(8px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .form-status.loading {
+            color: #c9a227;
         }
 
         @media (max-width: 768px) {
@@ -1027,7 +1125,9 @@
             }
         }
 
-        /* ===== FOOTER ===== */
+        /* ============================
+                   FOOTER
+                   ============================ */
         .footer {
             background: #0b1a2e;
             color: #cbd5e1;
@@ -1045,52 +1145,91 @@
             opacity: 0.7;
         }
 
-        /* ===== MUSIC BUTTON ===== */
+        /* ============================
+                   MUSIC BUTTON (floating)
+                   ============================ */
         .music-stop-btn {
             position: fixed;
             bottom: 24px;
             right: 24px;
             z-index: 200;
-            background: rgba(11, 26, 46, 0.9);
-            backdrop-filter: blur(12px);
+            background: #0b1a2e;
             color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 12px 20px;
+            border: none;
+            padding: 12px 22px;
             border-radius: 40px;
             font-weight: 700;
             font-size: 0.85rem;
             cursor: pointer;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
             display: flex;
             align-items: center;
-            gap: 8px;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            gap: 10px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(8px);
+            background: rgba(11, 26, 46, 0.85);
         }
         .music-stop-btn:hover {
-            transform: translateY(-3px) scale(1.04);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
             background: #0b1a2e;
-            border-color: #c9a227;
         }
-        .music-stop-btn .pulse-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #34d399;
-            display: inline-block;
-            animation: dotPulse 1.4s ease-in-out infinite;
+        .music-stop-btn i {
+            font-size: 1rem;
         }
-        @keyframes dotPulse {
-            0%,
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.3;
-                transform: scale(0.7);
+
+        @media (max-width: 480px) {
+            .music-stop-btn {
+                padding: 10px 16px;
+                font-size: 0.75rem;
+                bottom: 16px;
+                right: 16px;
             }
         }
+
+        /* ============================
+                   REVEAL ANIMATIONS (Intersection Observer)
+                   ============================ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .reveal-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(40px);
+            transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .reveal-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.92);
+            transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .reveal-scale.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* ============================
+                   MISC / UTILITY
+                   ============================ */
         #ytPlayerWrap {
             position: absolute;
             width: 1px;
@@ -1099,644 +1238,76 @@
             opacity: 0;
             pointer-events: none;
         }
-
-        /* ===== SEJARAH PAGE ===== */
-        .sejarah-hero {
-            padding: 60px 0 40px;
-            background: linear-gradient(135deg, #f1f5f9, #ffffff);
-            border-bottom: 1px solid #e9edf2;
-        }
-        .sejarah-hero h1 {
-            font-size: 2.8rem;
-            font-weight: 800;
-            margin-bottom: 8px;
-        }
-        .sejarah-hero p {
-            color: #64748b;
-            max-width: 560px;
-            font-size: 1.05rem;
-        }
-
-        /* Timeline */
-        .timeline-section {
-            padding: 60px 0;
-            background: #ffffff;
-        }
-        .timeline {
-            position: relative;
-            padding-left: 40px;
-            border-left: 3px solid #c9a22730;
-        }
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: -6px;
-            top: 0;
-            width: 12px;
-            height: 12px;
-            background: #c9a227;
-            border-radius: 50%;
-            box-shadow: 0 0 20px rgba(201, 162, 39, 0.3);
-        }
-        .timeline-item {
-            margin-bottom: 40px;
-            position: relative;
-            padding-left: 20px;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: timelineReveal 0.6s ease forwards;
-        }
-        .timeline-item:nth-child(1) {
-            animation-delay: 0.1s;
-        }
-        .timeline-item:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-        .timeline-item:nth-child(3) {
-            animation-delay: 0.3s;
-        }
-        .timeline-item:nth-child(4) {
-            animation-delay: 0.4s;
-        }
-        .timeline-item:nth-child(5) {
-            animation-delay: 0.5s;
-        }
-        .timeline-item:nth-child(6) {
-            animation-delay: 0.6s;
-        }
-
-        @keyframes timelineReveal {
-            0% {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -28px;
-            top: 6px;
-            width: 12px;
-            height: 12px;
-            background: #c9a227;
-            border-radius: 50%;
-            border: 3px solid #fff;
-            box-shadow: 0 0 0 4px #c9a22730;
-        }
-        .timeline-year {
-            font-weight: 800;
-            font-size: 1.1rem;
-            color: #c9a227;
-            margin-bottom: 2px;
-        }
-        .timeline-title {
-            font-weight: 700;
-            font-size: 1.15rem;
-            margin-bottom: 4px;
-        }
-        .timeline-desc {
-            color: #475569;
-            font-size: 0.95rem;
-        }
-
-        /* Bio grid */
-        .bio-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            margin: 20px 0;
-        }
-        .bio-card {
-            background: #f8fafc;
-            padding: 24px 28px;
-            border-radius: 20px;
-            border: 1px solid #e9edf2;
-            transition: all 0.3s ease;
-        }
-        .bio-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.05);
-        }
-        .bio-card h3 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: #0b1a2e;
-        }
-        .bio-card h3 i {
-            color: #c9a227;
-            margin-right: 8px;
-        }
-        .bio-card p,
-        .bio-card li {
-            color: #475569;
-            font-size: 0.95rem;
-        }
-        .bio-card ul {
-            padding-left: 20px;
-            list-style: disc;
-        }
-        .bio-card ul li {
-            margin-bottom: 4px;
-        }
-
-        /* ===== GALLERY / CAROUSEL ===== */
-        .gallery-section {
-            padding: 60px 0;
-            background: #f8fafc;
-            overflow: hidden;
-            position: relative;
-        }
-        .gallery-section .section-desc {
-            margin-bottom: 32px;
-        }
-
-        /* Carousel container */
-        .carousel-container {
-            position: relative;
-            overflow: hidden;
-            border-radius: 20px;
-            padding: 8px 0;
-            touch-action: none;
-            user-select: none;
-            -webkit-user-select: none;
-            cursor: grab;
-        }
-        .carousel-container.dragging {
-            cursor: grabbing;
-        }
-
-        .carousel-track {
-            display: flex;
-            gap: 24px;
-            width: max-content;
-            will-change: transform;
-            transition: none;
-            /* JS handles transform */;
-        }
-        .carousel-track.transitioning {
-            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .carousel-item {
-            flex: 0 0 220px;
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(4px);
-            border-radius: 16px;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            cursor: pointer;
-            position: relative;
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-        }
-        .carousel-item:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
-            border-color: rgba(201, 162, 39, 0.3);
-            background: rgba(255, 255, 255, 0.92);
-        }
-        .carousel-item-thumb {
-            width: 100%;
-            height: 150px;
-            background: #e9edf2;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3.2rem;
-            color: #94a3b8;
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        .carousel-item-thumb canvas {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-        .carousel-item-thumb .pdf-fallback {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            width: 100%;
-            height: 100%;
-            background: #f1f5f9;
-            color: #94a3b8;
-        }
-        .carousel-item-thumb .pdf-fallback i {
-            font-size: 3.6rem;
-            color: #c9a227;
-            opacity: 0.6;
-        }
-        .carousel-item-thumb .pdf-fallback span {
-            font-size: 0.7rem;
-            font-weight: 600;
-            opacity: 0.5;
-        }
-        .carousel-item-thumb .loading-spinner {
-            width: 32px;
-            height: 32px;
-            border: 3px solid #e9edf2;
-            border-top-color: #c9a227;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .carousel-item-body {
-            padding: 14px 16px 16px;
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-        }
-        .carousel-item-body h4 {
-            font-size: 0.9rem;
-            font-weight: 700;
-            margin-bottom: 2px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .carousel-item-body p {
-            font-size: 0.8rem;
-            color: #94a3b8;
-            font-weight: 500;
-        }
-        .carousel-item .badge-type {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(11, 26, 46, 0.75);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            color: #fff;
-            font-size: 0.6rem;
-            font-weight: 700;
-            padding: 4px 12px;
-            border-radius: 20px;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* Carousel controls hint */
-        .carousel-hint {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-top: 20px;
-            color: #94a3b8;
-            font-size: 0.75rem;
-            font-weight: 500;
-            opacity: 0.6;
-            letter-spacing: 0.3px;
-        }
-        .carousel-hint i {
-            font-size: 0.9rem;
-        }
-        .carousel-hint span {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        /* Scroll indicator */
-        .carousel-scroll-indicator {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(11, 26, 46, 0.6);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            color: #fff;
-            padding: 6px 16px;
-            border-radius: 30px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            letter-spacing: 0.3px;
-            opacity: 0;
+        .fade-transition {
             transition: opacity 0.6s ease;
-            pointer-events: none;
-            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .carousel-scroll-indicator.visible {
-            opacity: 1;
+        .hidden {
+            display: none !important;
         }
 
-        @media (max-width: 768px) {
-            .carousel-item {
-                flex: 0 0 160px;
-            }
-            .carousel-item-thumb {
-                height: 110px;
-            }
-            .section-title {
-                font-size: 2rem;
-            }
-            .carousel-hint {
-                font-size: 0.65rem;
-                flex-wrap: wrap;
-            }
+        /* scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
-
-        @media (max-width: 480px) {
-            .carousel-item {
-                flex: 0 0 140px;
-            }
-            .carousel-item-thumb {
-                height: 90px;
-            }
-            .carousel-item-body h4 {
-                font-size: 0.8rem;
-            }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
         }
-
-        /* ===== MODAL VIEWER ===== */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(11, 26, 46, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            z-index: 9998;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            padding: 24px;
+        ::-webkit-scrollbar-thumb {
+            background: #c9a22780;
+            border-radius: 10px;
         }
-        .modal-overlay.open {
-            display: flex;
-            opacity: 1;
-        }
-        .modal-content {
-            max-width: 90vw;
-            max-height: 85vh;
-            width: 100%;
-            height: auto;
-            background: #ffffff;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.4);
-            transform: scale(0.92) translateY(20px);
-            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
-        .modal-overlay.open .modal-content {
-            transform: scale(1) translateY(0);
-        }
-        .modal-close {
-            position: absolute;
-            top: 16px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.06);
-            border: none;
-            font-size: 1.6rem;
-            cursor: pointer;
-            color: #0b1a2e;
-            padding: 4px 12px;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            z-index: 10;
-            backdrop-filter: blur(4px);
-        }
-        .modal-close:hover {
-            background: rgba(0, 0, 0, 0.12);
-            transform: rotate(90deg);
-        }
-        .modal-body {
-            flex: 1;
-            padding: 20px;
-            overflow: auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 400px;
-            background: #f8fafc;
-        }
-        .modal-body iframe {
-            width: 100%;
-            height: 70vh;
-            border: none;
-            border-radius: 12px;
-            background: #fff;
-        }
-        .modal-body img {
-            max-width: 100%;
-            max-height: 70vh;
-            border-radius: 12px;
-            object-fit: contain;
-        }
-        .modal-body .pdf-placeholder {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 16px;
-            color: #64748b;
-        }
-        .modal-body .pdf-placeholder i {
-            font-size: 4rem;
-            color: #c9a227;
-        }
-        .modal-body .pdf-placeholder p {
-            font-size: 1rem;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        @media (max-width: 600px) {
-            .modal-content {
-                max-width: 98vw;
-                max-height: 92vh;
-            }
-            .modal-body iframe {
-                height: 50vh;
-            }
-            .modal-body {
-                min-height: 250px;
-                padding: 12px;
-            }
-        }
-
-        /* ===== BACK BUTTON ===== */
-        .back-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 28px;
-            border-radius: 40px;
-            font-weight: 700;
-            font-size: 0.95rem;
-            background: #0b1a2e;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            margin-top: 20px;
-        }
-        .back-btn:hover {
-            background: #1e2f44;
-            transform: translateX(-4px);
-            box-shadow: 0 8px 30px rgba(11, 26, 46, 0.2);
-        }
-        .back-btn i {
-            transition: transform 0.3s ease;
-        }
-        .back-btn:hover i {
-            transform: translateX(-4px);
-        }
-
-        /* ===== REVEAL ANIMATIONS ===== */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 768px) {
-            .bio-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            .sejarah-hero h1 {
-                font-size: 2rem;
-            }
-            .timeline {
-                padding-left: 24px;
-            }
-            .timeline-item {
-                padding-left: 12px;
-            }
-            .timeline-item::before {
-                left: -20px;
-                width: 10px;
-                height: 10px;
-            }
-            .hero-title {
-                font-size: 2.2rem;
-            }
-        }
-
-        /* ===== CURSOR GLOW ===== */
-        .cursor-glow {
-            position: fixed;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(201, 162, 39, 0.15), transparent 70%);
-            pointer-events: none;
-            z-index: 9997;
-            transform: translate(-50%, -50%);
-            transition: width 0.2s, height 0.2s, opacity 0.2s;
-            opacity: 0;
-        }
-        .cursor-glow.active {
-            opacity: 1;
-        }
-
-        /* ===== BACK TO TOP (optional enhancement) ===== */
-        .back-to-top {
-            position: fixed;
-            bottom: 90px;
-            right: 24px;
-            z-index: 150;
-            background: rgba(11, 26, 46, 0.8);
-            backdrop-filter: blur(8px);
-            color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            pointer-events: none;
-            font-size: 1.1rem;
-        }
-        .back-to-top.visible {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: all;
-        }
-        .back-to-top:hover {
-            background: #0b1a2e;
-            border-color: #c9a227;
-            transform: translateY(-3px) scale(1.05);
+        ::-webkit-scrollbar-thumb:hover {
+            background: #c9a227;
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== CURSOR GLOW ===== -->
-    <div class="cursor-glow" id="cursorGlow"></div>
+    <!-- ============================
+    LANDING PAGE
+    ============================ -->
+    <div id="landing">
+        <div id="landing-bg"></div>
+        <canvas id="particles-canvas"></canvas>
 
-    <!-- ===== LANDING PAGE ===== -->
-    <div id="landingPage">
-        <canvas id="particlesCanvas"></canvas>
-        <div class="glow-orb glow-orb-1"></div>
-        <div class="glow-orb glow-orb-2"></div>
+        <div class="landing-orb landing-orb--1"></div>
+        <div class="landing-orb landing-orb--2"></div>
+        <div class="landing-orb landing-orb--3"></div>
+
+        <div class="doodle doodle--1">✦</div>
+        <div class="doodle doodle--2">◈</div>
+        <div class="doodle doodle--3">✧</div>
+        <div class="doodle doodle--4">◇</div>
+
         <div class="landing-content">
             <div class="landing-badge" data-i18n="landing_badge">✦ Portfolio 2026</div>
-            <h1 class="landing-name">
-                Muhammad <span class="highlight">Azhar</span>
-            </h1>
-            <div class="landing-titles">
-                <span data-i18n="landing_title1">Frontend Developer</span>
-                <span data-i18n="landing_title2">Electronics Technology</span>
-                <span data-i18n="landing_title3">UI / UX Enthusiast</span>
-            </div>
-            <p class="landing-tagline" data-i18n="landing_tagline">
-                Every great idea begins with a single line of code.
+            <h1 class="landing-name">Muhammad Azhar</h1>
+            <p class="landing-sub">
+                <span data-i18n="landing_sub1">Frontend Developer</span> &bull;
+                <span data-i18n="landing_sub2">Electronics Technology</span> &bull;
+                <span data-i18n="landing_sub3">UI/UX Enthusiast</span>
             </p>
+            <div class="landing-tagline" data-i18n="landing_tagline">
+                "Every great idea begins with a single line of code."
+            </div>
             <button class="landing-btn" id="enterBtn">
+                <span class="btn-glow"></span>
                 <span data-i18n="landing_btn">Mulakan</span>
                 <i class="fas fa-arrow-right"></i>
             </button>
         </div>
     </div>
 
-    <!-- ===== APP WRAPPER ===== -->
-    <div id="app">
-
-        <!-- ===== PAGE TRANSITION OVERLAY ===== -->
-        <div class="page-transition-overlay" id="pageTransitionOverlay"></div>
+    <!-- ============================
+    PORTFOLIO MAIN
+    ============================ -->
+    <div id="main-portfolio" style="opacity:0; transition: opacity 1s ease;">
 
         <!-- ===== NAVBAR ===== -->
-        <nav class="navbar">
+        <nav class="navbar" id="navbar">
             <div class="container nav-container">
                 <div class="nav-left">
-                    <a href="#" class="nav-logo" id="logoLink">
+                    <a href="#" class="nav-logo">
                         <span class="logo-icon">✦</span>
                         <span>Azhar.dev</span>
                     </a>
@@ -1747,10 +1318,11 @@
                     </div>
                 </div>
                 <ul class="nav-links" id="navLinks">
-                    <li><a href="#" data-page="portfolio" data-section="projects" data-i18n="nav_projects" class="active">Projek</a></li>
-                    <li><a href="#" data-page="portfolio" data-section="about" data-i18n="nav_about">Tentang</a></li>
-                    <li><a href="#" data-page="portfolio" data-section="contact" data-i18n="nav_contact">Hubungi</a></li>
-                    <li><a href="#" data-page="sejarah" data-section="" data-i18n="nav_sejarah">Sejarah</a></li>
+                    <li><a href="#projects" data-i18n="nav_projects">Projek</a></li>
+                    <li><a href="history.html" data-i18n="nav_history">Sejarah</a></li>
+                    <li><a href="#achievements" data-i18n="nav_achievements">Pencapaian</a></li>
+                    <li><a href="#about" data-i18n="nav_about">Tentang</a></li>
+                    <li><a href="#contact" data-i18n="nav_contact">Hubungi</a></li>
                 </ul>
                 <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
                     <i class="fas fa-bars"></i>
@@ -1758,333 +1330,341 @@
             </div>
         </nav>
 
-        <!-- ===== BACK TO TOP ===== -->
-        <div class="back-to-top" id="backToTop" title="Kembali ke atas">
-            <i class="fas fa-chevron-up"></i>
-        </div>
-
-        <!-- ===== PAGE: PORTFOLIO ===== -->
-        <div class="page active" id="page-portfolio">
-
-            <!-- HERO -->
-            <section class="hero" id="hero">
-                <div class="container hero-container">
-                    <div class="hero-content">
-                        <div class="hero-badge" data-i18n="hero_badge">✦ Portfolio</div>
-                        <h1 class="hero-title" data-i18n-html="hero_title">
-                            Hi, saya <span class="highlight">Azhar</span>.<br />
-                            Pembangun <span class="highlight">Frontend</span>.
-                        </h1>
-                        <p class="hero-desc" data-i18n="hero_desc">
-                            Saya berkebolehan dalam pembangunan projek tahun akhir/penyambungan mikrokontroler/programming ide/ web app/web/penyusunan data (db), interaktif &amp; mesra pengguna.
-                            Terokai projek-projek yang telah saya bina dibawah. Kesemua projek telah diubah kepada mood demostrasi (demo) hanya paparan UI frontend sahaja dan anda boleh mencuba kesemua web demo dengan click button untuk pengalaman sendiri.
-                        </p>
-                        <div class="hero-actions">
-                            <a href="#projects" class="btn btn-primary nav-scroll-link" data-target="projects">
-                                <i class="fas fa-rocket"></i> <span data-i18n="btn_view_projects">Lihat Projek</span>
-                            </a>
-                            <a href="#contact" class="btn btn-outline nav-scroll-link" data-target="contact">
-                                <i class="fas fa-envelope"></i> <span data-i18n="btn_contact">Hubungi</span>
-                            </a>
-                        </div>
-                        <div class="hero-stats">
-                            <div class="stat">
-                                <span class="stat-number" data-count="10">0</span>
-                                <span class="stat-label" data-i18n="stat_projects">Projek</span>
-                            </div>
-                            <div class="stat">
-                                <span class="stat-number" data-count="6">0</span>
-                                <span class="stat-label" data-i18n="stat_done">Siap</span>
-                            </div>
-                            <div class="stat">
-                                <span class="stat-number" data-count="4">0</span>
-                                <span class="stat-label" data-i18n="stat_progress">Dalam Proses</span>
-                            </div>
-                        </div>
+        <!-- ===== HERO ===== -->
+        <section class="hero" id="hero">
+            <div class="container hero-container">
+                <div class="hero-content reveal-left">
+                    <div class="hero-badge" data-i18n="hero_badge">✦ Portfolio</div>
+                    <h1 class="hero-title" data-i18n-html="hero_title">
+                        Hi, saya <span class="highlight">Azhar</span>.<br />
+                        Pembangun <span class="highlight">Frontend</span>.
+                    </h1>
+                    <p class="hero-desc" data-i18n="hero_desc">
+                        Saya membina antara muka yang pantas, interaktif &amp; mesra pengguna.
+                        Terokai projek-projek demo saya di bawah. Setiap kad membawa kepada
+                        demo frontend dengan data contoh.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="#projects" class="btn btn-primary">
+                            <i class="fas fa-rocket"></i> <span data-i18n="btn_view_projects">Lihat Projek</span>
+                        </a>
+                        <a href="#contact" class="btn btn-outline">
+                            <i class="fas fa-envelope"></i> <span data-i18n="btn_contact">Hubungi</span>
+                        </a>
                     </div>
-                    <div class="hero-visual">
-                        <div class="hero-orb"></div>
-                        <div class="hero-orb-secondary"></div>
-                        <div class="hero-code-block">
-                            <div class="code-line"><span class="code-keyword">const</span> <span class="code-var">dev</span> = <span class="code-string">"Azhar"</span>;</div>
-                            <div class="code-line"><span class="code-keyword">const</span> <span class="code-var">role</span> = <span class="code-string">"Frontend"</span>;</div>
-                            <div class="code-line"><span class="code-keyword">const</span> <span class="code-var">passion</span> = <span class="code-string">"UI/UX"</span>;</div>
-                            <div class="code-line"><span class="code-keyword">while</span> (<span class="code-var">alive</span>) {</div>
-                            <div class="code-line code-indent"><span class="code-var">create</span>.<span class="code-method">awesome</span>();</div>
-                            <div class="code-line">}</div>
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <span class="stat-number" data-count="10">0</span>
+                            <span class="stat-label" data-i18n="stat_projects">Projek</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number" data-count="6">0</span>
+                            <span class="stat-label" data-i18n="stat_done">Siap</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number" data-count="4">0</span>
+                            <span class="stat-label" data-i18n="stat_progress">Dalam Proses</span>
                         </div>
                     </div>
                 </div>
-            </section>
-
-            <!-- PROJECTS -->
-            <section class="projects section-target" id="projects" data-section="projects">
-                <div class="container">
-                    <div class="section-header">
-                        <span class="section-tag" data-i18n="tag_portfolio">✦ Portfolio</span>
-                        <h2 class="section-title" data-i18n-html="projects_title">Projek <span class="highlight">Saya</span></h2>
-                        <p class="section-desc" data-i18n-html="projects_desc">
-                            Setiap kad membawa kepada demo frontend yang dibina sepenuhnya
-                            dengan data contoh. Klik <strong>"Live Demo"</strong> untuk meneroka(Gambaran UI yang sebenar agak lain kerana telah diubah strukturnya sebagai demo).
-                        </p>
-                    </div>
-                    <div class="projects-grid" id="projectsGrid"></div>
-                </div>
-            </section>
-
-            <!-- ABOUT -->
-            <section class="about section-target" id="about" data-section="about">
-                <div class="container about-container">
-                    <div class="about-image">
-                        <div class="about-placeholder">
-                            <img src="imagesprofile.jpg" alt="Muhammad Azhar" class="profile-img">
-                        </div>
-                        <div class="age-counter">
-                            <div class="age-counter-label" data-i18n="age_label">Umur</div>
-                            <div class="age-counter-value" id="ageCounterValue">Mengira...</div>
-                        </div>
-                        <div class="age-counter" style="margin-top:12px;">
-                            <div class="age-counter-label" data-i18n="interest_label">Minat dalam Dunia Komputer</div>
-                            <div class="age-counter-value" id="interestCounterValue">Mengira...</div>
-                        </div>
-                    </div>
-                    <div class="about-content">
-                        <span class="section-tag" data-i18n="tag_about">✦ Tentang</span>
-                        <h2 class="section-title" data-i18n-html="about_title">Saya <span class="highlight">Azhar</span></h2>
-                        <p data-i18n="about_p1">
-                            Saya seorang yang sukakan sesuatu yang mencabar dan benda baru untuk diterokai, selain  berpengalaman dalam  bidang Elektrik & Elektronik, saya suka mengisi masa lapang dengan memahami & belajar programing sekali gus saya gemar mencipta pengalaman digital dengan fokus pada reka bentuk yang menarik, prestasi tinggi,
-                            dan kebolehpasaran.
-                        </p>
-                        <p data-i18n="about_p2">
-                            Web  ini dibina  sebagai tempat pameran untuk projek-projek yang pernah saya
-                            bina dan sedang digunakan — semuanya telah diubah dalam bentuk demo frontend tanpa backend, supaya mudah
-                            diperlihatkan.
-                        </p>
-                        <div class="about-skills">
-                            <span class="skill-tag">HTML</span>
-                            <span class="skill-tag">CSS</span>
-                            <span class="skill-tag">JavaScript</span>
-                            <span class="skill-tag">App Script</span>
-                            <span class="skill-tag">C++</span>
-                            <span class="skill-tag">db</span>
-                        </div>
+                <div class="hero-visual reveal-right">
+                    <div class="hero-orb"></div>
+                    <div class="hero-orb-secondary"></div>
+                    <div class="hero-code-block">
+                        <div class="code-line"><span class="code-keyword">const</span> <span class="code-var">dev</span> = <span class="code-string">"Azhar"</span>;</div>
+                        <div class="code-line"><span class="code-keyword">const</span> <span class="code-var">role</span> = <span class="code-string">"Frontend"</span>;</div>
+                        <div class="code-line"><span class="code-keyword">const</span> <span class="code-var">passion</span> = <span class="code-string">"UI/UX"</span>;</div>
+                        <div class="code-line"><span class="code-keyword">while</span> (<span class="code-var">alive</span>) {</div>
+                        <div class="code-line code-indent"><span class="code-var">create</span>.<span class="code-method">awesome</span>();</div>
+                        <div class="code-line">}</div>
                     </div>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <!-- CONTACT -->
-            <section class="contact section-target" id="contact" data-section="contact">
-                <div class="container contact-container">
-                    <div class="contact-content">
-                        <span class="section-tag" data-i18n="tag_contact">✦ Hubungi</span>
-                        <h2 class="section-title" data-i18n-html="contact_title">Jom <span class="highlight">Get In Touch With Me</span></h2>
-                        <p data-i18n="contact_desc">
-                            Ada projek atau pertanyaan? Saya sentiasa terbuka untuk berkolaborasi
-                            dan membina perkara yang menarik bersama.Mari sama-sama kita merialisasikan impian anda.
-                        </p>
-                        <div class="contact-links">
-                            <a href="https://www.facebook.com/share/1E8NHuUyiY/" target="_blank" rel="noopener noreferrer" class="contact-link"><i class="fab fa-facebook"></i> Facebook</a>
-                            <a href="https://wa.me/601169387861" target="_blank" rel="noopener noreferrer" class="contact-link"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-                            <a href="https://www.instagram.com/zaha_camemg?igsh=cGN6dTkwNWZ3MW44" target="_blank" rel="noopener noreferrer" class="contact-link"><i class="fab fa-instagram"></i> Instagram</a>
-                            <a href="mailto:muhammad88628@gmail.com" class="contact-link"><i class="fas fa-envelope"></i> Email</a>
-                            <a href="https://www.linkedin.com/in/zaharmazlan?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" rel="noopener noreferrer" class="contact-link"><i class="fab fa-linkedin"></i> LinkedIn</a>
-                            <a href="https://open.spotify.com/user/31reltl2vg6546gyyh7xe6u4afze?si=y9EeKPSERjOeCXwqmRVtAw&utm_source=copy-link" target="_blank" rel="noopener noreferrer" class="contact-link"><i class="fab fa-spotify"></i> Spotify</a>
-                            <p class="spotify-note" data-i18n="spotify_note">🎧 Songs that I listen to while programming.</p>
-                        </div>
+        <!-- ===== PROJECTS ===== -->
+        <section class="projects" id="projects">
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="section-tag" data-i18n="tag_portfolio">✦ Portfolio</span>
+                    <h2 class="section-title" data-i18n-html="projects_title">Projek <span class="highlight">Saya</span></h2>
+                    <p class="section-desc" data-i18n-html="projects_desc">
+                        Setiap kad membawa kepada demo frontend yang dibina sepenuhnya
+                        dengan data contoh. Klik <strong>"Live Demo"</strong> untuk meneroka.
+                    </p>
+                </div>
+                <div class="projects-grid" id="projectsGrid"></div>
+            </div>
+        </section>
+
+        <!-- ===== ACHIEVEMENTS / GALLERY ===== -->
+        <section class="achievements" id="achievements">
+            <div class="container">
+                <div class="section-header reveal">
+                    <span class="section-tag" data-i18n="tag_achievements">✦ Pencapaian</span>
+                    <h2 class="section-title" data-i18n-html="achievements_title">Sijil &amp; <span class="highlight">Anugerah</span></h2>
+                    <p class="section-desc" data-i18n="achievements_desc">
+                        Galeri pencapaian, sijil, dan penyertaan sepanjang perjalanan.
+                    </p>
+                </div>
+            </div>
+            <div class="gallery-wrapper">
+                <div class="gallery-track" id="galleryTrack">
+                    <!-- Items akan diisi oleh JS -->
+                </div>
+            </div>
+            <!-- Lightbox -->
+            <div class="lightbox" id="lightbox">
+                <button class="lightbox-close" id="lightboxClose">&times;</button>
+                <img id="lightboxImg" src="" alt="Sijil" />
+            </div>
+        </section>
+
+        <!-- ===== ABOUT ===== -->
+        <section class="about" id="about">
+            <div class="container about-container">
+                <div class="about-image reveal-left">
+                    <div class="about-placeholder">
+                        <img src="imagesprofile.jpg" alt="Muhammad Azhar" class="profile-img" />
                     </div>
-                    <div class="contact-form-wrapper">
-                        <form class="contact-form" id="contactForm">
-                            <div class="form-group">
-                                <label for="formName" data-i18n="form_name">Nama</label>
-                                <input type="text" id="formName" placeholder="Nama anda" required data-i18n-placeholder="form_name_ph" />
-                            </div>
-                            <div class="form-group">
-                                <label for="formEmail" data-i18n="form_email">Email</label>
-                                <input type="email" id="formEmail" placeholder="email@anda.com" required />
-                            </div>
-                            <div class="form-group">
-                                <label for="formMessage" data-i18n="form_message">Mesej</label>
-                                <textarea id="formMessage" rows="4" placeholder="Tulis mesej anda..." required data-i18n-placeholder="form_message_ph"></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-block" id="formSubmitBtn">
-                                <i class="fas fa-paper-plane"></i> <span data-i18n="form_send">Hantar</span>
-                            </button>
-                            <div class="form-status" id="formStatus"></div>
-                        </form>
+                    <div class="age-counter">
+                        <div class="age-counter-label" data-i18n="age_label">Umur Sebenar</div>
+                        <div class="age-counter-value" id="ageCounterValue">Mengira...</div>
+                    </div>
+                    <div class="age-counter" style="margin-top:12px;">
+                        <div class="age-counter-label" data-i18n="interest_label">Minat dalam Dunia Komputer</div>
+                        <div class="age-counter-value" id="interestCounterValue">Mengira...</div>
                     </div>
                 </div>
-            </section>
-
-        </div>
-        <!-- end page-portfolio -->
-
-        <!-- ===== PAGE: SEJARAH ===== -->
-        <div class="page" id="page-sejarah">
-
-            <!-- Sejarah Hero -->
-            <section class="sejarah-hero">
-                <div class="container">
-                    <span class="section-tag" data-i18n="tag_sejarah">✦ Sejarah</span>
-                    <h1 data-i18n="sejarah_title">Perjalanan <span class="highlight">Hidup Saya</span></h1>
-                    <p data-i18n="sejarah_subtitle">Biodata, minat, hobi, pembelajaran, pengalaman, matlamat — dan pencapaian sepanjang perjalanan.</p>
-                </div>
-            </section>
-
-            <!-- Bio Grid -->
-            <section class="timeline-section" style="padding-top:20px;">
-                <div class="container">
-                    <div class="bio-grid">
-                        <div class="bio-card reveal">
-                            <h3><i class="fas fa-user"></i> <span data-i18n="bio_title">Biodata</span></h3>
-                            <p data-i18n="bio_text"><strong>Nama:</strong> Muhammad Azhar bin Mazlan<br>
-                                <strong data-i18n="bio_born">Lahir:</strong> 5 Jun 2006<br>
-                                <strong data-i18n="bio_origin">Asal:</strong> Malaysia<br>
-                                <strong data-i18n="bio_current">Kini:</strong> Mahasiswa &amp; Frontend Developer
-                            </p>
-                        </div>
-                        <div class="bio-card reveal">
-                            <h3><i class="fas fa-heart"></i> <span data-i18n="hobby_title">Minat &amp; Hobi</span></h3>
-                            <ul>
-                                <li data-i18n="hobby1">⚡ Elektronik &amp; IoT</li>
-                                <li data-i18n="hobby2">💻 Programming &amp; UI/UX</li>
-                                <li data-i18n="hobby3">🎵 Muzik &amp; Produksi</li>
-                                <li data-i18n="hobby4">📚 Membaca &amp; Belajar</li>
-                            </ul>
-                        </div>
-                        <div class="bio-card reveal">
-                            <h3><i class="fas fa-graduation-cap"></i> <span data-i18n="learn_title">Perjalanan Pembelajaran</span></h3>
-                            <ul>
-                                <li data-i18n="learn1">🔹 2020: Mula kenal programming (HTML/CSS)</li>
-                                <li data-i18n="learn2">🔹 2021: JavaScript &amp; C++</li>
-                                <li data-i18n="learn3">🔹 2022: IoT, ESP32, penderia</li>
-                                <li data-i18n="learn4">🔹 2023–2024: Frontend, App Script, DB</li>
-                                <li data-i18n="learn5">🔹 2025–2026: Projek bersepadu &amp; portfolio</li>
-                            </ul>
-                        </div>
-                        <div class="bio-card reveal">
-                            <h3><i class="fas fa-bullseye"></i> <span data-i18n="goal_title">Matlamat Hidup</span></h3>
-                            <ul>
-                                <li data-i18n="goal1">🚀 Menjadi Fullstack Developer</li>
-                                <li data-i18n="goal2">🌍 Bekerja di syarikat teknologi global</li>
-                                <li data-i18n="goal3">💡 Mencipta produk yang memberi impak</li>
-                                <li data-i18n="goal4">📈 Terus belajar &amp; berkongsi ilmu</li>
-                            </ul>
-                        </div>
+                <div class="about-content reveal-right">
+                    <span class="section-tag" data-i18n="tag_about">✦ Tentang</span>
+                    <h2 class="section-title" data-i18n-html="about_title">Saya <span class="highlight">Azhar</span></h2>
+                    <p data-i18n="about_p1">
+                        Saya seorang yang sukakan sesuatu yang mencabar dan benda baru untuk diterokai,
+                        selain berpengalaman dalam bidang Elektrik &amp; Elektronik, saya suka mengisi masa
+                        lapang dengan memahami &amp; belajar programming sekali gus saya gemar mencipta
+                        pengalaman digital dengan fokus pada reka bentuk yang menarik, prestasi tinggi,
+                        dan kebolehpasaran.
+                    </p>
+                    <p data-i18n="about_p2">
+                        Web ini dibina sebagai tempat pameran untuk projek-projek yang pernah saya
+                        bina dan sedang digunakan — semuanya telah diubah dalam bentuk demo frontend
+                        tanpa backend, supaya mudah diperlihatkan.
+                    </p>
+                    <div class="about-skills">
+                        <span class="skill-tag">HTML</span>
+                        <span class="skill-tag">CSS</span>
+                        <span class="skill-tag">JavaScript</span>
+                        <span class="skill-tag">App Script</span>
+                        <span class="skill-tag">C++</span>
+                        <span class="skill-tag">DB</span>
                     </div>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <!-- Timeline -->
-            <section class="timeline-section">
-                <div class="container">
-                    <div class="section-header" style="margin-bottom:32px;">
-                        <span class="section-tag" data-i18n="tag_timeline">✦ Timeline</span>
-                        <h2 class="section-title" data-i18n-html="timeline_title">Perjalanan <span class="highlight">Hidup</span></h2>
-                    </div>
-                    <div class="timeline">
-                        <div class="timeline-item">
-                            <div class="timeline-year">2006</div>
-                            <div class="timeline-title" data-i18n="t1_title">Lahir di Malaysia</div>
-                            <div class="timeline-desc" data-i18n="t1_desc">Permulaan hidup yang penuh dengan rasa ingin tahu.</div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-year">2020</div>
-                            <div class="timeline-title" data-i18n="t2_title">Mula Meminati Komputer</div>
-                            <div class="timeline-desc" data-i18n="t2_desc">Terokai dunia coding dan elektronik secara autodidak.</div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-year">2022</div>
-                            <div class="timeline-title" data-i18n="t3_title">Projek IoT Pertama</div>
-                            <div class="timeline-desc" data-i18n="t3_desc">Membina sistem pemantauan alam sekitar dengan ESP32 dan penderia.</div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-year">2024</div>
-                            <div class="timeline-title" data-i18n="t4_title">Mendalami Frontend &amp; UI/UX</div>
-                            <div class="timeline-desc" data-i18n="t4_desc">Fokus kepada pengalaman pengguna, reka bentuk moden dan prestasi.</div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-year">2025</div>
-                            <div class="timeline-title" data-i18n="t5_title">Portfolio &amp; Projek Bersepadu</div>
-                            <div class="timeline-desc" data-i18n="t5_desc">Menggabungkan semua kemahiran dalam projek-projek berskala.</div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-year">2026</div>
-                            <div class="timeline-title" data-i18n="t6_title">Masa Depan Cerah</div>
-                            <div class="timeline-desc" data-i18n="t6_desc">Terus membangun, belajar dan memberi impak kepada dunia.</div>
-                        </div>
+        <!-- ===== CONTACT ===== -->
+        <section class="contact" id="contact">
+            <div class="container contact-container">
+                <div class="contact-content reveal-left">
+                    <span class="section-tag" data-i18n="tag_contact">✦ Hubungi</span>
+                    <h2 class="section-title" data-i18n-html="contact_title">Jom <span class="highlight">Get In Touch</span></h2>
+                    <p data-i18n="contact_desc">
+                        Ada projek atau pertanyaan? Saya sentiasa terbuka untuk berkolaborasi
+                        dan membina perkara yang menarik bersama. Mari realisasikan impian anda.
+                    </p>
+                    <div class="contact-links">
+                        <a href="https://www.facebook.com/share/1E8NHuUyiY/" target="_blank" rel="noopener noreferrer" class="contact-link"><i class="fab fa-facebook"></i> Facebook</a>
+                        <a href="https://wa.me/601169387861" target="_blank" rel="noopener noreferrer" class="contact-link"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                        <a href="https://www.instagram.com/zaha_camemg?igsh=cGN6dTkwNWZ3MW44" target="_blank" rel="noopener noreferrer" class="contact-link"><i class="fab fa-instagram"></i> Instagram</a>
+                        <a href="mailto:muhammad88628@gmail.com" class="contact-link"><i class="fas fa-envelope"></i> Email</a>
+                        <a href="https://www.linkedin.com/in/zaharmazlan?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" rel="noopener noreferrer" class="contact-link"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                        <a href="https://open.spotify.com/user/31reltl2vg6546gyyh7xe6u4afze?si=y9EeKPSERjOeCXwqmRVtAw&utm_source=copy-link" target="_blank" rel="noopener noreferrer" class="contact-link"><i class="fab fa-spotify"></i> Spotify</a>
+                        <p class="spotify-note" data-i18n="spotify_note">🎧 Lagu-lagu yang saya dengar semasa programming.</p>
                     </div>
                 </div>
-            </section>
-
-            <!-- Gallery / Carousel -->
-            <section class="gallery-section" id="gallerySection">
-                <div class="container">
-                    <div class="section-header" style="margin-bottom:16px;">
-                        <span class="section-tag" data-i18n="tag_gallery">✦ Pencapaian</span>
-                        <h2 class="section-title" data-i18n-html="gallery_title">Sijil &amp; <span class="highlight">Anugerah</span></h2>
-                        <p class="section-desc" data-i18n="gallery_desc">Koleksi sijil, pencapaian, pertandingan dan program yang pernah disertai.</p>
-                    </div>
-
-                    <div class="carousel-container" id="carouselContainer">
-                        <div class="carousel-track" id="carouselTrack">
-                            <!-- Items will be rendered by JS -->
+                <div class="contact-form-wrapper reveal-right">
+                    <form class="contact-form" id="contactForm">
+                        <div class="form-group">
+                            <label for="formName" data-i18n="form_name">Nama</label>
+                            <input type="text" id="formName" placeholder="Nama anda" required data-i18n-placeholder="form_name_ph" />
                         </div>
-                      
-                    </div>
-
-
-
-                    <div style="text-align:center; margin-top:20px;">
-                        <button class="back-btn" id="backToPortfolioBtn">
-                            <i class="fas fa-arrow-left"></i> <span data-i18n="back_to_portfolio"> Kembali ke Portfolio</span>
+                        <div class="form-group">
+                            <label for="formEmail" data-i18n="form_email">Email</label>
+                            <input type="email" id="formEmail" placeholder="email@anda.com" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="formMessage" data-i18n="form_message">Mesej</label>
+                            <textarea id="formMessage" rows="4" placeholder="Tulis mesej anda..." required data-i18n-placeholder="form_message_ph"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block" id="formSubmitBtn">
+                            <i class="fas fa-paper-plane"></i> <span data-i18n="form_send">Hantar</span>
                         </button>
-                    </div>
+                        <div class="form-status" id="formStatus"></div>
+                    </form>
                 </div>
-            </section>
-
-        </div>
-        <!-- end page-sejarah -->
+            </div>
+        </section>
 
         <!-- ===== FOOTER ===== -->
         <footer class="footer">
             <div class="container footer-container">
-                <p data-i18n-html="footer_text">&copy; 2026 <strong>Azhar.dev</strong></p>
-                <p class="footer-sub" data-i18n-html="footer_sub">Dibina dengan <i class="fas fa-heart" style="color:#f472b6;"></i> oleh Azhar.dev</p>
+                <p data-i18n-html="footer_text">&copy; 2026 <strong>Azhar.dev</strong> — Dibina dengan <i class="fas fa-heart" style="color:#f472b6;"></i> untuk web.</p>
+                <p class="footer-sub" data-i18n-html="footer_sub">Dihoskan dengan <i class="fas fa-globe"></i> dan semangat.</p>
             </div>
         </footer>
 
+        <!-- ===== MUSIC BUTTON ===== -->
+        <button class="music-stop-btn" id="musicToggleBtn">
+            <i class="fas fa-pause" id="musicIcon"></i>
+            <span id="musicBtnLabel" data-i18n="music_stop">Stop Muzik</span>
+        </button>
+
+        <!-- ===== YOUTUBE PLAYER (hidden) ===== -->
+        <div id="ytPlayerWrap"><div id="ytPlayer"></div></div>
+
     </div>
-    <!-- end #app -->
+    <!-- ===== END MAIN PORTFOLIO ===== -->
 
-    <!-- ===== MUSIC PLAYER ===== -->
-    <div id="ytPlayerWrap"><div id="ytPlayer"></div></div>
-    <button class="music-stop-btn" id="musicToggleBtn">
-        <span class="pulse-dot" id="musicPulseDot"></span>
-        <i class="fas fa-pause" id="musicIcon"></i>
-        <span id="musicBtnLabel">Stop Muzik</span>
-    </button>
 
-    <!-- ===== MODAL VIEWER ===== -->
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal-content">
-            <button class="modal-close" id="modalCloseBtn">&times;</button>
-            <div class="modal-body" id="modalBody">
-                <!-- Content loaded by JS -->
-            </div>
-        </div>
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- ===== JAVASCRIPT ===== -->
-    <!-- ============================================================ -->
+    <!-- ============================
+    JAVASCRIPT
+    ============================ -->
     <script>
-        // ================================================================
-        // 1. DATA PROJEK
-        // ================================================================
+        // ============================================
+        // 1. LANDING PAGE → MAIN
+        // ============================================
+        const landing = document.getElementById('landing');
+        const mainPortfolio = document.getElementById('main-portfolio');
+        const enterBtn = document.getElementById('enterBtn');
+
+        let landingHidden = false;
+
+        enterBtn.addEventListener('click', () => {
+            if (landingHidden) return;
+            landingHidden = true;
+            landing.classList.add('hidden');
+
+            // fade in main
+            setTimeout(() => {
+                mainPortfolio.style.opacity = '1';
+            }, 300);
+
+            // trigger music play via user interaction
+            if (typeof ytPlayer !== 'undefined' && ytPlayer) {
+                try {
+                    ytPlayer.playVideo();
+                    setTimeout(() => {
+                        try { ytPlayer.unMute();
+                            ytPlayer.setVolume(50); } catch (e) {}
+                    }, 400);
+                    isPlaying = true;
+                    updateMusicUI();
+                } catch (e) {}
+            }
+
+            // trigger stat animations
+            animateStats();
+            // trigger reveal for above-fold
+            setTimeout(() => {
+                document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => {
+                    if (el.getBoundingClientRect().top < window.innerHeight * 0.85) {
+                        el.classList.add('visible');
+                    }
+                });
+            }, 600);
+        });
+
+        // ============================================
+        // 2. PARTICLES (landing)
+        // ============================================
+        (function initParticles() {
+            const canvas = document.getElementById('particles-canvas');
+            const ctx = canvas.getContext('2d');
+            let w, h;
+            const particles = [];
+            const COUNT = 60;
+
+            function resize() {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            class Particle {
+                constructor() {
+                    this.reset();
+                }
+                reset() {
+                    this.x = Math.random() * w;
+                    this.y = Math.random() * h;
+                    this.r = Math.random() * 2 + 1.2;
+                    this.dx = (Math.random() - 0.5) * 0.4;
+                    this.dy = (Math.random() - 0.5) * 0.4;
+                    this.opacity = Math.random() * 0.5 + 0.2;
+                }
+                update() {
+                    this.x += this.dx;
+                    this.y += this.dy;
+                    if (this.x < 0 || this.x > w) this.dx *= -1;
+                    if (this.y < 0 || this.y > h) this.dy *= -1;
+                }
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(201, 162, 39, ${this.opacity})`;
+                    ctx.fill();
+                }
+            }
+
+            for (let i = 0; i < COUNT; i++) {
+                particles.push(new Particle());
+            }
+
+            function animateParticles() {
+                if (landing.classList.contains('hidden')) {
+                    // slow down when hidden
+                    if (particles.length) {
+                        ctx.clearRect(0, 0, w, h);
+                        particles.forEach(p => { p.update();
+                            p.draw(); });
+                    }
+                    requestAnimationFrame(animateParticles);
+                    return;
+                }
+                ctx.clearRect(0, 0, w, h);
+                particles.forEach(p => { p.update();
+                    p.draw(); });
+
+                // draw lines
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 120) {
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = `rgba(201, 162, 39, ${0.06 * (1 - dist/120)})`;
+                            ctx.lineWidth = 0.6;
+                            ctx.stroke();
+                        }
+                    }
+                }
+                requestAnimationFrame(animateParticles);
+            }
+            animateParticles();
+        })();
+
+        // ============================================
+        // 3. PROJECTS DATA & RENDER
+        // ============================================
         const projectsData = [{
             id: 'Sistem Komplex',
             name: 'SPaWGSA',
-            description: 'Sistem pemantauan alam sekitar IoT menggunakan ESP32, penderia DHT22, MQ2, PMS5003. Paparan data suhu, kelembapan, gas, PM dengan kawalan relay dan buzzer. Demo data simulasi(DASHBOARD).',
+            description: 'Sistem pemantauan alam sekitar IoT menggunakan ESP32, penderia DHT22, MQ2, PMS5003. Paparan data suhu, kelembapan, gas, PM dengan kawalan relay dan buzzer. Demo data simulasi (DASHBOARD).',
             image: '1.png',
             demoLink: '1index.html'
         }, {
@@ -2102,76 +1682,29 @@
         }, {
             id: 'Sistem Komplex',
             name: 'Fast Lane Printing',
-            description: 'Sistem yang membolehkan pengguna (pelajar, guru, kakitangan) menghantar dokumen untuk dicetak. Pengguna perlu mengisi nama, jenis pengguna, nombor IC (dengan validasi format Malaysia), dan memilih fail (PDF/Word). Untuk pelajar, perlu mengisi tahun dan program pengajian. Sistem akan memproses permintaan cetakan dan memberikan maklum balas.Demo ini menggunakan simulasi – tiada sambungan ke Telegram atau mana-mana backend. Semua operasi dipaparkan sebagai simulasi dengan animasi muat naik dan mesej berjaya.',
+            description: 'Sistem yang membolehkan pengguna (pelajar, guru, kakitangan) menghantar dokumen untuk dicetak. Pengguna perlu mengisi nama, jenis pengguna, nombor IC (dengan validasi format Malaysia), dan memilih fail (PDF/Word). Demo ini menggunakan simulasi – tiada sambungan ke Telegram atau mana-mana backend.',
             image: '4.png',
             demoLink: '4index.html'
         }, {
             id: 'Sistem Komplex',
             name: 'Tempahan Bilik',
-            description: 'Projek Sistem Tempahan Bilik telah disertakan dalam portfolio dengan demo menggunakan localStorage. Anda hanya perlu pastikan fail projects/tempahan-bilik/index.html (yang saya berikan sebelum ini) berada di lokasi tersebut.',
+            description: 'Sistem Tempahan Bilik dengan demo menggunakan localStorage. Pengguna boleh membuat tempahan dan melihat senarai tempahan.',
             image: '5.png',
             demoLink: '5index.html'
         }, {
             id: 'Sistem Komplex',
             name: 'Daftar Buku',
-            description: 'Sistem untuk mendaftarkan buku baharu ke dalam sistem perpustakaan/pusat sumber. Pengguna perlu mengisi No. Panggilan (dijana automatik), Judul, Harga, Tahun, dan Catatan (dengan ciri shortcode). Data disimpan dalam localStorage dan boleh dilihat pada bila-bila masa. Demo ini menggunakan data contoh – tiada sambungan ke Google Forms atau mana-mana backend.',
+            description: 'Sistem untuk mendaftarkan buku baharu ke dalam sistem perpustakaan/pusat sumber. Data disimpan dalam localStorage dan boleh dilihat pada bila-bila masa.',
             image: '6.png',
             demoLink: '6index.html'
         }, {
             id: 'Sistem Komplex',
             name: 'Sistem Kehadiran',
-            description: 'sistem dalam proses kelulusan publish.',
+            description: 'Sistem dalam proses kelulusan publish.',
+            image: '',
             demoLink: 'projects/fast lane print/index.html'
         }, ];
 
-        // ================================================================
-        // 2. DATA GALLERY (PENCAPAIAN / SIJIL) — HANYA nama fail PDF
-        // ================================================================
-        const galleryData = [{
-            title: 'ANUGERAH KECEMERLANGAN AKADEMIK 2023',
-            type: 'Sijil',
-            file: 'ANUGERAH KECEMERLANGAN AKADEMIK 2023.pdf'
-        }, {
-            title: 'Anugerah Projek Terbaik 2024',
-            type: 'Anugerah',
-            file: 'anugerah_projek.pdf'
-        }, {
-            title: 'Pertandingan Inovasi STEM',
-            type: 'Pertandingan',
-            file: 'stem_competition.pdf'
-        }, {
-            title: 'Sijil Frontend Developer',
-            type: 'Sijil',
-            file: 'sijil_frontend.pdf'
-        }, {
-            title: 'Program Mentor Muda 2025',
-            type: 'Program',
-            file: 'mentor_muda.pdf'
-        }, {
-            title: 'Sijil Electronics & Robotics',
-            type: 'Sijil',
-            file: 'sijil_robotics.pdf'
-        }, {
-            title: 'Anugerah Inovasi Digital',
-            type: 'Anugerah',
-            file: 'inovasi_digital.pdf'
-        }, {
-            title: 'Hackathon 2024',
-            type: 'Pertandingan',
-            file: 'hackathon_2024.pdf'
-        }, {
-            title: 'Program Latihan Industri',
-            type: 'Program',
-            file: 'latihan_industri.pdf'
-        }, {
-            title: 'Sijil UI/UX Design',
-            type: 'Sijil',
-            file: 'sijil_uiux.pdf'
-        }, ];
-
-        // ================================================================
-        // 3. RENDER PROJECTS
-        // ================================================================
         function renderProjects() {
             const grid = document.getElementById('projectsGrid');
             if (!grid) return;
@@ -2179,396 +1712,97 @@
                 grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#64748b;">Tiada projek buat masa ini.</p>';
                 return;
             }
-            grid.innerHTML = projectsData.map(proj => `
-                <div class="project-card">
-                    <div class="project-thumb">
-                        ${proj.image ? `<img src="${proj.image}" alt="${proj.name}">` : `<span>📁</span>`}
-                    </div>
-                    <div class="project-body">
-                        <h3 class="project-name">${proj.name}</h3>
-                        <p class="project-desc">${proj.description}</p>
-                        <a href="${proj.demoLink}" target="_blank" class="project-link">
-                            <i class="fas fa-play"></i> Live Demo
-                        </a>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // ================================================================
-        // 4. PDF THUMBNAIL GENERATOR (PDF.js)
-        // ================================================================
-        const pdfjsLib = window.pdfjsLib;
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
-        async function generatePDFThumbnail(file, container) {
-            try {
-                const loadingEl = document.createElement('div');
-                loadingEl.className = 'loading-spinner';
-                container.appendChild(loadingEl);
-
-                const pdf = await pdfjsLib.getDocument(file).promise;
-                const page = await pdf.getPage(1);
-                const viewport = page.getViewport({ scale: 1.5 });
-                const canvas = document.createElement('canvas');
-                const context = canvas.getContext('2d');
-                canvas.width = viewport.width;
-                canvas.height = viewport.height;
-                await page.render({ canvasContext: context, viewport: viewport }).promise;
-
-                // Remove loading spinner
-                if (loadingEl.parentNode) loadingEl.remove();
-
-                // Clear container and add canvas
-                container.innerHTML = '';
-                container.appendChild(canvas);
-                return true;
-            } catch (err) {
-                console.warn('PDF thumbnail failed for', file, err);
-                // Fallback: show PDF icon
-                container.innerHTML = `
-                    <div class="pdf-fallback">
-                        <i class="fas fa-file-pdf"></i>
-                        <span>PDF</span>
-                    </div>
-                `;
-                return false;
-            }
-        }
-
-        // ================================================================
-        // 5. PREMIUM CAROUSEL
-        // ================================================================
-        class PremiumCarousel {
-            constructor(container, items, options = {}) {
-                this.container = container;
-                this.items = items;
-                this.track = container.querySelector('.carousel-track');
-                this.itemWidth = options.itemWidth || 220;
-                this.gap = options.gap || 24;
-                this.autoScrollSpeed = options.autoScrollSpeed || 0.6; // px per frame
-                this.pauseDelay = options.pauseDelay || 2800; // ms
-
-                this.totalWidth = (this.itemWidth + this.gap) * this.items.length;
-                this.position = 0;
-                this.isDragging = false;
-                this.isAutoScrolling = true;
-                this.pauseTimeout = null;
-                this.rafId = null;
-                this.startX = 0;
-                this.currentX = 0;
-                this.dragOffset = 0;
-                this.dragVelocity = 0;
-                this.lastDragTime = 0;
-                this.isTransitioning = false;
-                this.itemsRendered = false;
-
-                this.init();
-            }
-
-            init() {
-                this.renderItems();
-                this.setupEvents();
-                this.startAutoScroll();
-                this.showIndicator();
-            }
-
-            renderItems() {
-                // Build 3x duplication for infinite feel
-                const tripleItems = [...this.items, ...this.items, ...this.items];
-                this.track.innerHTML = tripleItems.map((item, idx) => {
-                    const realIndex = idx % this.items.length;
-                    return `
-                        <div class="carousel-item" data-index="${realIndex}" data-file="${item.file}" data-title="${item.title}" data-type="${item.type}">
-                            <div class="carousel-item-thumb" id="thumb-${idx}">
-                                <div class="loading-spinner"></div>
-                            </div>
-                            <div class="carousel-item-body">
-                                <h4>${item.title}</h4>
-                                <p>${item.type}</p>
-                            </div>
-                            <span class="badge-type">${item.type}</span>
+            grid.innerHTML = projectsData.map((proj, idx) => `
+                    <div class="project-card reveal" style="transition-delay:${idx * 0.08}s">
+                        <div class="project-thumb">
+                            ${proj.image ? `<img src="${proj.image}" alt="${proj.name}">` : `<span>📁</span>`}
                         </div>
-                    `;
-                }).join('');
-
-                // Generate PDF thumbnails
-                const allItems = this.track.querySelectorAll('.carousel-item');
-                allItems.forEach((el, idx) => {
-                    const realIdx = idx % this.items.length;
-                    const file = this.items[realIdx].file;
-                    const thumbContainer = el.querySelector('.carousel-item-thumb');
-                    generatePDFThumbnail(file, thumbContainer);
-
-                    // Click to open modal
-                    el.addEventListener('click', () => {
-                        const title = this.items[realIdx].title;
-                        openModal(file, title);
-                    });
-                });
-
-                // Set initial position (centered on the middle set)
-                const middleOffset = this.items.length * (this.itemWidth + this.gap);
-                this.position = -middleOffset;
-                this.updateTrack(false);
-                this.itemsRendered = true;
-            }
-
-            get totalItems() {
-                return this.items.length * 3;
-            }
-
-            get itemStep() {
-                return this.itemWidth + this.gap;
-            }
-
-            updateTrack(animated = true) {
-                if (!this.track) return;
-                if (animated && !this.isDragging) {
-                    this.track.classList.add('transitioning');
-                } else {
-                    this.track.classList.remove('transitioning');
-                }
-                this.track.style.transform = `translateX(${this.position}px)`;
-            }
-
-            // Auto-scroll
-            startAutoScroll() {
-                if (this.rafId) cancelAnimationFrame(this.rafId);
-                this.isAutoScrolling = true;
-                this.autoScrollLoop();
-            }
-
-            autoScrollLoop() {
-                if (!this.isAutoScrolling) return;
-                if (!this.isDragging && !this.isTransitioning) {
-                    this.position -= this.autoScrollSpeed;
-
-                    // Check boundaries for infinite loop
-                    const singleSetWidth = this.items.length * this.itemStep;
-                    const leftBoundary = -singleSetWidth * 2;
-                    const rightBoundary = -singleSetWidth;
-
-                    if (this.position < leftBoundary) {
-                        this.position += singleSetWidth;
-                        this.updateTrack(false);
-                    } else if (this.position > rightBoundary) {
-                        this.position -= singleSetWidth;
-                        this.updateTrack(false);
-                    } else {
-                        this.updateTrack(true);
-                    }
-                }
-                this.rafId = requestAnimationFrame(() => this.autoScrollLoop());
-            }
-
-            pauseAutoScroll() {
-                this.isAutoScrolling = false;
-                if (this.rafId) {
-                    cancelAnimationFrame(this.rafId);
-                    this.rafId = null;
-                }
-                // Resume after delay
-                clearTimeout(this.pauseTimeout);
-                this.pauseTimeout = setTimeout(() => {
-                    this.startAutoScroll();
-                }, this.pauseDelay);
-            }
-
-            // Drag / Swipe
-            setupEvents() {
-                const container = this.container;
-
-                // Pointer events (mouse + touch)
-                container.addEventListener('pointerdown', (e) => this.onPointerDown(e));
-                container.addEventListener('pointermove', (e) => this.onPointerMove(e));
-                container.addEventListener('pointerup', (e) => this.onPointerUp(e));
-                container.addEventListener('pointercancel', (e) => this.onPointerUp(e));
-
-                // Mouse wheel
-                container.addEventListener('wheel', (e) => {
-                    e.preventDefault();
-                    const delta = e.deltaX || e.deltaY;
-                    if (Math.abs(delta) < 2) return;
-                    this.position -= delta * 0.5;
-                    const singleSetWidth = this.items.length * this.itemStep;
-                    const leftBoundary = -singleSetWidth * 2;
-                    const rightBoundary = -singleSetWidth;
-                    if (this.position < leftBoundary) this.position += singleSetWidth;
-                    if (this.position > rightBoundary) this.position -= singleSetWidth;
-                    this.updateTrack(true);
-                    this.pauseAutoScroll();
-                }, { passive: false });
-
-                // Touch events via pointer events already covered
-
-                // Trackpad (via wheel with passive false)
-            }
-
-            onPointerDown(e) {
-                this.isDragging = true;
-                this.startX = e.clientX;
-                this.currentX = e.clientX;
-                this.dragOffset = 0;
-                this.dragVelocity = 0;
-                this.lastDragTime = performance.now();
-                this.container.classList.add('dragging');
-                this.track.classList.remove('transitioning');
-                this.pauseAutoScroll();
-
-                // Hide indicator
-                this.hideIndicator();
-            }
-
-            onPointerMove(e) {
-                if (!this.isDragging) return;
-                const now = performance.now();
-                const dt = now - this.lastDragTime;
-                const dx = e.clientX - this.currentX;
-                this.dragVelocity = dx / Math.max(dt, 16);
-                this.dragOffset += dx;
-                this.position += dx;
-                this.currentX = e.clientX;
-                this.lastDragTime = now;
-                this.updateTrack(false);
-            }
-
-            onPointerUp(e) {
-                if (!this.isDragging) return;
-                this.isDragging = false;
-                this.container.classList.remove('dragging');
-
-                // Apply momentum if velocity is significant
-                const momentum = this.dragVelocity * 8;
-                if (Math.abs(momentum) > 0.5) {
-                    this.position += momentum;
-                    this.updateTrack(true);
-                }
-
-                // Snap to nearest item
-                this.snapToNearest();
-
-                // Resume auto-scroll after delay
-                this.pauseAutoScroll();
-                this.showIndicator();
-            }
-
-            snapToNearest() {
-                const singleSetWidth = this.items.length * this.itemStep;
-                const relativePos = ((this.position % singleSetWidth) + singleSetWidth) % singleSetWidth;
-                const nearestIndex = Math.round(relativePos / this.itemStep);
-                let targetPos = -nearestIndex * this.itemStep;
-
-                // Adjust to keep within the middle set range
-                const middleStart = -singleSetWidth;
-                const middleEnd = -singleSetWidth * 2;
-                if (targetPos > middleStart) targetPos -= singleSetWidth;
-                if (targetPos < middleEnd) targetPos += singleSetWidth;
-
-                this.position = targetPos;
-                this.updateTrack(true);
-            }
-
-            showIndicator() {
-                const indicator = document.getElementById('carouselIndicator');
-                if (indicator) {
-                    indicator.classList.add('visible');
-                    clearTimeout(this.indicatorTimeout);
-                    this.indicatorTimeout = setTimeout(() => {
-                        indicator.classList.remove('visible');
-                    }, 3000);
-                }
-            }
-
-            hideIndicator() {
-                const indicator = document.getElementById('carouselIndicator');
-                if (indicator) indicator.classList.remove('visible');
-                clearTimeout(this.indicatorTimeout);
-            }
-
-            // Cleanup
-            destroy() {
-                if (this.rafId) cancelAnimationFrame(this.rafId);
-                clearTimeout(this.pauseTimeout);
-                clearTimeout(this.indicatorTimeout);
-            }
+                        <div class="project-body">
+                            <h3 class="project-name">${proj.name}</h3>
+                            <p class="project-desc">${proj.description}</p>
+                            <a href="${proj.demoLink}" target="_blank" class="project-link">
+                                <i class="fas fa-play"></i> Live Demo
+                            </a>
+                        </div>
+                    </div>
+                `).join('');
         }
 
-        // ================================================================
-        // 6. RENDER GALLERY CAROUSEL
-        // ================================================================
-        let carouselInstance = null;
+        // ============================================
+        // 4. ACHIEVEMENTS GALLERY
+        // ============================================
+        // Sila gantikan array ini dengan gambar sijil sebenar anda.
+        // Letakkan gambar dalam folder "certificates/" atau guna URL terus.
+        const certificateImages = [
+            'certificates/sijil1.jpg',
+            'certificates/sijil2.jpg',
+            'certificates/sijil3.jpg',
+            'certificates/sijil4.jpg',
+            'certificates/sijil5.jpg',
+            'certificates/sijil6.jpg',
+            'certificates/sijil7.jpg',
+            'certificates/sijil8.jpg',
+            // tambah seberapa banyak yang perlu
+        ];
 
-        function renderGalleryCarousel() {
-            const track = document.getElementById('carouselTrack');
+        // Jika tiada gambar, gunakan placeholder
+        const fallbackCert = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="500" viewBox="0 0 400 500"%3E%3Crect width="400" height="500" fill="%23f1f5f9"/%3E%3Ctext x="200" y="250" font-family="Inter,sans-serif" font-size="24" fill="%2394a3b8" text-anchor="middle"%3ESijil%3C/text%3E%3C/svg%3E';
+
+        function renderGallery() {
+            const track = document.getElementById('galleryTrack');
             if (!track) return;
 
-            // Clear existing
-            track.innerHTML = '';
+            // Jika tiada gambar, gunakan placeholder
+            const images = certificateImages.length ? certificateImages : [fallbackCert, fallbackCert, fallbackCert, fallbackCert,
+                fallbackCert
+            ];
 
-            // Create carousel instance
-            const container = document.getElementById('carouselContainer');
-            if (carouselInstance) {
-                carouselInstance.destroy();
-                carouselInstance = null;
-            }
-
-            carouselInstance = new PremiumCarousel(container, galleryData, {
-                itemWidth: 220,
-                gap: 24,
-                autoScrollSpeed: 0.6,
-                pauseDelay: 2800
-            });
-        }
-
-        // ================================================================
-        // 7. MODAL VIEWER
-        // ================================================================
-        function openModal(file, title) {
-            const overlay = document.getElementById('modalOverlay');
-            const body = document.getElementById('modalBody');
-            if (!overlay || !body) return;
-
-            const ext = file.split('.').pop().toLowerCase();
-            let content = '';
-
-            if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(ext)) {
-                content = `<img src="${file}" alt="${title}">`;
-            } else if (ext === 'pdf') {
-                content = `<iframe src="${file}#toolbar=1" title="${title}"></iframe>`;
-            } else {
-                content = `
-                    <div class="pdf-placeholder">
-                        <i class="fas fa-file-alt"></i>
-                        <p><strong>${title}</strong><br>Fail: ${file}<br>Format tidak disokong untuk pratonton.</p>
+            // Ulang 2 kali untuk infinite scroll effect
+            const items = [...images, ...images];
+            track.innerHTML = items.map((src, i) => `
+                    <div class="gallery-item" data-src="${src}">
+                        <img src="${src}" alt="Sijil ${i+1}" loading="lazy" onerror="this.src='${fallbackCert}'" />
+                        <div class="gallery-overlay"><span>📜 Sijil</span></div>
                     </div>
-                `;
-            }
+                `).join('');
 
-            body.innerHTML = content;
-            overlay.classList.add('open');
-            document.body.style.overflow = 'hidden';
-        }
+            // Lightbox
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightboxImg');
+            const lightboxClose = document.getElementById('lightboxClose');
 
-        function closeModal() {
-            const overlay = document.getElementById('modalOverlay');
-            if (overlay) {
-                overlay.classList.remove('open');
+            track.querySelectorAll('.gallery-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const src = item.getAttribute('data-src') || item.querySelector('img')?.src;
+                    if (src) {
+                        lightboxImg.src = src;
+                        lightbox.classList.add('open');
+                        document.body.style.overflow = 'hidden';
+                    }
+                });
+            });
+
+            lightboxClose.addEventListener('click', closeLightbox);
+            lightbox.addEventListener('click', (e) => {
+                if (e.target === lightbox) closeLightbox();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeLightbox();
+            });
+
+            function closeLightbox() {
+                lightbox.classList.remove('open');
                 document.body.style.overflow = '';
             }
+
+            // Pause on hover
+            track.addEventListener('mouseenter', () => track.classList.add('paused'));
+            track.addEventListener('mouseleave', () => track.classList.remove('paused'));
         }
 
-        document.getElementById('modalCloseBtn')?.addEventListener('click', closeModal);
-        document.getElementById('modalOverlay')?.addEventListener('click', function(e) {
-            if (e.target === this) closeModal();
-        });
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeModal();
-        });
-
-        // ================================================================
-        // 8. UMUR REAL-TIME + MINAT KOMPUTER
-        // ================================================================
+        // ============================================
+        // 5. AGE & INTEREST COUNTERS (real-time)
+        // ============================================
         const birthDate = new Date(2006, 5, 5, 0, 0, 0);
         const interestStart = new Date(2020, 5, 16, 0, 0, 0);
 
@@ -2597,14 +1831,16 @@
             if (h < 0) { h += 24;
                 d--; }
             if (d < 0) {
-                const prev = new Date(to.getFullYear(), to.getMonth(), 0).getDate();
-                d += prev;
+                const pmd = new Date(to.getFullYear(), to.getMonth(), 0).getDate();
+                d += pmd;
                 m--;
             }
             if (m < 0) { m += 12;
                 y--; }
             return { years: y, months: m, days: d, hours: h, minutes: min, seconds: s };
         }
+
+        let currentLang = 'ms';
 
         function updateAge() {
             const now = new Date();
@@ -2623,7 +1859,7 @@
             if (!el) return;
             if (now < interestStart) {
                 const L = interestLabels[currentLang] || interestLabels.ms;
-                el.innerHTML = `<span style="color:#94a3b8;font-weight:400;">⏳ ${L.title || 'Minat dalam Dunia Komputer'} akan bermula...</span>`;
+                el.innerHTML = `<span style="color:#94a3b8;font-weight:400;">⏳ ${L.title || 'Minat'} akan bermula...</span>`;
                 return;
             }
             const diff = computeDiff(interestStart, now);
@@ -2632,26 +1868,25 @@
                 `<strong>${diff.years}</strong> ${L.years} &nbsp; <strong>${diff.months}</strong> ${L.months} &nbsp; <strong>${diff.days}</strong> ${L.days}<br><strong>${diff.hours}</strong> ${L.hours} &nbsp; <strong>${diff.minutes}</strong> ${L.minutes} &nbsp; <strong>${diff.seconds}</strong> ${L.seconds}`;
         }
 
-        // ================================================================
-        // 9. TERJEMAHAN
-        // ================================================================
-        let currentLang = 'ms';
-
+        // ============================================
+        // 6. TRANSLATIONS (lengkap & konsisten)
+        // ============================================
         const translations = {
             ms: {
-                landing_badge: '✦ Portfolio 2026',
-                landing_title1: 'Frontend Developer',
-                landing_title2: 'Electronics Technology',
-                landing_title3: 'UI / UX Enthusiast',
-                landing_tagline: 'Every great idea begins with a single line of code.',
-                landing_btn: 'Mulakan',
                 nav_projects: 'Projek',
+                nav_history: 'Sejarah',
+                nav_achievements: 'Pencapaian',
                 nav_about: 'Tentang',
                 nav_contact: 'Hubungi',
-                nav_sejarah: 'Sejarah',
+                landing_badge: '✦ Portfolio 2026',
+                landing_sub1: 'Frontend Developer',
+                landing_sub2: 'Elektronik',
+                landing_sub3: 'UI/UX Enthusiast',
+                landing_tagline: '"Setiap idea hebat bermula dengan sebaris kod."',
+                landing_btn: 'Mulakan',
                 hero_badge: '✦ Portfolio',
                 hero_title: 'Hi, saya <span class="highlight">Azhar</span>.<br />Pembangun <span class="highlight">Frontend</span>.',
-                hero_desc: 'Saya berkebolehan dalam pembangunan projek tahun akhir/penyambungan mikrokontroler/programming ide/ web app/web/penyusunan data (db), interaktif & mesra pengguna. Terokai projek-projek yang telah saya bina dibawah. Kesemua projek telah diubah kepada mood demostrasi (demo) hanya paparan UI frontend sahaja dan anda boleh mencuba kesemua web demo dengan click button untuk pengalaman sendiri.',
+                hero_desc: 'Saya membina antara muka yang pantas, interaktif & mesra pengguna. Terokai projek-projek demo saya di bawah.',
                 btn_view_projects: 'Lihat Projek',
                 btn_contact: 'Hubungi',
                 stat_projects: 'Projek',
@@ -2659,16 +1894,19 @@
                 stat_progress: 'Dalam Proses',
                 tag_portfolio: '✦ Portfolio',
                 projects_title: 'Projek <span class="highlight">Saya</span>',
-                projects_desc: 'Setiap kad membawa kepada demo frontend yang dibina sepenuhnya dengan data contoh. Klik <strong>"Live Demo"</strong> untuk meneroka(Gambaran UI yang sebenar agak lain kerana telah diubah strukturnya sebagai demo).',
+                projects_desc: 'Setiap kad membawa kepada demo frontend yang dibina sepenuhnya dengan data contoh. Klik <strong>"Live Demo"</strong> untuk meneroka.',
+                tag_achievements: '✦ Pencapaian',
+                achievements_title: 'Sijil &amp; <span class="highlight">Anugerah</span>',
+                achievements_desc: 'Galeri pencapaian, sijil, dan penyertaan sepanjang perjalanan.',
                 tag_about: '✦ Tentang',
                 about_title: 'Saya <span class="highlight">Azhar</span>',
-                about_p1: 'Saya seorang yang sukakan sesuatu yang mencabar dan benda baru untuk diterokai, selain berpengalaman dalam bidang Elektrik & Elektronik, saya suka mengisi masa lapang dengan memahami & belajar programing sekali gus saya gemar mencipta pengalaman digital dengan fokus pada reka bentuk yang menarik, prestasi tinggi, dan kebolehpasaran.',
+                about_p1: 'Saya seorang yang sukakan sesuatu yang mencabar dan benda baru untuk diterokai, selain berpengalaman dalam bidang Elektrik & Elektronik, saya suka mengisi masa lapang dengan memahami & belajar programming sekali gus saya gemar mencipta pengalaman digital dengan fokus pada reka bentuk yang menarik, prestasi tinggi, dan kebolehpasaran.',
                 about_p2: 'Web ini dibina sebagai tempat pameran untuk projek-projek yang pernah saya bina dan sedang digunakan — semuanya telah diubah dalam bentuk demo frontend tanpa backend, supaya mudah diperlihatkan.',
                 age_label: 'Umur Sebenar',
                 interest_label: 'Minat dalam Dunia Komputer',
                 tag_contact: '✦ Hubungi',
-                contact_title: 'Jom <span class="highlight">Get In Touch With Me</span>',
-                contact_desc: 'Ada projek atau pertanyaan? Saya sentiasa terbuka untuk berkolaborasi dan membina perkara yang menarik bersama. Mari sama-sama kita merialisasikan impian anda.',
+                contact_title: 'Jom <span class="highlight">Get In Touch</span>',
+                contact_desc: 'Ada projek atau pertanyaan? Saya sentiasa terbuka untuk berkolaborasi dan membina perkara yang menarik bersama. Mari realisasikan impian anda.',
                 spotify_note: '🎧 Lagu-lagu yang saya dengar semasa programming.',
                 form_name: 'Nama',
                 form_name_ph: 'Nama anda',
@@ -2676,70 +1914,29 @@
                 form_message: 'Mesej',
                 form_message_ph: 'Tulis mesej anda...',
                 form_send: 'Hantar',
-                form_sending: 'Menghantar...',
-                form_success: '✅ Mesej berjaya dihantar! Terima kasih.',
-                form_error: '❌ Ralat: Mesej tidak dapat dihantar. Sila cuba lagi.',
-                footer_text: '&copy; 2026 <strong>Azhar.dev</strong>',
-                footer_sub: 'Dibina dengan <i class="fas fa-heart" style="color:#f472b6;"></i> oleh Azhar.dev',
-                tag_sejarah: '✦ Sejarah',
-                sejarah_title: 'Perjalanan <span class="highlight">Hidup Saya</span>',
-                sejarah_subtitle: 'Biodata, minat, hobi, pembelajaran, pengalaman, matlamat — dan pencapaian sepanjang perjalanan.',
-                bio_title: 'Biodata',
-                bio_text: '<strong>Nama:</strong> Muhammad Azhar bin Mazlan<br><strong>Lahir:</strong> 5 Jun 2006<br><strong>Asal:</strong> Malaysia<br><strong>Kini:</strong> Mahasiswa &amp; Frontend Developer',
-                bio_born: 'Lahir',
-                bio_origin: 'Asal',
-                bio_current: 'Kini',
-                hobby_title: 'Minat &amp; Hobi',
-                hobby1: '⚡ Elektronik &amp; IoT',
-                hobby2: '💻 Programming &amp; UI/UX',
-                hobby3: '🎵 Muzik &amp; Produksi',
-                hobby4: '📚 Membaca &amp; Belajar',
-                learn_title: 'Perjalanan Pembelajaran',
-                learn1: '🔹 2020: Mula kenal programming (HTML/CSS)',
-                learn2: '🔹 2021: JavaScript &amp; C++',
-                learn3: '🔹 2022: IoT, ESP32, penderia',
-                learn4: '🔹 2023–2024: Frontend, App Script, DB',
-                learn5: '🔹 2025–2026: Projek bersepadu &amp; portfolio',
-                goal_title: 'Matlamat Hidup',
-                goal1: '🚀 Menjadi Fullstack Developer',
-                goal2: '🌍 Bekerja di syarikat teknologi global',
-                goal3: '💡 Mencipta produk yang memberi impak',
-                goal4: '📈 Terus belajar &amp; berkongsi ilmu',
-                tag_timeline: '✦ Timeline',
-                timeline_title: 'Perjalanan <span class="highlight">Hidup</span>',
-                t1_title: 'Lahir di Malaysia',
-                t1_desc: 'Permulaan hidup yang penuh dengan rasa ingin tahu.',
-                t2_title: 'Mula Meminati Komputer',
-                t2_desc: 'Terokai dunia coding dan elektronik secara autodidak.',
-                t3_title: 'Projek IoT Pertama',
-                t3_desc: 'Membina sistem pemantauan alam sekitar dengan ESP32 dan penderia.',
-                t4_title: 'Mendalami Frontend &amp; UI/UX',
-                t4_desc: 'Fokus kepada pengalaman pengguna, reka bentuk moden dan prestasi.',
-                t5_title: 'Portfolio &amp; Projek Bersepadu',
-                t5_desc: 'Menggabungkan semua kemahiran dalam projek-projek berskala.',
-                t6_title: 'Masa Depan Cerah',
-                t6_desc: 'Terus membangun, belajar dan memberi impak kepada dunia.',
-                tag_gallery: '✦ Pencapaian',
-                gallery_title: 'Sijil &amp; <span class="highlight">Anugerah</span>',
-                gallery_desc: 'Koleksi sijil, pencapaian, pertandingan dan program yang pernah disertai.',
-                back_to_portfolio: 'Kembali ke Portfolio',
+                footer_text: '&copy; 2026 <strong>Azhar.dev</strong> — Dibina dengan <i class="fas fa-heart" style="color:#f472b6;"></i> untuk web.',
+                footer_sub: 'Dihoskan dengan <i class="fas fa-globe"></i> dan semangat.',
                 music_stop: 'Stop Muzik',
-                music_play: 'Main Muzik'
+                music_play: 'Main Muzik',
+                form_sending: 'Menghantar...',
+                form_success: 'Mesej berjaya dihantar! Terima kasih 😊',
+                form_error: 'Ralat. Sila cuba lagi.',
             },
             en: {
-                landing_badge: '✦ Portfolio 2026',
-                landing_title1: 'Frontend Developer',
-                landing_title2: 'Electronics Technology',
-                landing_title3: 'UI / UX Enthusiast',
-                landing_tagline: 'Every great idea begins with a single line of code.',
-                landing_btn: 'Start',
                 nav_projects: 'Projects',
+                nav_history: 'History',
+                nav_achievements: 'Achievements',
                 nav_about: 'About',
                 nav_contact: 'Contact',
-                nav_sejarah: 'History',
+                landing_badge: '✦ Portfolio 2026',
+                landing_sub1: 'Frontend Developer',
+                landing_sub2: 'Electronics',
+                landing_sub3: 'UI/UX Enthusiast',
+                landing_tagline: '"Every great idea begins with a single line of code."',
+                landing_btn: 'Start',
                 hero_badge: '✦ Portfolio',
                 hero_title: 'Hi, I\'m <span class="highlight">Azhar</span>.<br />Frontend <span class="highlight">Developer</span>.',
-                hero_desc: 'I specialize in final year projects, microcontroller integration, programming IDE, web apps, and database management. Explore my projects below. All have been converted to frontend demos — click the button to try them yourself.',
+                hero_desc: 'I build fast, interactive & user-friendly interfaces. Explore my demo projects below.',
                 btn_view_projects: 'View Projects',
                 btn_contact: 'Contact Me',
                 stat_projects: 'Projects',
@@ -2747,15 +1944,18 @@
                 stat_progress: 'In Progress',
                 tag_portfolio: '✦ Portfolio',
                 projects_title: 'My <span class="highlight">Projects</span>',
-                projects_desc: 'Every card leads to a fully built frontend demo with sample data. Click <strong>"Live Demo"</strong> to explore (the actual UI may differ slightly as it has been restructured for demo purposes).',
+                projects_desc: 'Every card leads to a fully built frontend demo with sample data. Click <strong>"Live Demo"</strong> to explore.',
+                tag_achievements: '✦ Achievements',
+                achievements_title: 'Certificates &amp; <span class="highlight">Awards</span>',
+                achievements_desc: 'Gallery of achievements, certificates, and participations throughout the journey.',
                 tag_about: '✦ About',
                 about_title: 'I\'m <span class="highlight">Azhar</span>',
-                about_p1: 'I enjoy challenges and exploring new things. Besides experience in Electrical & Electronics, I spend my free time learning programming and creating digital experiences focused on great design, high performance, and marketability.',
+                about_p1: 'I enjoy challenges and exploring new things. Besides experience in Electrical & Electronics, I like to spend my free time learning programming, and I love creating digital experiences focused on great design, high performance, and marketability.',
                 about_p2: 'This website was built as a showcase for projects I have built and are in use — all converted into frontend-only demos without a backend, so they can be easily viewed.',
                 age_label: 'Real-Time Age',
                 interest_label: 'Interest in Computers',
                 tag_contact: '✦ Contact',
-                contact_title: 'Let\'s <span class="highlight">Get In Touch With Me</span>',
+                contact_title: 'Let\'s <span class="highlight">Get In Touch</span>',
                 contact_desc: 'Have a project or a question? I\'m always open to collaborating and building interesting things together. Let\'s bring your ideas to life.',
                 spotify_note: '🎧 Songs I listen to while programming.',
                 form_name: 'Name',
@@ -2764,70 +1964,29 @@
                 form_message: 'Message',
                 form_message_ph: 'Write your message...',
                 form_send: 'Send',
-                form_sending: 'Sending...',
-                form_success: '✅ Message sent successfully! Thank you.',
-                form_error: '❌ Error: Message could not be sent. Please try again.',
-                footer_text: '&copy; 2026 <strong>Azhar.dev</strong>',
-                footer_sub: 'Built with <i class="fas fa-heart" style="color:#f472b6;"></i> by Azhar.dev',
-                tag_sejarah: '✦ History',
-                sejarah_title: 'My <span class="highlight">Life Journey</span>',
-                sejarah_subtitle: 'Bio, interests, hobbies, learning, experience, goals — and achievements along the way.',
-                bio_title: 'Bio',
-                bio_text: '<strong>Name:</strong> Muhammad Azhar bin Mazlan<br><strong>Born:</strong> 5 June 2006<br><strong>Origin:</strong> Malaysia<br><strong>Now:</strong> Student &amp; Frontend Developer',
-                bio_born: 'Born',
-                bio_origin: 'Origin',
-                bio_current: 'Now',
-                hobby_title: 'Interests &amp; Hobbies',
-                hobby1: '⚡ Electronics &amp; IoT',
-                hobby2: '💻 Programming &amp; UI/UX',
-                hobby3: '🎵 Music &amp; Production',
-                hobby4: '📚 Reading &amp; Learning',
-                learn_title: 'Learning Journey',
-                learn1: '🔹 2020: Started programming (HTML/CSS)',
-                learn2: '🔹 2021: JavaScript &amp; C++',
-                learn3: '🔹 2022: IoT, ESP32, sensors',
-                learn4: '🔹 2023–2024: Frontend, App Script, DB',
-                learn5: '🔹 2025–2026: Integrated projects &amp; portfolio',
-                goal_title: 'Life Goals',
-                goal1: '🚀 Become a Fullstack Developer',
-                goal2: '🌍 Work at a global tech company',
-                goal3: '💡 Create products that make an impact',
-                goal4: '📈 Keep learning &amp; sharing knowledge',
-                tag_timeline: '✦ Timeline',
-                timeline_title: 'Life <span class="highlight">Journey</span>',
-                t1_title: 'Born in Malaysia',
-                t1_desc: 'A life full of curiosity from the start.',
-                t2_title: 'Became Interested in Computers',
-                t2_desc: 'Explored coding and electronics self-taught.',
-                t3_title: 'First IoT Project',
-                t3_desc: 'Built an environmental monitoring system with ESP32 and sensors.',
-                t4_title: 'Deepened Frontend &amp; UI/UX',
-                t4_desc: 'Focused on user experience, modern design and performance.',
-                t5_title: 'Portfolio &amp; Integrated Projects',
-                t5_desc: 'Combined all skills into large-scale projects.',
-                t6_title: 'Bright Future',
-                t6_desc: 'Keep building, learning and making an impact.',
-                tag_gallery: '✦ Achievements',
-                gallery_title: 'Certificates &amp; <span class="highlight">Awards</span>',
-                gallery_desc: 'A collection of certificates, achievements, competitions and programs I\'ve participated in.',
-                back_to_portfolio: '← Back to Portfolio',
+                footer_text: '&copy; 2026 <strong>Azhar.dev</strong> — Built with <i class="fas fa-heart" style="color:#f472b6;"></i> for the web.',
+                footer_sub: 'Hosted with <i class="fas fa-globe"></i> and passion.',
                 music_stop: 'Stop Music',
-                music_play: 'Play Music'
+                music_play: 'Play Music',
+                form_sending: 'Sending...',
+                form_success: 'Message sent successfully! Thank you 😊',
+                form_error: 'Error. Please try again.',
             },
             zh: {
-                landing_badge: '✦ 作品集 2026',
-                landing_title1: '前端开发者',
-                landing_title2: '电子技术',
-                landing_title3: 'UI / UX 爱好者',
-                landing_tagline: 'Every great idea begins with a single line of code.',
-                landing_btn: '开始',
                 nav_projects: '项目',
+                nav_history: '历史',
+                nav_achievements: '成就',
                 nav_about: '关于',
                 nav_contact: '联系',
-                nav_sejarah: '历史',
+                landing_badge: '✦ 作品集 2026',
+                landing_sub1: '前端开发',
+                landing_sub2: '电子技术',
+                landing_sub3: 'UI/UX 爱好者',
+                landing_tagline: '"每个伟大的想法都始于一行代码。"',
+                landing_btn: '开始',
                 hero_badge: '✦ 作品集',
                 hero_title: '嗨，我是 <span class="highlight">Azhar</span>。<br />前端 <span class="highlight">开发者</span>。',
-                hero_desc: '我擅长最终项目开发、微控制器集成、编程IDE、网页应用和数据库管理。探索我下面的项目。所有项目都已转换为前端演示 — 点击按钮即可亲自体验。',
+                hero_desc: '我构建快速、互动且用户友好的界面。探索下面的演示项目。',
                 btn_view_projects: '查看项目',
                 btn_contact: '联系我',
                 stat_projects: '项目',
@@ -2835,10 +1994,13 @@
                 stat_progress: '进行中',
                 tag_portfolio: '✦ 作品集',
                 projects_title: '我的 <span class="highlight">项目</span>',
-                projects_desc: '每张卡片都会带你进入一个使用示例数据完整构建的前端演示。点击 <strong>"Live Demo"</strong> 进行探索（实际UI可能略有不同，因为已为演示目的进行了重构）。',
+                projects_desc: '每张卡片都会带你进入一个使用示例数据完整构建的前端演示。点击 <strong>"Live Demo"</strong> 进行探索。',
+                tag_achievements: '✦ 成就',
+                achievements_title: '证书与 <span class="highlight">奖项</span>',
+                achievements_desc: '展示旅程中的成就、证书和参与经历。',
                 tag_about: '✦ 关于',
                 about_title: '我是 <span class="highlight">Azhar</span>',
-                about_p1: '我喜欢挑战和探索新事物。除了在电气与电子领域有经验外，我也喜欢利用空闲时间学习编程，热衷于打造注重精美设计、高性能与市场适应性的数字体验。',
+                about_p1: '我喜欢挑战和探索新事物，除了在电气与电子领域有经验外，我也喜欢利用空闲时间学习编程，热衷于打造注重精美设计、高性能与市场适应性的数字体验。',
                 about_p2: '这个网站是为展示我曾经开发并正在使用的项目而建立的——全部都转换成了没有后端的纯前端演示，方便浏览查看。',
                 age_label: '实时年龄',
                 interest_label: '对计算机的兴趣',
@@ -2852,55 +2014,13 @@
                 form_message: '留言',
                 form_message_ph: '写下您的留言...',
                 form_send: '发送',
-                form_sending: '发送中...',
-                form_success: '✅ 消息发送成功！谢谢。',
-                form_error: '❌ 错误：消息无法发送。请重试。',
-                footer_text: '&copy; 2026 <strong>Azhar.dev</strong>',
-                footer_sub: '用 <i class="fas fa-heart" style="color:#f472b6;"></i> 由 Azhar.dev 打造',
-                tag_sejarah: '✦ 历史',
-                sejarah_title: '我的 <span class="highlight">人生旅程</span>',
-                sejarah_subtitle: '个人简介、兴趣、爱好、学习、经验、目标 — 以及一路上的成就。',
-                bio_title: '个人简介',
-                bio_text: '<strong>姓名：</strong> Muhammad Azhar bin Mazlan<br><strong>出生：</strong> 2006年6月5日<br><strong>籍贯：</strong> 马来西亚<br><strong>现状：</strong> 学生 &amp; 前端开发者',
-                bio_born: '出生',
-                bio_origin: '籍贯',
-                bio_current: '现状',
-                hobby_title: '兴趣 &amp; 爱好',
-                hobby1: '⚡ 电子与物联网',
-                hobby2: '💻 编程与 UI/UX',
-                hobby3: '🎵 音乐与制作',
-                hobby4: '📚 阅读与学习',
-                learn_title: '学习历程',
-                learn1: '🔹 2020：开始学习编程（HTML/CSS）',
-                learn2: '🔹 2021：JavaScript &amp; C++',
-                learn3: '🔹 2022：物联网、ESP32、传感器',
-                learn4: '🔹 2023–2024：前端、App Script、数据库',
-                learn5: '🔹 2025–2026：综合项目与作品集',
-                goal_title: '人生目标',
-                goal1: '🚀 成为全栈开发者',
-                goal2: '🌍 在全球科技公司工作',
-                goal3: '💡 创造有影响力的产品',
-                goal4: '📈 持续学习与分享知识',
-                tag_timeline: '✦ 时间线',
-                timeline_title: '人生 <span class="highlight">旅程</span>',
-                t1_title: '在马来西亚出生',
-                t1_desc: '充满好奇心的生命开端。',
-                t2_title: '开始对计算机产生兴趣',
-                t2_desc: '自学编程和电子。',
-                t3_title: '第一个物联网项目',
-                t3_desc: '用ESP32和传感器构建环境监测系统。',
-                t4_title: '深入学习前端与UI/UX',
-                t4_desc: '专注于用户体验、现代设计和性能。',
-                t5_title: '作品集与综合项目',
-                t5_desc: '将所有技能融合到大型项目中。',
-                t6_title: '光明的未来',
-                t6_desc: '持续建设、学习并产生影响。',
-                tag_gallery: '✦ 成就',
-                gallery_title: '证书 &amp; <span class="highlight">奖项</span>',
-                gallery_desc: '收集的证书、成就、竞赛和参与过的项目。',
-                back_to_portfolio: '← 返回作品集',
+                footer_text: '&copy; 2026 <strong>Azhar.dev</strong> — 用 <i class="fas fa-heart" style="color:#f472b6;"></i> 为网络而建。',
+                footer_sub: '托管于 <i class="fas fa-globe"></i> 和热情。',
                 music_stop: '停止音乐',
-                music_play: '播放音乐'
+                music_play: '播放音乐',
+                form_sending: '发送中...',
+                form_success: '消息发送成功！谢谢 😊',
+                form_error: '错误，请重试。',
             }
         };
 
@@ -2925,7 +2045,6 @@
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
             });
-
             document.documentElement.lang = lang;
 
             const label = document.getElementById('musicBtnLabel');
@@ -2933,167 +2052,19 @@
 
             updateAge();
             updateInterest();
+            updateFormStatusText();
         }
 
-        // ================================================================
-        // 10. PAGE NAVIGATION (SPA) + TRANSITION ANIMATIONS
-        // ================================================================
-        let currentPage = 'portfolio';
-        let isTransitioning = false;
-        const transitionOverlay = document.getElementById('pageTransitionOverlay');
-
-        function switchPage(page, section = null, animate = true) {
-            if (isTransitioning) return;
-            if (page === currentPage && !section) return;
-
-            const portfolioPage = document.getElementById('page-portfolio');
-            const sejarahPage = document.getElementById('page-sejarah');
-            const navLinks = document.querySelectorAll('.nav-links a');
-
-            // If switching to same page but different section on portfolio
-            if (page === 'portfolio' && page === currentPage && section) {
-                scrollToSection(section);
-                updateActiveNav(page, section);
-                return;
-            }
-
-            // If switching to a different page
-            const targetPage = page === 'portfolio' ? portfolioPage : sejarahPage;
-            const currentPageEl = page === 'portfolio' ? sejarahPage : portfolioPage;
-
-            if (!targetPage) return;
-
-            isTransitioning = true;
-
-            // Play exit animation on current page
-            if (currentPageEl) {
-                currentPageEl.classList.remove('active', 'enter');
-                currentPageEl.classList.add('exit');
-            }
-
-            // Show overlay
-            transitionOverlay.classList.add('active');
-
-            setTimeout(() => {
-                // Hide current, show target
-                if (currentPageEl) {
-                    currentPageEl.classList.remove('exit');
-                    currentPageEl.style.display = 'none';
-                }
-                targetPage.style.display = 'block';
-                targetPage.classList.add('enter');
-
-                // Hide overlay
-                transitionOverlay.classList.remove('active');
-
-                setTimeout(() => {
-                    targetPage.classList.remove('enter');
-                    targetPage.classList.add('active');
-                    isTransitioning = false;
-
-                    // Trigger reveals on sejarah page
-                    if (page === 'sejarah') {
-                        setTimeout(() => {
-                            document.querySelectorAll('#page-sejarah .reveal').forEach(el => {
-                                el.classList.add('visible');
-                            });
-                            // Init carousel if not already
-                            if (!carouselInstance) {
-                                renderGalleryCarousel();
-                            }
-                        }, 300);
-                    }
-
-                    // Update nav
-                    updateActiveNav(page, section);
-                    currentPage = page;
-
-                    // Scroll to top
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-
-                }, 500);
-            }, 450);
+        function updateFormStatusText() {
+            const status = document.getElementById('formStatus');
+            if (!status) return;
+            // We'll manage status via JS, not via data-i18n
         }
 
-        function scrollToSection(sectionId) {
-            const target = document.querySelector(`[data-section="${sectionId}"]`);
-            if (target) {
-                // Add highlight class for animation
-                target.classList.remove('highlight-scroll');
-                // Force reflow
-                void target.offsetWidth;
-                target.classList.add('highlight-scroll');
-
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-                setTimeout(() => {
-                    target.classList.add('visible');
-                }, 300);
-
-                setTimeout(() => {
-                    target.classList.remove('highlight-scroll');
-                }, 800);
-            }
-        }
-
-        function updateActiveNav(page, section) {
-            const navLinks = document.querySelectorAll('.nav-links a');
-            navLinks.forEach(link => {
-                const linkPage = link.dataset.page;
-                const linkSection = link.dataset.section;
-                if (linkPage === page && (!section || linkSection === section)) {
-                    link.classList.add('active');
-                } else {
-                    link.classList.remove('active');
-                }
-            });
-        }
-
-        // Nav link click handler with transition
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const page = this.dataset.page;
-                const section = this.dataset.section || null;
-
-                if (page === 'sejarah') {
-                    switchPage('sejarah');
-                } else {
-                    switchPage('portfolio', section);
-                }
-
-                // Close mobile nav
-                document.getElementById('navLinks').classList.remove('open');
-            });
-        });
-
-        // Scroll links (hero buttons)
-        document.querySelectorAll('.nav-scroll-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = this.dataset.target;
-                if (target) {
-                    switchPage('portfolio', target);
-                }
-            });
-        });
-
-        // Logo click
-        document.getElementById('logoLink')?.addEventListener('click', function(e) {
-            e.preventDefault();
-            switchPage('portfolio');
-            document.getElementById('navLinks').classList.remove('open');
-        });
-
-        // Back to portfolio button
-        document.getElementById('backToPortfolioBtn')?.addEventListener('click', function() {
-            switchPage('portfolio');
-        });
-
-        // ================================================================
-        // 11. MUZIK (YouTube)
-        // ================================================================
-        let ytPlayer = null;
+        // ============================================
+        // 7. MUSIC (YouTube)
+        // ============================================
+        let ytPlayer;
         let isPlaying = false;
         const YT_VIDEO_ID = 'AfIDRkYQD-w';
 
@@ -3102,150 +2073,113 @@
                 height: '1',
                 width: '1',
                 videoId: YT_VIDEO_ID,
-                playerVars: {
-                    autoplay: 0,
-                    mute: 1,
-                    controls: 0,
-                    loop: 1,
-                    playlist: YT_VIDEO_ID
-                },
+                playerVars: { autoplay: 0, mute: 1, controls: 0, loop: 1, playlist: YT_VIDEO_ID },
                 events: {
-                    onReady: (e) => {}
+                    onReady: (e) => {
+                        // tidak autoplay di sini — tunggu user klik "Mulakan"
+                    }
                 }
             });
         }
 
-        function playMusic() {
-            if (!ytPlayer) return;
-            try {
-                ytPlayer.playVideo();
-                ytPlayer.unMute();
-                ytPlayer.setVolume(60);
-                isPlaying = true;
-                updateMusicUI();
-            } catch (e) { console.warn('Music play error:', e); }
+        const ytScript = document.createElement('script');
+        ytScript.src = 'https://www.youtube.com/iframe_api';
+        document.head.appendChild(ytScript);
+
+        function updateMusicUI() {
+            const icon = document.getElementById('musicIcon');
+            const label = document.getElementById('musicBtnLabel');
+            const dict = translations[currentLang] || translations.ms;
+            if (icon) icon.className = isPlaying ? 'fas fa-pause' : 'fas fa-play';
+            if (label) label.textContent = isPlaying ? dict.music_stop : dict.music_play;
         }
 
-        function toggleMusic() {
+        document.getElementById('musicToggleBtn').addEventListener('click', () => {
             if (!ytPlayer) return;
-            const dict = translations[currentLang];
+            const dict = translations[currentLang] || translations.ms;
             if (isPlaying) {
                 ytPlayer.pauseVideo();
                 isPlaying = false;
             } else {
                 ytPlayer.playVideo();
-                try { ytPlayer.unMute(); } catch (e) {}
+                try { ytPlayer.unMute();
+                    ytPlayer.setVolume(50); } catch (e) {}
                 isPlaying = true;
             }
             updateMusicUI();
-        }
-
-        function updateMusicUI() {
-            const icon = document.getElementById('musicIcon');
-            const label = document.getElementById('musicBtnLabel');
-            const dot = document.getElementById('musicPulseDot');
-            const dict = translations[currentLang];
-            if (icon) icon.className = isPlaying ? 'fas fa-pause' : 'fas fa-play';
-            if (label) label.textContent = isPlaying ? dict.music_stop : dict.music_play;
-            if (dot) dot.style.background = isPlaying ? '#34d399' : '#94a3b8';
-        }
-
-        // Load YouTube API
-        const ytScript = document.createElement('script');
-        ytScript.src = 'https://www.youtube.com/iframe_api';
-        document.head.appendChild(ytScript);
-
-        document.getElementById('musicToggleBtn').addEventListener('click', toggleMusic);
-
-        // ================================================================
-        // 12. LANDING PAGE LOGIC
-        // ================================================================
-        const landingPage = document.getElementById('landingPage');
-        const app = document.getElementById('app');
-        const enterBtn = document.getElementById('enterBtn');
-
-        // Particles
-        (function initParticles() {
-            const canvas = document.getElementById('particlesCanvas');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            let w, h;
-            const particles = [];
-            const count = 60;
-
-            function resize() {
-                w = canvas.width = window.innerWidth;
-                h = canvas.height = window.innerHeight;
-            }
-            window.addEventListener('resize', resize);
-            resize();
-
-            class Particle {
-                constructor() {
-                    this.reset();
-                }
-                reset() {
-                    this.x = Math.random() * w;
-                    this.y = Math.random() * h;
-                    this.size = Math.random() * 2.5 + 1;
-                    this.speedX = (Math.random() - 0.5) * 0.5;
-                    this.speedY = (Math.random() - 0.5) * 0.5;
-                    this.opacity = Math.random() * 0.5 + 0.2;
-                }
-                update() {
-                    this.x += this.speedX;
-                    this.y += this.speedY;
-                    if (this.x < 0 || this.x > w || this.y < 0 || this.y > h) this.reset();
-                }
-                draw() {
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(201, 162, 39, ${this.opacity})`;
-                    ctx.fill();
-                }
-            }
-
-            for (let i = 0; i < count; i++) particles.push(new Particle());
-
-            function animate() {
-                ctx.clearRect(0, 0, w, h);
-                particles.forEach(p => { p.update();
-                    p.draw(); });
-                for (let i = 0; i < particles.length; i++) {
-                    for (let j = i + 1; j < particles.length; j++) {
-                        const dx = particles[i].x - particles[j].x;
-                        const dy = particles[i].y - particles[j].y;
-                        const dist = Math.sqrt(dx * dx + dy * dy);
-                        if (dist < 120) {
-                            ctx.beginPath();
-                            ctx.moveTo(particles[i].x, particles[i].y);
-                            ctx.lineTo(particles[j].x, particles[j].y);
-                            ctx.strokeStyle = `rgba(201, 162, 39, ${0.08 * (1 - dist/120)})`;
-                            ctx.lineWidth = 0.6;
-                            ctx.stroke();
-                        }
-                    }
-                }
-                requestAnimationFrame(animate);
-            }
-            animate();
-        })();
-
-        // Enter button
-        enterBtn.addEventListener('click', function() {
-            landingPage.classList.add('hide');
-            app.classList.add('visible');
-            playMusic();
-            switchPage('portfolio');
-            animateStats();
-            setTimeout(() => {
-                landingPage.style.display = 'none';
-            }, 1400);
         });
 
-        // ================================================================
-        // 13. STATS ANIMATION
-        // ================================================================
+        // ============================================
+        // 8. CONTACT FORM (FormSubmit)
+        // ============================================
+        const contactForm = document.getElementById('contactForm');
+        const formStatus = document.getElementById('formStatus');
+        const submitBtn = document.getElementById('formSubmitBtn');
+
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('formName').value.trim();
+            const email = document.getElementById('formEmail').value.trim();
+            const message = document.getElementById('formMessage').value.trim();
+
+            if (!name || !email || !message) {
+                formStatus.textContent = 'Sila lengkapkan semua ruangan.';
+                formStatus.className = 'form-status error';
+                return;
+            }
+
+            const dict = translations[currentLang] || translations.ms;
+            formStatus.textContent = dict.form_sending || 'Menghantar...';
+            formStatus.className = 'form-status loading';
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${dict.form_sending || 'Menghantar...'}`;
+
+            try {
+                // Guna FormSubmit.co — percuma, tanpa backend
+                const response = await fetch('https://formsubmit.co/ajax/muhammad88628@gmail.com', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        email: email,
+                        message: message,
+                        _subject: `Portfolio Contact from ${name}`,
+                        _captcha: 'false'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success !== false) {
+                    formStatus.textContent = dict.form_success || 'Mesej berjaya dihantar!';
+                    formStatus.className = 'form-status success';
+                    contactForm.reset();
+                } else {
+                    throw new Error('Server error');
+                }
+            } catch (err) {
+                formStatus.textContent = dict.form_error || 'Ralat. Sila cuba lagi.';
+                formStatus.className = 'form-status error';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `<i class="fas fa-paper-plane"></i> ${dict.form_send || 'Hantar'}`;
+                // auto clear status after 6s
+                setTimeout(() => {
+                    if (formStatus.classList.contains('success') || formStatus.classList.contains('error')) {
+                        formStatus.textContent = '';
+                        formStatus.className = 'form-status';
+                    }
+                }, 8000);
+            }
+        });
+
+        // ============================================
+        // 9. ANIMATE STATS
+        // ============================================
         function animateStats() {
             const stats = document.querySelectorAll('.stat-number');
             stats.forEach(stat => {
@@ -3254,111 +2188,18 @@
                 const increment = Math.ceil(target / 30);
                 const timer = setInterval(() => {
                     current += increment;
-                    if (current >= target) {
-                        current = target;
-                        clearInterval(timer);
-                    }
+                    if (current >= target) { current = target;
+                        clearInterval(timer); }
                     stat.textContent = current;
                 }, 50);
             });
         }
 
-        // ================================================================
-        // 14. CONTACT FORM (EmailJS)
-        // ================================================================
-        (function initEmailJS() {
-            const publicKey = 'YOUR_EMAILJS_PUBLIC_KEY';
-            if (publicKey !== 'YOUR_EMAILJS_PUBLIC_KEY') {
-                emailjs.init(publicKey);
-            }
-        })();
-
-        const contactForm = document.getElementById('contactForm');
-        const formStatus = document.getElementById('formStatus');
-        const submitBtn = document.getElementById('formSubmitBtn');
-
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const name = document.getElementById('formName').value.trim();
-            const email = document.getElementById('formEmail').value.trim();
-            const message = document.getElementById('formMessage').value.trim();
-
-            if (!name || !email || !message) {
-                showFormStatus('error', 'Sila lengkapkan semua ruangan.');
-                return;
-            }
-
-            submitBtn.disabled = true;
-            const dict = translations[currentLang];
-            submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${dict.form_sending || 'Menghantar...'}`;
-            formStatus.style.display = 'none';
-
-            const publicKey = 'YOUR_EMAILJS_PUBLIC_KEY';
-            if (publicKey !== 'YOUR_EMAILJS_PUBLIC_KEY') {
-                const serviceID = 'service_xxxxx';
-                const templateID = 'template_xxxxx';
-                emailjs.send(serviceID, templateID, {
-                        from_name: name,
-                        from_email: email,
-                        message: message,
-                        to_email: 'muhammad88628@gmail.com'
-                    })
-                    .then(() => {
-                        showFormStatus('success', dict.form_success);
-                        contactForm.reset();
-                    })
-                    .catch((err) => {
-                        console.error('EmailJS error:', err);
-                        showFormStatus('error', dict.form_error);
-                    })
-                    .finally(() => {
-                        submitBtn.disabled = false;
-                        submitBtn.innerHTML = `<i class="fas fa-paper-plane"></i> ${dict.form_send}`;
-                    });
-            } else {
-                const subject = encodeURIComponent(`Mesej dari ${name}`);
-                const body = encodeURIComponent(`Nama: ${name}\nEmail: ${email}\n\nMesej:\n${message}`);
-                window.location.href = `mailto:muhammad88628@gmail.com?subject=${subject}&body=${body}`;
-                showFormStatus('success', '📧 Email client dibuka. Sila hantar mesej anda.');
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = `<i class="fas fa-paper-plane"></i> ${dict.form_send}`;
-                setTimeout(() => { formStatus.style.display = 'none'; }, 6000);
-            }
-        });
-
-        function showFormStatus(type, text) {
-            formStatus.className = 'form-status ' + type;
-            formStatus.textContent = text;
-            formStatus.style.display = 'block';
-            setTimeout(() => {
-                if (type === 'success') {
-                    formStatus.style.display = 'none';
-                }
-            }, 6000);
-        }
-
-        // ================================================================
-        // 15. NAV TOGGLE
-        // ================================================================
-        document.getElementById('navToggle')?.addEventListener('click', function() {
-            document.getElementById('navLinks').classList.toggle('open');
-        });
-
-        // ================================================================
-        // 16. LANGUAGE SWITCHER
-        // ================================================================
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                applyLanguage(this.dataset.lang);
-            });
-        });
-
-        // ================================================================
-        // 17. REVEAL ON SCROLL (Intersection Observer)
-        // ================================================================
+        // ============================================
+        // 10. REVEAL ON SCROLL (Intersection Observer)
+        // ============================================
         function initReveal() {
-            const reveals = document.querySelectorAll('.reveal');
+            const elements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .project-card');
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -3366,114 +2207,82 @@
                     }
                 });
             }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-            reveals.forEach(el => observer.observe(el));
+
+            elements.forEach(el => observer.observe(el));
         }
 
-        // ================================================================
-        // 18. CURSOR GLOW
-        // ================================================================
-        const cursorGlow = document.getElementById('cursorGlow');
-        if (cursorGlow) {
-            document.addEventListener('mousemove', (e) => {
-                cursorGlow.style.left = e.clientX + 'px';
-                cursorGlow.style.top = e.clientY + 'px';
-                cursorGlow.classList.add('active');
-            });
-            document.addEventListener('mouseleave', () => {
-                cursorGlow.classList.remove('active');
-            });
-        }
-
-        // ================================================================
-        // 19. BACK TO TOP
-        // ================================================================
-        const backToTop = document.getElementById('backToTop');
-        if (backToTop) {
+        // ============================================
+        // 11. NAVBAR SCROLL EFFECT
+        // ============================================
+        function initNavbarScroll() {
+            const navbar = document.getElementById('navbar');
             window.addEventListener('scroll', () => {
-                if (window.scrollY > 400) {
-                    backToTop.classList.add('visible');
-                } else {
-                    backToTop.classList.remove('visible');
-                }
-            });
-            backToTop.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                navbar.classList.toggle('scrolled', window.scrollY > 30);
             });
         }
 
-        // ================================================================
-        // 20. SCROLL SPY FOR ACTIVE NAV (portfolio sections)
-        // ================================================================
-        function initScrollSpy() {
-            const sections = document.querySelectorAll('[data-section]');
-            const navLinks = document.querySelectorAll('.nav-links a[data-section]');
-
-            if (sections.length === 0) return;
-
-            const observer = new IntersectionObserver((entries) => {
-                let activeSection = null;
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        activeSection = entry.target.dataset.section;
-                    }
+        // ============================================
+        // 12. MOBILE NAV TOGGLE
+        // ============================================
+        function initNavToggle() {
+            const toggle = document.getElementById('navToggle');
+            const navLinks = document.getElementById('navLinks');
+            if (toggle && navLinks) {
+                toggle.addEventListener('click', () => {
+                    navLinks.classList.toggle('open');
                 });
-                if (activeSection && currentPage === 'portfolio') {
-                    navLinks.forEach(link => {
-                        if (link.dataset.section === activeSection) {
-                            link.classList.add('active');
-                        } else {
-                            link.classList.remove('active');
-                        }
-                    });
-                }
-            }, { threshold: 0.4, rootMargin: '-80px 0px -80px 0px' });
-
-            sections.forEach(section => observer.observe(section));
+                // close on link click (mobile)
+                navLinks.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => navLinks.classList.remove('open'));
+                });
+            }
         }
 
-        // ================================================================
-        // 21. INIT
-        // ================================================================
-        document.addEventListener('DOMContentLoaded', function() {
-            applyLanguage('ms');
-            renderProjects();
-            // Gallery carousel will be rendered when sejarah page is first shown
-            // via switchPage
+        // ============================================
+        // 13. LANGUAGE SWITCHER
+        // ============================================
+        function initLangSwitcher() {
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    applyLanguage(btn.getAttribute('data-lang'));
+                    // update music label after lang change
+                    updateMusicUI();
+                });
+            });
+        }
 
+        // ============================================
+        // 14. INIT ALL
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProjects();
+            renderGallery();
+            initReveal();
+            initNavbarScroll();
+            initNavToggle();
+            initLangSwitcher();
+
+            // set default language
+            applyLanguage('ms');
+
+            // start counters
             updateAge();
             updateInterest();
             setInterval(() => { updateAge();
                 updateInterest(); }, 1000);
 
-            initReveal();
+            // If user didn't click enter yet, but we want stats ready
+            // They'll animate on enter click.
 
-            // Init scroll spy
-            setTimeout(initScrollSpy, 500);
+            // Ensure main portfolio is hidden initially (landing covers)
+            mainPortfolio.style.opacity = '0';
 
-            // Pre-load portfolio page
-            document.getElementById('page-portfolio').style.display = 'block';
-            document.getElementById('page-portfolio').classList.add('active');
-
-            // Set initial active nav
-            updateActiveNav('portfolio', 'projects');
+            // On enter, we already handle stats and reveal
         });
 
-        // ================================================================
-        // 22. HANDLE EXTERNAL YT API LOAD TIMEOUT
-        // ================================================================
-        let ytReady = false;
-        window.onYouTubeIframeAPIReady = function() {
-            ytReady = true;
-            onYouTubeIframeAPIReady();
-        };
-        setTimeout(() => {
-            if (!ytReady && typeof YT === 'undefined') {
-                console.warn('YouTube API failed to load. Music may not work.');
-            }
-        }, 8000);
-
-        console.log('🚀 Portfolio Azhar.dev — Premium Edition');
-        console.log('✨ Features: Landing, SPA, Carousel, PDF Thumbnails, Transitions, Active Nav, Music');
+        // Also handle if somehow landing is bypassed (just in case)
+        // But we keep landing as first screen.
+        console.log('🚀 Portfolio premium siap!');
     </script>
 
 </body>
