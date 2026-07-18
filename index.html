@@ -13,8 +13,8 @@
 
     <style>
         /* ============================
-                   GLOBAL RESET & BASE
-                   ============================ */
+           GLOBAL RESET & BASE
+           ============================ */
         * {
             margin: 0;
             padding: 0;
@@ -73,8 +73,8 @@
         }
 
         /* ============================
-                   LANDING PAGE (overlay)
-                   ============================ */
+           LANDING PAGE (overlay)
+           ============================ */
         #landing {
             position: fixed;
             inset: 0;
@@ -92,22 +92,18 @@
             transform: scale(1.05);
             pointer-events: none;
         }
-
-        /* landing background */
         #landing-bg {
             position: absolute;
             inset: 0;
             background: radial-gradient(ellipse at 30% 40%, #1a2a44 0%, #0b1a2e 70%);
             z-index: 0;
         }
-        /* particles canvas */
         #particles-canvas {
             position: absolute;
             inset: 0;
             z-index: 1;
             pointer-events: none;
         }
-        /* glowing orbs */
         .landing-orb {
             position: absolute;
             border-radius: 50%;
@@ -149,7 +145,6 @@
                 transform: translate(40px, -30px) scale(1.1);
             }
         }
-
         .landing-content {
             position: relative;
             z-index: 2;
@@ -257,7 +252,6 @@
             transform: translateX(6px);
         }
 
-        /* floating doodle */
         .doodle {
             position: absolute;
             font-size: 2.4rem;
@@ -337,8 +331,8 @@
         }
 
         /* ============================
-                   NAVBAR (sticky, glass)
-                   ============================ */
+           NAVBAR (sticky, glass)
+           ============================ */
         .navbar {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
@@ -383,6 +377,7 @@
             color: #2c3e50;
             transition: color 0.2s, transform 0.2s;
             position: relative;
+            cursor: pointer;
         }
         .nav-links a::after {
             content: '';
@@ -418,7 +413,6 @@
             color: #0b1a2e;
         }
 
-        /* Language switcher */
         .lang-switcher {
             display: flex;
             gap: 4px;
@@ -477,8 +471,8 @@
         }
 
         /* ============================
-                   HERO
-                   ============================ */
+           HERO
+           ============================ */
         .hero {
             padding: 60px 0 50px;
             background: linear-gradient(135deg, #f1f5f9, #ffffff);
@@ -678,8 +672,8 @@
         }
 
         /* ============================
-                   PROJECTS
-                   ============================ */
+           PROJECTS
+           ============================ */
         .projects {
             padding: 80px 0;
             background: #ffffff;
@@ -771,156 +765,8 @@
         }
 
         /* ============================
-                   ACHIEVEMENTS / GALLERY
-                   ============================ */
-        .achievements {
-            padding: 80px 0;
-            background: #f8fafc;
-            overflow: hidden;
-        }
-        .gallery-wrapper {
-            position: relative;
-            width: 100%;
-            overflow: hidden;
-            padding: 20px 0;
-        }
-        .gallery-track {
-            display: flex;
-            gap: 28px;
-            animation: scrollGallery 40s linear infinite;
-            width: max-content;
-        }
-        .gallery-track.paused {
-            animation-play-state: paused;
-        }
-        @keyframes scrollGallery {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(-50%);
-            }
-        }
-        .gallery-item {
-            flex: 0 0 260px;
-            background: #ffffff;
-            border-radius: 18px;
-            overflow: hidden;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
-            border: 1px solid #e9edf2;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            transform: rotate(0deg) scale(1);
-        }
-        .gallery-item:hover {
-            transform: rotate(-1deg) scale(1.04);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
-            border-color: #c9a22760;
-            z-index: 5;
-        }
-        .gallery-item img {
-            width: 100%;
-            height: 340px;
-            object-fit: cover;
-            display: block;
-            transition: transform 0.5s ease;
-        }
-        .gallery-item:hover img {
-            transform: scale(1.02);
-        }
-        .gallery-item .gallery-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(0deg, rgba(11, 26, 46, 0.6) 0%, transparent 60%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            display: flex;
-            align-items: flex-end;
-            padding: 20px;
-        }
-        .gallery-item:hover .gallery-overlay {
-            opacity: 1;
-        }
-        .gallery-item .gallery-overlay span {
-            color: #fff;
-            font-weight: 600;
-            font-size: 0.85rem;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(4px);
-            padding: 6px 16px;
-            border-radius: 40px;
-        }
-        /* lightbox */
-        .lightbox {
-            position: fixed;
-            inset: 0;
-            background: rgba(11, 26, 46, 0.88);
-            backdrop-filter: blur(20px);
-            z-index: 999;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .lightbox.open {
-            display: flex;
-            opacity: 1;
-        }
-        .lightbox img {
-            max-width: 90%;
-            max-height: 85vh;
-            border-radius: 16px;
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
-            transform: scale(0.95);
-            transition: transform 0.4s ease;
-        }
-        .lightbox.open img {
-            transform: scale(1);
-        }
-        .lightbox-close {
-            position: absolute;
-            top: 30px;
-            right: 40px;
-            font-size: 2.2rem;
-            color: #fff;
-            cursor: pointer;
-            background: rgba(255, 255, 255, 0.1);
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s;
-            border: none;
-        }
-        .lightbox-close:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        @media (max-width: 768px) {
-            .gallery-item {
-                flex: 0 0 200px;
-            }
-            .gallery-item img {
-                height: 260px;
-            }
-        }
-        @media (max-width: 480px) {
-            .gallery-item {
-                flex: 0 0 160px;
-            }
-            .gallery-item img {
-                height: 210px;
-            }
-        }
-
-        /* ============================
-                   ABOUT
-                   ============================ */
+           ABOUT
+           ============================ */
         .about {
             padding: 80px 0;
             background: #ffffff;
@@ -1020,8 +866,8 @@
         }
 
         /* ============================
-                   CONTACT
-                   ============================ */
+           CONTACT
+           ============================ */
         .contact {
             padding: 80px 0;
             background: #f8fafc;
@@ -1126,8 +972,8 @@
         }
 
         /* ============================
-                   FOOTER
-                   ============================ */
+           FOOTER
+           ============================ */
         .footer {
             background: #0b1a2e;
             color: #cbd5e1;
@@ -1146,8 +992,8 @@
         }
 
         /* ============================
-                   MUSIC BUTTON (floating)
-                   ============================ */
+           MUSIC BUTTON (floating)
+           ============================ */
         .music-stop-btn {
             position: fixed;
             bottom: 24px;
@@ -1188,8 +1034,8 @@
         }
 
         /* ============================
-                   REVEAL ANIMATIONS (Intersection Observer)
-                   ============================ */
+           REVEAL ANIMATIONS (Intersection Observer)
+           ============================ */
         .reveal {
             opacity: 0;
             transform: translateY(40px);
@@ -1228,8 +1074,434 @@
         }
 
         /* ============================
-                   MISC / UTILITY
-                   ============================ */
+           VIEW HISTORY
+           ============================ */
+        #view-history {
+            display: none;
+            padding: 40px 0 80px;
+            background: #ffffff;
+            animation: fadeSlideIn 0.6s ease;
+        }
+        #view-history.active {
+            display: block;
+        }
+
+        @keyframes fadeSlideIn {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ---- Biodata Card ---- */
+        .bio-card {
+            background: #f8fafc;
+            border-radius: 24px;
+            padding: 36px 40px;
+            border: 1px solid #e9edf2;
+            max-width: 700px;
+            margin: 0 auto 50px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px 32px;
+        }
+        .bio-card .bio-label {
+            font-weight: 600;
+            color: #64748b;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .bio-card .bio-value {
+            font-weight: 700;
+            color: #0b1a2e;
+            font-size: 1.05rem;
+        }
+        .bio-card .bio-full {
+            grid-column: 1 / -1;
+            text-align: center;
+            border-bottom: 1px solid #e9edf2;
+            padding-bottom: 16px;
+            margin-bottom: 8px;
+        }
+        .bio-card .bio-full .bio-name {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #0b1a2e;
+        }
+        .bio-card .bio-full .bio-name span {
+            color: #c9a227;
+        }
+
+        @media (max-width: 600px) {
+            .bio-card {
+                grid-template-columns: 1fr;
+                gap: 6px 0;
+                padding: 24px 20px;
+            }
+            .bio-card .bio-full .bio-name {
+                font-size: 1.4rem;
+            }
+        }
+
+        /* ---- Minat & Hobi ---- */
+        .interests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .interest-item {
+            background: #f8fafc;
+            border: 1px solid #e9edf2;
+            border-radius: 16px;
+            padding: 20px 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+        .interest-item:hover {
+            transform: translateY(-6px);
+            border-color: #c9a22760;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+        }
+        .interest-item i {
+            font-size: 2.2rem;
+            color: #c9a227;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .interest-item span {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #0b1a2e;
+        }
+
+        /* ---- Timeline ---- */
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 28px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #c9a22740;
+            border-radius: 6px;
+        }
+        .timeline-item {
+            display: flex;
+            gap: 28px;
+            margin-bottom: 32px;
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: all 0.6s ease;
+            position: relative;
+        }
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .timeline-item .tl-dot {
+            flex: 0 0 20px;
+            width: 20px;
+            height: 20px;
+            background: #c9a227;
+            border-radius: 50%;
+            margin-top: 6px;
+            position: relative;
+            z-index: 2;
+            border: 3px solid #fff;
+            box-shadow: 0 0 0 4px #c9a22740;
+        }
+        .timeline-item .tl-content {
+            flex: 1;
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 18px 24px;
+            border: 1px solid #e9edf2;
+            transition: all 0.3s ease;
+        }
+        .timeline-item .tl-content:hover {
+            border-color: #c9a22760;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+        }
+        .timeline-item .tl-period {
+            font-weight: 700;
+            color: #c9a227;
+            font-size: 0.9rem;
+            margin-bottom: 2px;
+        }
+        .timeline-item .tl-title {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: #0b1a2e;
+        }
+        .timeline-item .tl-desc {
+            font-size: 0.92rem;
+            color: #475569;
+            margin-top: 4px;
+        }
+
+        @media (max-width: 600px) {
+            .timeline::before {
+                left: 16px;
+            }
+            .timeline-item {
+                gap: 16px;
+            }
+            .timeline-item .tl-dot {
+                flex: 0 0 14px;
+                width: 14px;
+                height: 14px;
+                margin-top: 8px;
+            }
+            .timeline-item .tl-content {
+                padding: 14px 16px;
+            }
+            .timeline-item .tl-title {
+                font-size: 0.95rem;
+            }
+        }
+
+        /* ---- Matlamat Hidup ---- */
+        .goals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 24px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .goal-card {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 28px 20px;
+            border: 1px solid #e9edf2;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .goal-card:hover {
+            transform: translateY(-6px);
+            border-color: #c9a22760;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+        }
+        .goal-card i {
+            font-size: 2rem;
+            color: #c9a227;
+            margin-bottom: 12px;
+        }
+        .goal-card p {
+            font-weight: 500;
+            color: #0b1a2e;
+            font-size: 0.98rem;
+        }
+
+        /* ---- Gallery Sijil (dipindahkan & dinaik taraf) ---- */
+        .history-gallery {
+            background: #f8fafc;
+            padding: 40px 0 20px;
+            border-radius: 24px;
+            margin-top: 10px;
+        }
+        .history-gallery .gallery-wrapper {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            padding: 20px 0;
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .history-gallery .gallery-track {
+            display: flex;
+            gap: 28px;
+            animation: scrollGallery 40s linear infinite;
+            width: max-content;
+            cursor: grab;
+            transition: none;
+        }
+        .history-gallery .gallery-track.dragging {
+            cursor: grabbing;
+            animation-play-state: paused !important;
+        }
+        .history-gallery .gallery-track.paused {
+            animation-play-state: paused;
+        }
+        @keyframes scrollGallery {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+        .history-gallery .gallery-item {
+            flex: 0 0 260px;
+            background: #ffffff;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e9edf2;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            transform: rotate(0deg) scale(1);
+        }
+        .history-gallery .gallery-item:hover {
+            transform: rotate(-1deg) scale(1.04);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+            border-color: #c9a22760;
+            z-index: 5;
+        }
+        .history-gallery .gallery-item img {
+            width: 100%;
+            height: 340px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+            pointer-events: none;
+        }
+        .history-gallery .gallery-item:hover img {
+            transform: scale(1.02);
+        }
+        .history-gallery .gallery-item .gallery-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg, rgba(11, 26, 46, 0.6) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: flex-end;
+            padding: 20px;
+            pointer-events: none;
+        }
+        .history-gallery .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+        .history-gallery .gallery-item .gallery-overlay span {
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.85rem;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            padding: 6px 16px;
+            border-radius: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .history-gallery .gallery-item {
+                flex: 0 0 200px;
+            }
+            .history-gallery .gallery-item img {
+                height: 260px;
+            }
+        }
+        @media (max-width: 480px) {
+            .history-gallery .gallery-item {
+                flex: 0 0 160px;
+            }
+            .history-gallery .gallery-item img {
+                height: 210px;
+            }
+        }
+
+        /* Lightbox (global) */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(11, 26, 46, 0.88);
+            backdrop-filter: blur(20px);
+            z-index: 999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .lightbox.open {
+            display: flex;
+            opacity: 1;
+        }
+        .lightbox img {
+            max-width: 90%;
+            max-height: 85vh;
+            border-radius: 16px;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+            transform: scale(0.95);
+            transition: transform 0.4s ease;
+        }
+        .lightbox.open img {
+            transform: scale(1);
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            font-size: 2.2rem;
+            color: #fff;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            border: none;
+        }
+        .lightbox-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* ---- Butang Kembali ---- */
+        .back-home-btn-wrap {
+            text-align: center;
+            margin-top: 50px;
+        }
+        .back-home-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 44px;
+            border-radius: 60px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            background: #0b1a2e;
+            color: #fff;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 30px rgba(11, 26, 46, 0.15);
+        }
+        .back-home-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 50px rgba(11, 26, 46, 0.2);
+            background: #1e2f44;
+        }
+        .back-home-btn i {
+            font-size: 1.1rem;
+            transition: transform 0.3s ease;
+        }
+        .back-home-btn:hover i {
+            transform: translateX(-6px);
+        }
+
+        /* ============================
+           MISC / UTILITY
+           ============================ */
         #ytPlayerWrap {
             position: absolute;
             width: 1px;
@@ -1245,7 +1517,6 @@
             display: none !important;
         }
 
-        /* scrollbar styling */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -1258,6 +1529,25 @@
         }
         ::-webkit-scrollbar-thumb:hover {
             background: #c9a227;
+        }
+
+        /* History page responsive spacing */
+        .history-section {
+            margin-bottom: 60px;
+        }
+        .history-section:last-of-type {
+            margin-bottom: 20px;
+        }
+        .history-section .section-header {
+            margin-bottom: 32px;
+        }
+        @media (max-width: 768px) {
+            .history-section {
+                margin-bottom: 40px;
+            }
+            .history-section .section-header {
+                margin-bottom: 24px;
+            }
         }
     </style>
 </head>
@@ -1307,7 +1597,7 @@
         <nav class="navbar" id="navbar">
             <div class="container nav-container">
                 <div class="nav-left">
-                    <a href="#" class="nav-logo">
+                    <a href="#" class="nav-logo" id="logoHomeLink">
                         <span class="logo-icon">✦</span>
                         <span>Azhar.dev</span>
                     </a>
@@ -1318,11 +1608,10 @@
                     </div>
                 </div>
                 <ul class="nav-links" id="navLinks">
-                    <li><a href="#projects" data-i18n="nav_projects">Projek</a></li>
-                    <li><a href="history.html" data-i18n="nav_history">Sejarah</a></li>
-                    <li><a href="#achievements" data-i18n="nav_achievements">Pencapaian</a></li>
-                    <li><a href="#about" data-i18n="nav_about">Tentang</a></li>
-                    <li><a href="#contact" data-i18n="nav_contact">Hubungi</a></li>
+                    <li><a href="#projects" data-i18n="nav_projects" class="nav-portfolio-link">Projek</a></li>
+                    <li><a href="#" id="historyNavLink" data-i18n="nav_history">Sejarah dan Pencapaian</a></li>
+                    <li><a href="#about" data-i18n="nav_about" class="nav-portfolio-link">Tentang</a></li>
+                    <li><a href="#contact" data-i18n="nav_contact" class="nav-portfolio-link">Hubungi</a></li>
                 </ul>
                 <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
                     <i class="fas fa-bars"></i>
@@ -1330,189 +1619,319 @@
             </div>
         </nav>
 
-        <!-- ===== HERO ===== -->
-        <section class="hero" id="hero">
-            <div class="container hero-container">
-                <div class="hero-content reveal-left">
-                    <div class="hero-badge" data-i18n="hero_badge">✦ Portfolio</div>
-                    <h1 class="hero-title" data-i18n-html="hero_title">
-                        Hi, saya <span class="highlight">Azhar</span>.<br />
-                        Pembangun <span class="highlight">Frontend</span>.
-                    </h1>
-                    <p class="hero-desc" data-i18n="hero_desc">
-                        Saya membina antara muka yang pantas, interaktif &amp; mesra pengguna.
-                        Terokai projek-projek demo saya di bawah. Setiap kad membawa kepada
-                        demo frontend dengan data contoh.
-                    </p>
-                    <div class="hero-actions">
-                        <a href="#projects" class="btn btn-primary">
-                            <i class="fas fa-rocket"></i> <span data-i18n="btn_view_projects">Lihat Projek</span>
-                        </a>
-                        <a href="#contact" class="btn btn-outline">
-                            <i class="fas fa-envelope"></i> <span data-i18n="btn_contact">Hubungi</span>
-                        </a>
-                    </div>
-                    <div class="hero-stats">
-                        <div class="stat">
-                            <span class="stat-number" data-count="10">0</span>
-                            <span class="stat-label" data-i18n="stat_projects">Projek</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-number" data-count="6">0</span>
-                            <span class="stat-label" data-i18n="stat_done">Siap</span>
-                        </div>
-                        <div class="stat">
-                            <span class="stat-number" data-count="4">0</span>
-                            <span class="stat-label" data-i18n="stat_progress">Dalam Proses</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="hero-visual reveal-right">
-                    <div class="hero-orb"></div>
-                    <div class="hero-orb-secondary"></div>
-                    <div class="hero-code-block">
-                        <div class="code-line"><span class="code-keyword">const</span> <span class="code-var">dev</span> = <span class="code-string">"Azhar"</span>;</div>
-                        <div class="code-line"><span class="code-keyword">const</span> <span class="code-var">role</span> = <span class="code-string">"Frontend"</span>;</div>
-                        <div class="code-line"><span class="code-keyword">const</span> <span class="code-var">passion</span> = <span class="code-string">"UI/UX"</span>;</div>
-                        <div class="code-line"><span class="code-keyword">while</span> (<span class="code-var">alive</span>) {</div>
-                        <div class="code-line code-indent"><span class="code-var">create</span>.<span class="code-method">awesome</span>();</div>
-                        <div class="code-line">}</div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <!-- ============================
+        VIEW: PORTFOLIO (utama)
+        ============================ -->
+        <div id="view-portfolio">
 
-        <!-- ===== PROJECTS ===== -->
-        <section class="projects" id="projects">
+            <!-- ===== HERO ===== -->
+            <section class="hero" id="hero">
+                <div class="container hero-container">
+                    <div class="hero-content reveal-left">
+                        <div class="hero-badge" data-i18n="hero_badge">✦ Portfolio</div>
+                        <h1 class="hero-title" data-i18n-html="hero_title">
+                            Hi, saya <span class="highlight">Azhar</span>.<br />
+                            Pembangun <span class="highlight">Frontend</span>.
+                        </h1>
+                        <p class="hero-desc" data-i18n="hero_desc">
+                            Saya membina antara muka yang pantas, interaktif &amp; mesra pengguna.
+                            Terokai projek-projek demo saya di bawah. Setiap kad membawa kepada
+                            demo frontend dengan data contoh.
+                        </p>
+                        <div class="hero-actions">
+                            <a href="#projects" class="btn btn-primary">
+                                <i class="fas fa-rocket"></i> <span data-i18n="btn_view_projects">Lihat Projek</span>
+                            </a>
+                            <a href="#contact" class="btn btn-outline">
+                                <i class="fas fa-envelope"></i> <span data-i18n="btn_contact">Hubungi</span>
+                            </a>
+                        </div>
+                        <div class="hero-stats">
+                            <div class="stat">
+                                <span class="stat-number" data-count="10">0</span>
+                                <span class="stat-label" data-i18n="stat_projects">Projek</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number" data-count="6">0</span>
+                                <span class="stat-label" data-i18n="stat_done">Siap</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number" data-count="4">0</span>
+                                <span class="stat-label" data-i18n="stat_progress">Dalam Proses</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hero-visual reveal-right">
+                        <div class="hero-orb"></div>
+                        <div class="hero-orb-secondary"></div>
+                        <div class="hero-code-block">
+                            <div class="code-line"><span class="code-keyword">const</span> <span class="code-var">dev</span> = <span class="code-string">"Azhar"</span>;</div>
+                            <div class="code-line"><span class="code-keyword">const</span> <span class="code-var">role</span> = <span class="code-string">"Frontend"</span>;</div>
+                            <div class="code-line"><span class="code-keyword">const</span> <span class="code-var">passion</span> = <span class="code-string">"UI/UX"</span>;</div>
+                            <div class="code-line"><span class="code-keyword">while</span> (<span class="code-var">alive</span>) {</div>
+                            <div class="code-line code-indent"><span class="code-var">create</span>.<span class="code-method">awesome</span>();</div>
+                            <div class="code-line">}</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== PROJECTS ===== -->
+            <section class="projects" id="projects">
+                <div class="container">
+                    <div class="section-header reveal">
+                        <span class="section-tag" data-i18n="tag_portfolio">✦ Portfolio</span>
+                        <h2 class="section-title" data-i18n-html="projects_title">Projek <span class="highlight">Saya</span></h2>
+                        <p class="section-desc" data-i18n-html="projects_desc">
+                            Setiap folder membawa kepada demo frontend yang dibina sepenuhnya
+                            dengan data contoh. Klik <strong>"Live Demo"</strong> untuk meneroka.
+                        </p>
+                    </div>
+                    <div class="projects-grid" id="projectsGrid"></div>
+                </div>
+            </section>
+
+            <!-- ===== ABOUT ===== -->
+            <section class="about" id="about">
+                <div class="container about-container">
+                    <div class="about-image reveal-left">
+                        <div class="about-placeholder">
+                            <img src="imagesprofile.jpg" alt="Muhammad Azhar" class="profile-img" />
+                        </div>
+                        <div class="age-counter">
+                            <div class="age-counter-label" data-i18n="age_label">Umur Sebenar</div>
+                            <div class="age-counter-value" id="ageCounterValue">Mengira...</div>
+                        </div>
+                        <div class="age-counter" style="margin-top:12px;">
+                            <div class="age-counter-label" data-i18n="interest_label">Minat dalam Dunia Komputer</div>
+                            <div class="age-counter-value" id="interestCounterValue">Mengira...</div>
+                        </div>
+                    </div>
+                    <div class="about-content reveal-right">
+                        <span class="section-tag" data-i18n="tag_about">✦ Tentang</span>
+                        <h2 class="section-title" data-i18n-html="about_title">Saya <span class="highlight">Azhar</span></h2>
+                        <p data-i18n="about_p1">
+                            Saya seorang yang sukakan sesuatu yang mencabar dan benda baru untuk diterokai,
+                            selain berpengalaman dalam bidang Elektrik &amp; Elektronik, saya suka mengisi masa
+                            lapang dengan memahami &amp; belajar programming sekali gus saya gemar mencipta
+                            pengalaman digital dengan fokus pada reka bentuk yang menarik, prestasi tinggi,
+                            dan kebolehpasaran.
+                        </p>
+                        <p data-i18n="about_p2">
+                            Web ini dibina sebagai tempat pameran untuk projek-projek yang pernah saya
+                            bina dan sedang digunakan. Semuanya telah diubah dalam bentuk demo frontend
+                            tanpa backend, supaya mudah diperlihatkan.
+                        </p>
+                        <div class="about-skills">
+                            <span class="skill-tag">HTML</span>
+                            <span class="skill-tag">CSS</span>
+                            <span class="skill-tag">JavaScript</span>
+                            <span class="skill-tag">App Script</span>
+                            <span class="skill-tag">C++</span>
+                            <span class="skill-tag">DB</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== CONTACT ===== -->
+            <section class="contact" id="contact">
+                <div class="container contact-container">
+                    <div class="contact-content reveal-left">
+                        <span class="section-tag" data-i18n="tag_contact">✦ Hubungi</span>
+                        <h2 class="section-title" data-i18n-html="contact_title">Jom <span class="highlight">Get In Touch</span></h2>
+                        <p data-i18n="contact_desc">
+                            Ada projek atau pertanyaan? Saya sentiasa terbuka untuk berkolaborasi
+                            dan membina perkara yang menarik bersama. Mari realisasikan impian anda.
+                        </p>
+                        <div class="contact-links">
+                            <a href="https://www.facebook.com/share/1E8NHuUyiY/" target="_blank" rel="noopener noreferrer" class="contact-link"><i class="fab fa-facebook"></i> Facebook</a>
+                            <a href="https://wa.me/601169387861" target="_blank" rel="noopener noreferrer" class="contact-link"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                            <a href="https://www.instagram.com/zaha_camemg?igsh=cGN6dTkwNWZ3MW44" target="_blank" rel="noopener noreferrer" class="contact-link"><i class="fab fa-instagram"></i> Instagram</a>
+                            <a href="mailto:muhammad88628@gmail.com" class="contact-link"><i class="fas fa-envelope"></i> Email</a>
+                            <a href="https://www.linkedin.com/in/zaharmazlan?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" rel="noopener noreferrer" class="contact-link"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                            <a href="https://open.spotify.com/user/31reltl2vg6546gyyh7xe6u4afze?si=y9EeKPSERjOeCXwqmRVtAw&utm_source=copy-link" target="_blank" rel="noopener noreferrer" class="contact-link"><i class="fab fa-spotify"></i> Spotify</a>
+                            <p class="spotify-note" data-i18n="spotify_note">🎧 Lagu-lagu yang saya dengar semasa programming.</p>
+                        </div>
+                    </div>
+                    <div class="contact-form-wrapper reveal-right">
+                        <form class="contact-form" id="contactForm">
+                            <div class="form-group">
+                                <label for="formName" data-i18n="form_name">Nama</label>
+                                <input type="text" id="formName" placeholder="Nama anda" required data-i18n-placeholder="form_name_ph" />
+                            </div>
+                            <div class="form-group">
+                                <label for="formEmail" data-i18n="form_email">Email</label>
+                                <input type="email" id="formEmail" placeholder="email@anda.com" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="formMessage" data-i18n="form_message">Mesej</label>
+                                <textarea id="formMessage" rows="4" placeholder="Tulis mesej anda..." required data-i18n-placeholder="form_message_ph"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block" id="formSubmitBtn">
+                                <i class="fas fa-paper-plane"></i> <span data-i18n="form_send">Hantar</span>
+                            </button>
+                            <div class="form-status" id="formStatus"></div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== FOOTER ===== -->
+            <footer class="footer">
+                <div class="container footer-container">
+                    <p data-i18n-html="footer_text">&copy; 2026 <strong>Azhar.dev</strong> — Dibina dengan <i class="fas fa-heart" style="color:#f472b6;"></i> untuk web.</p>
+                    <p class="footer-sub" data-i18n-html="footer_sub">Dihoskan dengan <i class="fas fa-globe"></i> dan semangat.</p>
+                </div>
+            </footer>
+
+        </div>
+        <!-- END view-portfolio -->
+
+
+        <!-- ============================
+        VIEW: SEJARAH
+        ============================ -->
+        <div id="view-history">
+
             <div class="container">
-                <div class="section-header reveal">
-                    <span class="section-tag" data-i18n="tag_portfolio">✦ Portfolio</span>
-                    <h2 class="section-title" data-i18n-html="projects_title">Projek <span class="highlight">Saya</span></h2>
-                    <p class="section-desc" data-i18n-html="projects_desc">
-                        Setiap kad membawa kepada demo frontend yang dibina sepenuhnya
-                        dengan data contoh. Klik <strong>"Live Demo"</strong> untuk meneroka.
-                    </p>
-                </div>
-                <div class="projects-grid" id="projectsGrid"></div>
-            </div>
-        </section>
 
-        <!-- ===== ACHIEVEMENTS / GALLERY ===== -->
-        <section class="achievements" id="achievements">
-            <div class="container">
-                <div class="section-header reveal">
-                    <span class="section-tag" data-i18n="tag_achievements">✦ Pencapaian</span>
-                    <h2 class="section-title" data-i18n-html="achievements_title">Sijil &amp; <span class="highlight">Anugerah</span></h2>
-                    <p class="section-desc" data-i18n="achievements_desc">
-                        Galeri pencapaian, sijil, dan penyertaan sepanjang perjalanan.
-                    </p>
-                </div>
-            </div>
-            <div class="gallery-wrapper">
-                <div class="gallery-track" id="galleryTrack">
-                    <!-- Items akan diisi oleh JS -->
-                </div>
-            </div>
-            <!-- Lightbox -->
-            <div class="lightbox" id="lightbox">
-                <button class="lightbox-close" id="lightboxClose">&times;</button>
-                <img id="lightboxImg" src="" alt="Sijil" />
-            </div>
-        </section>
-
-        <!-- ===== ABOUT ===== -->
-        <section class="about" id="about">
-            <div class="container about-container">
-                <div class="about-image reveal-left">
-                    <div class="about-placeholder">
-                        <img src="imagesprofile.jpg" alt="Muhammad Azhar" class="profile-img" />
+                <!-- BIODATA -->
+                <section class="history-section">
+                    <div class="section-header reveal">
+                        <span class="section-tag" data-i18n="history_bio_tag">✦ Biodata</span>
+                        <h2 class="section-title" data-i18n-html="history_bio_title">Profil <span class="highlight">Peribadi</span></h2>
                     </div>
-                    <div class="age-counter">
-                        <div class="age-counter-label" data-i18n="age_label">Umur Sebenar</div>
-                        <div class="age-counter-value" id="ageCounterValue">Mengira...</div>
-                    </div>
-                    <div class="age-counter" style="margin-top:12px;">
-                        <div class="age-counter-label" data-i18n="interest_label">Minat dalam Dunia Komputer</div>
-                        <div class="age-counter-value" id="interestCounterValue">Mengira...</div>
-                    </div>
-                </div>
-                <div class="about-content reveal-right">
-                    <span class="section-tag" data-i18n="tag_about">✦ Tentang</span>
-                    <h2 class="section-title" data-i18n-html="about_title">Saya <span class="highlight">Azhar</span></h2>
-                    <p data-i18n="about_p1">
-                        Saya seorang yang sukakan sesuatu yang mencabar dan benda baru untuk diterokai,
-                        selain berpengalaman dalam bidang Elektrik &amp; Elektronik, saya suka mengisi masa
-                        lapang dengan memahami &amp; belajar programming sekali gus saya gemar mencipta
-                        pengalaman digital dengan fokus pada reka bentuk yang menarik, prestasi tinggi,
-                        dan kebolehpasaran.
-                    </p>
-                    <p data-i18n="about_p2">
-                        Web ini dibina sebagai tempat pameran untuk projek-projek yang pernah saya
-                        bina dan sedang digunakan — semuanya telah diubah dalam bentuk demo frontend
-                        tanpa backend, supaya mudah diperlihatkan.
-                    </p>
-                    <div class="about-skills">
-                        <span class="skill-tag">HTML</span>
-                        <span class="skill-tag">CSS</span>
-                        <span class="skill-tag">JavaScript</span>
-                        <span class="skill-tag">App Script</span>
-                        <span class="skill-tag">C++</span>
-                        <span class="skill-tag">DB</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===== CONTACT ===== -->
-        <section class="contact" id="contact">
-            <div class="container contact-container">
-                <div class="contact-content reveal-left">
-                    <span class="section-tag" data-i18n="tag_contact">✦ Hubungi</span>
-                    <h2 class="section-title" data-i18n-html="contact_title">Jom <span class="highlight">Get In Touch</span></h2>
-                    <p data-i18n="contact_desc">
-                        Ada projek atau pertanyaan? Saya sentiasa terbuka untuk berkolaborasi
-                        dan membina perkara yang menarik bersama. Mari realisasikan impian anda.
-                    </p>
-                    <div class="contact-links">
-                        <a href="https://www.facebook.com/share/1E8NHuUyiY/" target="_blank" rel="noopener noreferrer" class="contact-link"><i class="fab fa-facebook"></i> Facebook</a>
-                        <a href="https://wa.me/601169387861" target="_blank" rel="noopener noreferrer" class="contact-link"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-                        <a href="https://www.instagram.com/zaha_camemg?igsh=cGN6dTkwNWZ3MW44" target="_blank" rel="noopener noreferrer" class="contact-link"><i class="fab fa-instagram"></i> Instagram</a>
-                        <a href="mailto:muhammad88628@gmail.com" class="contact-link"><i class="fas fa-envelope"></i> Email</a>
-                        <a href="https://www.linkedin.com/in/zaharmazlan?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" rel="noopener noreferrer" class="contact-link"><i class="fab fa-linkedin"></i> LinkedIn</a>
-                        <a href="https://open.spotify.com/user/31reltl2vg6546gyyh7xe6u4afze?si=y9EeKPSERjOeCXwqmRVtAw&utm_source=copy-link" target="_blank" rel="noopener noreferrer" class="contact-link"><i class="fab fa-spotify"></i> Spotify</a>
-                        <p class="spotify-note" data-i18n="spotify_note">🎧 Lagu-lagu yang saya dengar semasa programming.</p>
-                    </div>
-                </div>
-                <div class="contact-form-wrapper reveal-right">
-                    <form class="contact-form" id="contactForm">
-                        <div class="form-group">
-                            <label for="formName" data-i18n="form_name">Nama</label>
-                            <input type="text" id="formName" placeholder="Nama anda" required data-i18n-placeholder="form_name_ph" />
+                    <div class="bio-card reveal">
+                        <div class="bio-full">
+                            <div class="bio-name" data-i18n-html="history_bio_name">MUHAMMAD AZHAR <span>BIN MAZLAN</span></div>
                         </div>
-                        <div class="form-group">
-                            <label for="formEmail" data-i18n="form_email">Email</label>
-                            <input type="email" id="formEmail" placeholder="email@anda.com" required />
-                        </div>
-                        <div class="form-group">
-                            <label for="formMessage" data-i18n="form_message">Mesej</label>
-                            <textarea id="formMessage" rows="4" placeholder="Tulis mesej anda..." required data-i18n-placeholder="form_message_ph"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-block" id="formSubmitBtn">
-                            <i class="fas fa-paper-plane"></i> <span data-i18n="form_send">Hantar</span>
-                        </button>
-                        <div class="form-status" id="formStatus"></div>
-                    </form>
-                </div>
-            </div>
-        </section>
+                        <div class="bio-label" data-i18n="history_bio_label_birth">Lahir</div>
+                        <div class="bio-value" data-i18n="history_bio_birth">5 JUNE 2006</div>
+                        <div class="bio-label" data-i18n="history_bio_label_citizen">Warganegara</div>
+                        <div class="bio-value" data-i18n="history_bio_citizen">MALAYSIA</div>
+                        <div class="bio-label" data-i18n="history_bio_label_origin">Berasal</div>
+                        <div class="bio-value" data-i18n="history_bio_origin">TERENGGANU</div>
+                        <div class="bio-label" data-i18n="history_bio_label_race">Bangsa</div>
+                        <div class="bio-value" data-i18n="history_bio_race">MELAYU</div>
+                    </div>
+                </section>
 
-        <!-- ===== FOOTER ===== -->
-        <footer class="footer">
-            <div class="container footer-container">
-                <p data-i18n-html="footer_text">&copy; 2026 <strong>Azhar.dev</strong> — Dibina dengan <i class="fas fa-heart" style="color:#f472b6;"></i> untuk web.</p>
-                <p class="footer-sub" data-i18n-html="footer_sub">Dihoskan dengan <i class="fas fa-globe"></i> dan semangat.</p>
+                <!-- MINAT & HOBI -->
+                <section class="history-section">
+                    <div class="section-header reveal">
+                        <span class="section-tag" data-i18n="history_interests_tag">✦ Minat</span>
+                        <h2 class="section-title" data-i18n-html="history_interests_title">Minat &amp; <span class="highlight">Hobi</span></h2>
+                    </div>
+                    <div class="interests-grid reveal">
+                        <div class="interest-item"><i class="fas fa-bolt"></i><span data-i18n="interest_elec">Elektrik &amp; Elektronik</span></div>
+                        <div class="interest-item"><i class="fas fa-utensils"></i><span data-i18n="interest_cook">Memasak (bermula umur 6 tahun Hingga Kini)</span></div>
+                        <div class="interest-item"><i class="fas fa-laptop-code"></i><span data-i18n="interest_digital">Dunia Digital</span></div>
+                        <div class="interest-item"><i class="fas fa-code"></i><span data-i18n="interest_prog">Programming</span></div>
+                        <div class="interest-item"><i class="fas fa-music"></i><span data-i18n="interest_music">Muzik</span></div>
+                        <div class="interest-item"><i class="fas fa-chart-line"></i><span data-i18n="interest_marketing">Marketing</span></div>
+                        <div class="interest-item"><i class="fas fa-pencil-ruler"></i><span data-i18n="interest_design">Design</span></div>
+                    </div>
+                </section>
+
+                <!-- PERJALANAN PEMBELAJARAN (Timeline) -->
+                <section class="history-section">
+                    <div class="section-header reveal">
+                        <span class="section-tag" data-i18n="history_timeline_tag">✦ Perjalanan</span>
+                        <h2 class="section-title" data-i18n-html="history_timeline_title">Pembelajaran <span class="highlight">Saya</span></h2>
+                    </div>
+                    <div class="timeline" id="timelineContainer">
+                        <div class="timeline-item reveal">
+                            <div class="tl-dot"></div>
+                            <div class="tl-content">
+                                <div class="tl-period" data-i18n="tl_period_1">2010–2012</div>
+                                <div class="tl-title" data-i18n="tl_title_1">PASTI As-Syakirin</div>
+                                <div class="tl-desc" data-i18n="tl_desc_1">Permulaan pendidikan awal.</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item reveal">
+                            <div class="tl-dot"></div>
+                            <div class="tl-content">
+                                <div class="tl-period" data-i18n="tl_period_2">2013–2018</div>
+                                <div class="tl-title" data-i18n="tl_title_2">Sekolah Kebangsaan Pusat Kuala Ibai (SKPKI)</div>
+                                <div class="tl-desc" data-i18n="tl_desc_2">Asas kukuh dalam pendidikan rendah.</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item reveal">
+                            <div class="tl-dot"></div>
+                            <div class="tl-content">
+                                <div class="tl-period" data-i18n="tl_period_3">2019–2021</div>
+                                <div class="tl-title" data-i18n="tl_title_3">Sekolah Menengah Kebangsaan Rusila (SMKR)</div>
+                                <div class="tl-desc" data-i18n="tl_desc_3">Menengah rendah hingga tingkatan 3.</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item reveal">
+                            <div class="tl-dot"></div>
+                            <div class="tl-content">
+                                <div class="tl-period" data-i18n="tl_period_4">2022–2023</div>
+                                <div class="tl-title" data-i18n="tl_title_4">Kolej Vokasional Wakaf Tembesu (SVM 1 – SVM 2)</div>
+                                <div class="tl-desc" data-i18n="tl_desc_4">Sijil Vokasional Malaysia dalam bidang Elektrik &amp; Elektronik.</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item reveal">
+                            <div class="tl-dot"></div>
+                            <div class="tl-content">
+                                <div class="tl-period" data-i18n="tl_period_5">2024–2026</div>
+                                <div class="tl-title" data-i18n="tl_title_5">Kolej Vokasional Wakaf Tembesu (DVM 1 – DVM 2 + OJT)</div>
+                                <div class="tl-desc" data-i18n="tl_desc_5">Diploma Vokasional Malaysia dengan Latihan Industri.</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item reveal">
+                            <div class="tl-dot"></div>
+                            <div class="tl-content">
+                                <div class="tl-period" data-i18n="tl_period_6">OJT</div>
+                                <div class="tl-title" data-i18n="tl_title_6">PMINT.URUS (6 Bulan)</div>
+                                <div class="tl-desc" data-i18n="tl_desc_6">Latihan industri di PMINT.URUS – pengalaman dunia sebenar.</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- MATLAMAT HIDUP -->
+                <section class="history-section">
+                    <div class="section-header reveal">
+                        <span class="section-tag" data-i18n="history_goals_tag">✦ Matlamat</span>
+                        <h2 class="section-title" data-i18n-html="history_goals_title">Hidup <span class="highlight">Saya</span></h2>
+                    </div>
+                    <div class="goals-grid reveal">
+                        <div class="goal-card"><i class="fas fa-leaf"></i><p data-i18n="goal_1">Mengubah gaya hidup kepada yang lebih sihat termasuk menjaga alam sekitar.</p></div>
+                        <div class="goal-card"><i class="fas fa-recycle"></i><p data-i18n="goal_2">Mencipta sesuatu yang membantu memelihara alam dan mengurangkan penggunaan kertas.</p></div>
+                        <div class="goal-card"><i class="fas fa-graduation-cap"></i><p data-i18n="goal_3">Mempelajari perkara baharu dan berkongsi ilmu.</p></div>
+                        <div class="goal-card"><i class="fas fa-globe-asia"></i><p data-i18n="goal_4">Berhasrat membina sesuatu yang boleh digunakan di seluruh dunia.</p></div>
+                    </div>
+                </section>
+
+                <!-- SIJIL & ANUGERAH (galeri dipindahkan) -->
+                <section class="history-section history-gallery" id="historyGallerySection">
+                    <div class="section-header reveal">
+                        <span class="section-tag" data-i18n="history_gallery_tag">✦ Sijil</span>
+                        <h2 class="section-title" data-i18n-html="history_gallery_title">Sijil &amp; <span class="highlight">Anugerah</span></h2>
+                        <p class="section-desc" data-i18n="history_gallery_desc">Koleksi sijil, pencapaian, pertandingan dan program yang pernah disertai.</p>
+                    </div>
+                    <div class="gallery-wrapper" id="historyGalleryWrapper">
+                        <div class="gallery-track" id="historyGalleryTrack">
+                            <!-- diisi oleh JS -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- BUTANG KEMBALI -->
+                <div class="back-home-btn-wrap reveal">
+                    <button class="back-home-btn" id="backHomeBtn">
+                        <i class="fas fa-arrow-left"></i>
+                        <span data-i18n="back_home_btn">Kembali ke Halaman Utama</span>
+                    </button>
+                </div>
+
             </div>
-        </footer>
+            <!-- end container -->
+        </div>
+        <!-- END view-history -->
 
         <!-- ===== MUSIC BUTTON ===== -->
         <button class="music-stop-btn" id="musicToggleBtn">
@@ -1523,8 +1942,14 @@
         <!-- ===== YOUTUBE PLAYER (hidden) ===== -->
         <div id="ytPlayerWrap"><div id="ytPlayer"></div></div>
 
+        <!-- ===== LIGHTBOX (global) ===== -->
+        <div class="lightbox" id="lightbox">
+            <button class="lightbox-close" id="lightboxClose">&times;</button>
+            <img id="lightboxImg" src="" alt="Sijil" />
+        </div>
+
     </div>
-    <!-- ===== END MAIN PORTFOLIO ===== -->
+    <!-- END main-portfolio -->
 
 
     <!-- ============================
@@ -1545,12 +1970,10 @@
             landingHidden = true;
             landing.classList.add('hidden');
 
-            // fade in main
             setTimeout(() => {
                 mainPortfolio.style.opacity = '1';
             }, 300);
 
-            // trigger music play via user interaction
             if (typeof ytPlayer !== 'undefined' && ytPlayer) {
                 try {
                     ytPlayer.playVideo();
@@ -1563,15 +1986,14 @@
                 } catch (e) {}
             }
 
-            // trigger stat animations
             animateStats();
-            // trigger reveal for above-fold
             setTimeout(() => {
-                document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => {
-                    if (el.getBoundingClientRect().top < window.innerHeight * 0.85) {
-                        el.classList.add('visible');
-                    }
-                });
+                document.querySelectorAll('#view-portfolio .reveal, #view-portfolio .reveal-left, #view-portfolio .reveal-right, #view-portfolio .reveal-scale')
+                    .forEach(el => {
+                        if (el.getBoundingClientRect().top < window.innerHeight * 0.85) {
+                            el.classList.add('visible');
+                        }
+                    });
             }, 600);
         });
 
@@ -1624,7 +2046,6 @@
 
             function animateParticles() {
                 if (landing.classList.contains('hidden')) {
-                    // slow down when hidden
                     if (particles.length) {
                         ctx.clearRect(0, 0, w, h);
                         particles.forEach(p => { p.update();
@@ -1637,7 +2058,6 @@
                 particles.forEach(p => { p.update();
                     p.draw(); });
 
-                // draw lines
                 for (let i = 0; i < particles.length; i++) {
                     for (let j = i + 1; j < particles.length; j++) {
                         const dx = particles[i].x - particles[j].x;
@@ -1697,19 +2117,43 @@
             description: 'Sistem untuk mendaftarkan buku baharu ke dalam sistem perpustakaan/pusat sumber. Data disimpan dalam localStorage dan boleh dilihat pada bila-bila masa.',
             image: '6.png',
             demoLink: '6index.html'
-        }, {
+        }, 
+        {
             id: 'Sistem Komplex',
             name: 'Sistem Kehadiran',
             description: 'Sistem dalam proses kelulusan publish.',
-            image: '',
+            image: 'https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif',
             demoLink: 'projects/fast lane print/index.html'
-        }, ];
+        }, 
+        {
+            id: 'Sistem Komplex',
+            name: 'Penggunaan Data Harian',
+            description: 'Sistem dalam proses Pembinaan.',
+            image: 'https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif',
+            demoLink: 'projects/fast lane print/index.html'
+        }, 
+        {
+            id: 'Sistem Komplex',
+            name: 'Bahan mengajar litar basic',
+            description: 'Sistem dalam proses Pengumpulan bahan.',
+            image: 'https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif',
+            demoLink: 'projects/fast lane print/index.html'
+        }, 
+        {
+            id: 'Sistem Komplex',
+            name: 'Sistem record carian bahan ternama',
+            description: 'Sistem dalam proses Pembinaan.',
+            image: 'https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif',
+            demoLink: 'projects/fast lane print/index.html'
+        }, 
+    ];
 
         function renderProjects() {
             const grid = document.getElementById('projectsGrid');
             if (!grid) return;
             if (projectsData.length === 0) {
-                grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#64748b;">Tiada projek buat masa ini.</p>';
+                grid.innerHTML =
+                '<p style="grid-column:1/-1;text-align:center;color:#64748b;">Tiada projek buat masa ini.</p>';
                 return;
             }
             grid.innerHTML = projectsData.map((proj, idx) => `
@@ -1729,12 +2173,10 @@
         }
 
         // ============================================
-        // 4. ACHIEVEMENTS GALLERY
+        // 4. HISTORY GALLERY (sijil)
         // ============================================
-        // Sila gantikan array ini dengan gambar sijil sebenar anda.
-        // Letakkan gambar dalam folder "certificates/" atau guna URL terus.
         const certificateImages = [
-              'Screenshot 2026-07-18 121316.png',
+            'Screenshot 2026-07-18 121316.png',
             'Screenshot 2026-07-18 121515.png',
             'Screenshot 2026-07-18 121725.png',
             'Screenshot 2026-07-18 121849.png',
@@ -1757,22 +2199,16 @@
             'Screenshot 2026-07-18 123706.png',
             'Screenshot 2026-07-18 123751.png',
             'Screenshot 2026-07-18 123925.png',
-            // tambah seberapa banyak yang perlu
         ];
-
-        // Jika tiada gambar, gunakan placeholder
         const fallbackCert = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="500" viewBox="0 0 400 500"%3E%3Crect width="400" height="500" fill="%23f1f5f9"/%3E%3Ctext x="200" y="250" font-family="Inter,sans-serif" font-size="24" fill="%2394a3b8" text-anchor="middle"%3ESijil%3C/text%3E%3C/svg%3E';
 
-        function renderGallery() {
-            const track = document.getElementById('galleryTrack');
+        function renderHistoryGallery() {
+            const track = document.getElementById('historyGalleryTrack');
             if (!track) return;
 
-            // Jika tiada gambar, gunakan placeholder
             const images = certificateImages.length ? certificateImages : [fallbackCert, fallbackCert, fallbackCert, fallbackCert,
                 fallbackCert
             ];
-
-            // Ulang 2 kali untuk infinite scroll effect
             const items = [...images, ...images];
             track.innerHTML = items.map((src, i) => `
                     <div class="gallery-item" data-src="${src}">
@@ -1781,7 +2217,7 @@
                     </div>
                 `).join('');
 
-            // Lightbox
+            // Lightbox untuk history gallery
             const lightbox = document.getElementById('lightbox');
             const lightboxImg = document.getElementById('lightboxImg');
             const lightboxClose = document.getElementById('lightboxClose');
@@ -1810,9 +2246,147 @@
                 document.body.style.overflow = '';
             }
 
-            // Pause on hover
-            track.addEventListener('mouseenter', () => track.classList.add('paused'));
-            track.addEventListener('mouseleave', () => track.classList.remove('paused'));
+            // ---- DRAG MANUAL + AUTO RESUME ----
+            let isDragging = false;
+            let startX = 0;
+            let scrollLeft = 0;
+            let dragPaused = false;
+            let resumeTimeout = null;
+
+            const wrapper = document.getElementById('historyGalleryWrapper');
+
+            function pauseAutoScroll() {
+                if (!dragPaused) {
+                    track.classList.add('paused');
+                    dragPaused = true;
+                    if (resumeTimeout) {
+                        clearTimeout(resumeTimeout);
+                        resumeTimeout = null;
+                    }
+                }
+            }
+
+            function resumeAutoScrollAfterDelay() {
+                if (resumeTimeout) {
+                    clearTimeout(resumeTimeout);
+                    resumeTimeout = null;
+                }
+                resumeTimeout = setTimeout(() => {
+                    if (!isDragging) {
+                        track.classList.remove('paused');
+                        dragPaused = false;
+                        resumeTimeout = null;
+                    }
+                }, 2500);
+            }
+
+            // Mouse events
+            wrapper.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                pauseAutoScroll();
+                track.classList.add('dragging');
+                startX = e.pageX - wrapper.getBoundingClientRect().left;
+                scrollLeft = track.scrollLeft || 0;
+                // get current translateX
+                const style = window.getComputedStyle(track);
+                const transform = style.transform;
+                if (transform && transform !== 'none') {
+                    const matrix = transform.match(/matrix.*\((.+)\)/);
+                    if (matrix) {
+                        const values = matrix[1].split(', ');
+                        const tx = parseFloat(values[4] || 0);
+                        scrollLeft = tx;
+                    }
+                }
+                wrapper.style.cursor = 'grabbing';
+                e.preventDefault();
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const x = e.pageX - wrapper.getBoundingClientRect().left;
+                const walk = (x - startX);
+                const currentTx = scrollLeft + walk;
+                track.style.transform = `translateX(${currentTx}px)`;
+                track.style.animation = 'none';
+            });
+
+            window.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    track.classList.remove('dragging');
+                    wrapper.style.cursor = 'grab';
+                    // resume auto scroll after delay
+                    track.style.animation = '';
+                    track.style.transform = '';
+                    resumeAutoScrollAfterDelay();
+                }
+            });
+
+            // Touch events
+            let touchStartX = 0;
+            let touchScrollLeft = 0;
+
+            wrapper.addEventListener('touchstart', (e) => {
+                const touch = e.touches[0];
+                isDragging = true;
+                pauseAutoScroll();
+                track.classList.add('dragging');
+                touchStartX = touch.pageX - wrapper.getBoundingClientRect().left;
+                const style = window.getComputedStyle(track);
+                const transform = style.transform;
+                if (transform && transform !== 'none') {
+                    const matrix = transform.match(/matrix.*\((.+)\)/);
+                    if (matrix) {
+                        const values = matrix[1].split(', ');
+                        const tx = parseFloat(values[4] || 0);
+                        touchScrollLeft = tx;
+                    }
+                } else {
+                    touchScrollLeft = 0;
+                }
+            }, { passive: true });
+
+            wrapper.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                const touch = e.touches[0];
+                const x = touch.pageX - wrapper.getBoundingClientRect().left;
+                const walk = (x - touchStartX);
+                const currentTx = touchScrollLeft + walk;
+                track.style.transform = `translateX(${currentTx}px)`;
+                track.style.animation = 'none';
+            }, { passive: true });
+
+            wrapper.addEventListener('touchend', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    track.classList.remove('dragging');
+                    track.style.animation = '';
+                    track.style.transform = '';
+                    resumeAutoScrollAfterDelay();
+                }
+            }, { passive: true });
+
+            // Pause on hover (as before)
+            track.addEventListener('mouseenter', () => {
+                if (!isDragging) {
+                    track.classList.add('paused');
+                    dragPaused = true;
+                    if (resumeTimeout) {
+                        clearTimeout(resumeTimeout);
+                        resumeTimeout = null;
+                    }
+                }
+            });
+            track.addEventListener('mouseleave', () => {
+                if (!isDragging) {
+                    resumeAutoScrollAfterDelay();
+                }
+            });
+
+            // Initial state: auto scroll running
+            track.classList.remove('paused');
+            dragPaused = false;
         }
 
         // ============================================
@@ -1884,20 +2458,19 @@
         }
 
         // ============================================
-        // 6. TRANSLATIONS (lengkap & konsisten)
+        // 6. TRANSLATIONS (lengkap + tambahan baru)
         // ============================================
         const translations = {
             ms: {
                 nav_projects: 'Projek',
-                nav_history: 'Sejarah',
-                nav_achievements: 'Pencapaian',
+                nav_history: 'Sejarah dan Pencapaian',
                 nav_about: 'Tentang',
                 nav_contact: 'Hubungi',
-                landing_badge: '✦ Portfolio 2026',
-                landing_sub1: 'Frontend Developer',
-                landing_sub2: 'Elektronik',
-                landing_sub3: 'UI/UX Enthusiast',
-                landing_tagline: '"Setiap idea hebat bermula dengan sebaris kod."',
+                landing_badge: '✦ Foliozaha.web',
+                landing_sub1: 'Standard Developer',
+                landing_sub2: 'Elektronik dan Elektrik',
+                landing_sub3: 'UI/DB',
+                landing_tagline: '"Every great idea begins with a real live adventure."',
                 landing_btn: 'Mulakan',
                 hero_badge: '✦ Portfolio',
                 hero_title: 'Hi, saya <span class="highlight">Azhar</span>.<br />Pembangun <span class="highlight">Frontend</span>.',
@@ -1910,9 +2483,6 @@
                 tag_portfolio: '✦ Portfolio',
                 projects_title: 'Projek <span class="highlight">Saya</span>',
                 projects_desc: 'Setiap kad membawa kepada demo frontend yang dibina sepenuhnya dengan data contoh. Klik <strong>"Live Demo"</strong> untuk meneroka.',
-                tag_achievements: '✦ Pencapaian',
-                achievements_title: 'Sijil &amp; <span class="highlight">Anugerah</span>',
-                achievements_desc: 'Galeri pencapaian, sijil, dan penyertaan sepanjang perjalanan.',
                 tag_about: '✦ Tentang',
                 about_title: 'Saya <span class="highlight">Azhar</span>',
                 about_p1: 'Saya seorang yang sukakan sesuatu yang mencabar dan benda baru untuk diterokai, selain berpengalaman dalam bidang Elektrik & Elektronik, saya suka mengisi masa lapang dengan memahami & belajar programming sekali gus saya gemar mencipta pengalaman digital dengan fokus pada reka bentuk yang menarik, prestasi tinggi, dan kebolehpasaran.',
@@ -1929,18 +2499,68 @@
                 form_message: 'Mesej',
                 form_message_ph: 'Tulis mesej anda...',
                 form_send: 'Hantar',
-                footer_text: '&copy; 2026 <strong>Azhar.dev</strong> — Dibina dengan <i class="fas fa-heart" style="color:#f472b6;"></i> untuk web.',
-                footer_sub: 'Dihoskan dengan <i class="fas fa-globe"></i> dan semangat.',
+                footer_text: '&copy; 2026 <strong>Azhar.dev</strong> — Membina sesuatu dengan basic skill dengan harapan mengubah sesuatu kecil.',
+                footer_sub: 'Dihoskan dengan <i class="fas fa-globe"></i> dan kasih sayang.',
                 music_stop: 'Stop Muzik',
                 music_play: 'Main Muzik',
                 form_sending: 'Menghantar...',
                 form_success: 'Mesej berjaya dihantar! Terima kasih 😊',
                 form_error: 'Ralat. Sila cuba lagi.',
+                // SEJARAH
+                history_bio_tag: '✦ Biodata',
+                history_bio_title: 'Profil <span class="highlight">Peribadi</span>',
+                history_bio_name: 'MUHAMMAD AZHAR <span>BIN MAZLAN</span>',
+                history_bio_label_birth: 'Lahir',
+                history_bio_birth: '5 JUNE 2006',
+                history_bio_label_citizen: 'Warganegara',
+                history_bio_citizen: 'MALAYSIA',
+                history_bio_label_origin: 'Berasal',
+                history_bio_origin: 'TERENGGANU',
+                history_bio_label_race: 'Bangsa',
+                history_bio_race: 'MELAYU',
+                history_interests_tag: '✦ Minat',
+                history_interests_title: 'Minat &amp; <span class="highlight">Hobi</span>',
+                interest_elec: 'Elektrik dan Elektronik',
+                interest_cook: 'Memasak (Bermula umur 6 tahun Hingga Kini)',
+                interest_digital: 'Dunia Digital',
+                interest_prog: 'Programming',
+                interest_music: 'Muzik',
+                interest_marketing: 'Marketing',
+                interest_design: 'Design',
+                history_timeline_tag: '✦ Perjalanan',
+                history_timeline_title: 'Latar Belakang Pendidikan <span class="highlight">Saya</span>',
+                tl_period_1: '2010–2012',
+                tl_title_1: 'PASTI As-Syakirin',
+                tl_desc_1: 'Permulaan pendidikan awal.',
+                tl_period_2: '2013–2018',
+                tl_title_2: 'Sekolah Kebangsaan Pusat Kuala Ibai (SKPKI)',
+                tl_desc_2: 'Asas kukuh dalam pendidikan rendah.',
+                tl_period_3: '2019–2021',
+                tl_title_3: 'Sekolah Menengah Kebangsaan Rusila (SMKR)',
+                tl_desc_3: 'Menengah rendah hingga tingkatan 3.',
+                tl_period_4: '2022–2023',
+                tl_title_4: 'Kolej Vokasional Wakaf Tembesu (SVM 1 – SVM 2)',
+                tl_desc_4: 'Sijil Vokasional Malaysia dalam bidang Teknologi Elektronik.',
+                tl_period_5: '2024–2026',
+                tl_title_5: 'Kolej Vokasional Wakaf Tembesu (DVM 1 – DVM 2 + OJT)',
+                tl_desc_5: 'Diploma Vokasional Malaysia dengan Latihan Industri.',
+                tl_period_6: 'OJT',
+                tl_title_6: 'PMINT.URUS (6 Bulan)',
+                tl_desc_6: 'Latihan industri di PMINT.URUS – pengalaman bekerja dunia sebenar.',
+                history_goals_tag: '✦ Matlamat',
+                history_goals_title: 'Hidup <span class="highlight">Saya</span>',
+                goal_1: 'Mengubah gaya hidup kepada yang lebih sihat termasuk menjaga alam sekitar.',
+                goal_2: 'Mencipta sesuatu yang membantu memelihara alam dan mengurangkan penggunaan kertas.',
+                goal_3: 'Mempelajari perkara baharu dan berkongsi ilmu.',
+                goal_4: 'Berhasrat membina sesuatu yang boleh digunakan di seluruh dunia.',
+                history_gallery_tag: '✦ Pencapaian',
+                history_gallery_title: 'Sijil &amp; <span class="highlight">Anugerah</span>',
+                history_gallery_desc: 'Koleksi sijil, pencapaian, pertandingan dan program yang pernah disertai.',
+                back_home_btn: 'Kembali ke Halaman Utama',
             },
             en: {
                 nav_projects: 'Projects',
                 nav_history: 'History',
-                nav_achievements: 'Achievements',
                 nav_about: 'About',
                 nav_contact: 'Contact',
                 landing_badge: '✦ Portfolio 2026',
@@ -1960,9 +2580,6 @@
                 tag_portfolio: '✦ Portfolio',
                 projects_title: 'My <span class="highlight">Projects</span>',
                 projects_desc: 'Every card leads to a fully built frontend demo with sample data. Click <strong>"Live Demo"</strong> to explore.',
-                tag_achievements: '✦ Achievements',
-                achievements_title: 'Certificates &amp; <span class="highlight">Awards</span>',
-                achievements_desc: 'Gallery of achievements, certificates, and participations throughout the journey.',
                 tag_about: '✦ About',
                 about_title: 'I\'m <span class="highlight">Azhar</span>',
                 about_p1: 'I enjoy challenges and exploring new things. Besides experience in Electrical & Electronics, I like to spend my free time learning programming, and I love creating digital experiences focused on great design, high performance, and marketability.',
@@ -1986,11 +2603,61 @@
                 form_sending: 'Sending...',
                 form_success: 'Message sent successfully! Thank you 😊',
                 form_error: 'Error. Please try again.',
+                // HISTORY
+                history_bio_tag: '✦ Bio',
+                history_bio_title: 'Personal <span class="highlight">Profile</span>',
+                history_bio_name: 'MUHAMMAD AZHAR <span>BIN MAZLAN</span>',
+                history_bio_label_birth: 'Born',
+                history_bio_birth: '5 JUNE 2006',
+                history_bio_label_citizen: 'Citizen',
+                history_bio_citizen: 'MALAYSIA',
+                history_bio_label_origin: 'Origin',
+                history_bio_origin: 'TERENGGANU',
+                history_bio_label_race: 'Race',
+                history_bio_race: 'MALAY',
+                history_interests_tag: '✦ Interests',
+                history_interests_title: 'Interests &amp; <span class="highlight">Hobbies</span>',
+                interest_elec: 'Electrical &amp; Electronics',
+                interest_cook: 'Cooking (age 6)',
+                interest_digital: 'Digital World',
+                interest_prog: 'Programming',
+                interest_music: 'Music',
+                interest_marketing: 'Marketing',
+                interest_design: 'Design',
+                history_timeline_tag: '✦ Journey',
+                history_timeline_title: 'My <span class="highlight">Education</span>',
+                tl_period_1: '2010–2012',
+                tl_title_1: 'PASTI As-Syakirin',
+                tl_desc_1: 'Early education start.',
+                tl_period_2: '2013–2018',
+                tl_title_2: 'Sekolah Kebangsaan Pusat Kuala Ibai (SKPKI)',
+                tl_desc_2: 'Strong foundation in primary education.',
+                tl_period_3: '2019–2021',
+                tl_title_3: 'Sekolah Menengah Kebangsaan Rusila (SMKR)',
+                tl_desc_3: 'Lower secondary to Form 3.',
+                tl_period_4: '2022–2023',
+                tl_title_4: 'Kolej Vokasional Wakaf Tembesu (SVM 1 – SVM 2)',
+                tl_desc_4: 'Malaysian Vocational Certificate in Electrical &amp; Electronics.',
+                tl_period_5: '2024–2026',
+                tl_title_5: 'Kolej Vokasional Wakaf Tembesu (DVM 1 – DVM 2 + OJT)',
+                tl_desc_5: 'Malaysian Vocational Diploma with Industrial Training.',
+                tl_period_6: 'OJT',
+                tl_title_6: 'PMINT.URUS (6 Months)',
+                tl_desc_6: 'Industrial training at PMINT.URUS – real-world experience.',
+                history_goals_tag: '✦ Goals',
+                history_goals_title: 'My <span class="highlight">Life Goals</span>',
+                goal_1: 'Adopt a healthier lifestyle including caring for the environment.',
+                goal_2: 'Create something that helps preserve nature and reduce paper usage.',
+                goal_3: 'Learn new things and share knowledge.',
+                goal_4: 'Aspire to build something that can be used worldwide.',
+                history_gallery_tag: '✦ Certificates',
+                history_gallery_title: 'Certificates &amp; <span class="highlight">Awards</span>',
+                history_gallery_desc: 'Collection of certificates, achievements, competitions and programs attended.',
+                back_home_btn: 'Back to Homepage',
             },
             zh: {
                 nav_projects: '项目',
                 nav_history: '历史',
-                nav_achievements: '成就',
                 nav_about: '关于',
                 nav_contact: '联系',
                 landing_badge: '✦ 作品集 2026',
@@ -2010,9 +2677,6 @@
                 tag_portfolio: '✦ 作品集',
                 projects_title: '我的 <span class="highlight">项目</span>',
                 projects_desc: '每张卡片都会带你进入一个使用示例数据完整构建的前端演示。点击 <strong>"Live Demo"</strong> 进行探索。',
-                tag_achievements: '✦ 成就',
-                achievements_title: '证书与 <span class="highlight">奖项</span>',
-                achievements_desc: '展示旅程中的成就、证书和参与经历。',
                 tag_about: '✦ 关于',
                 about_title: '我是 <span class="highlight">Azhar</span>',
                 about_p1: '我喜欢挑战和探索新事物，除了在电气与电子领域有经验外，我也喜欢利用空闲时间学习编程，热衷于打造注重精美设计、高性能与市场适应性的数字体验。',
@@ -2036,6 +2700,57 @@
                 form_sending: '发送中...',
                 form_success: '消息发送成功！谢谢 😊',
                 form_error: '错误，请重试。',
+                // HISTORY
+                history_bio_tag: '✦ 个人资料',
+                history_bio_title: '个人 <span class="highlight">简介</span>',
+                history_bio_name: 'MUHAMMAD AZHAR <span>BIN MAZLAN</span>',
+                history_bio_label_birth: '出生',
+                history_bio_birth: '2006年6月5日',
+                history_bio_label_citizen: '公民',
+                history_bio_citizen: '马来西亚',
+                history_bio_label_origin: '籍贯',
+                history_bio_origin: '登嘉楼',
+                history_bio_label_race: '种族',
+                history_bio_race: '马来人',
+                history_interests_tag: '✦ 兴趣',
+                history_interests_title: '兴趣与 <span class="highlight">爱好</span>',
+                interest_elec: '电气与电子',
+                interest_cook: '烹饪（6岁开始）',
+                interest_digital: '数字世界',
+                interest_prog: '编程',
+                interest_music: '音乐',
+                interest_marketing: '市场营销',
+                interest_design: '设计',
+                history_timeline_tag: '✦ 历程',
+                history_timeline_title: '我的 <span class="highlight">教育</span>',
+                tl_period_1: '2010–2012',
+                tl_title_1: 'PASTI As-Syakirin',
+                tl_desc_1: '早期教育开端。',
+                tl_period_2: '2013–2018',
+                tl_title_2: 'Sekolah Kebangsaan Pusat Kuala Ibai (SKPKI)',
+                tl_desc_2: '小学教育坚实基础。',
+                tl_period_3: '2019–2021',
+                tl_title_3: 'Sekolah Menengah Kebangsaan Rusila (SMKR)',
+                tl_desc_3: '初中至中三。',
+                tl_period_4: '2022–2023',
+                tl_title_4: 'Kolej Vokasional Wakaf Tembesu (SVM 1 – SVM 2)',
+                tl_desc_4: '马来西亚职业证书（电气与电子）。',
+                tl_period_5: '2024–2026',
+                tl_title_5: 'Kolej Vokasional Wakaf Tembesu (DVM 1 – DVM 2 + OJT)',
+                tl_desc_5: '马来西亚职业文凭（含工业实习）。',
+                tl_period_6: 'OJT',
+                tl_title_6: 'PMINT.URUS（6个月）',
+                tl_desc_6: '在PMINT.URUS的工业实习 – 真实世界经验。',
+                history_goals_tag: '✦ 目标',
+                history_goals_title: '我的 <span class="highlight">人生目标</span>',
+                goal_1: '采用更健康的生活方式，包括关爱环境。',
+                goal_2: '创造有助于保护自然和减少用纸的事物。',
+                goal_3: '学习新事物并分享知识。',
+                goal_4: '立志打造能在全球使用的东西。',
+                history_gallery_tag: '✦ 证书',
+                history_gallery_title: '证书与 <span class="highlight">奖项</span>',
+                history_gallery_desc: '曾参加的证书、成就、比赛和项目合集。',
+                back_home_btn: '返回主页',
             }
         };
 
@@ -2071,9 +2786,7 @@
         }
 
         function updateFormStatusText() {
-            const status = document.getElementById('formStatus');
-            if (!status) return;
-            // We'll manage status via JS, not via data-i18n
+            // handled via JS
         }
 
         // ============================================
@@ -2090,9 +2803,7 @@
                 videoId: YT_VIDEO_ID,
                 playerVars: { autoplay: 0, mute: 1, controls: 0, loop: 1, playlist: YT_VIDEO_ID },
                 events: {
-                    onReady: (e) => {
-                        // tidak autoplay di sini — tunggu user klik "Mulakan"
-                    }
+                    onReady: (e) => {}
                 }
             });
         }
@@ -2151,7 +2862,6 @@
             submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${dict.form_sending || 'Menghantar...'}`;
 
             try {
-                // Guna FormSubmit.co — percuma, tanpa backend
                 const response = await fetch('https://formsubmit.co/ajax/muhammad88628@gmail.com', {
                     method: 'POST',
                     headers: {
@@ -2182,7 +2892,6 @@
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = `<i class="fas fa-paper-plane"></i> ${dict.form_send || 'Hantar'}`;
-                // auto clear status after 6s
                 setTimeout(() => {
                     if (formStatus.classList.contains('success') || formStatus.classList.contains('error')) {
                         formStatus.textContent = '';
@@ -2214,7 +2923,7 @@
         // 10. REVEAL ON SCROLL (Intersection Observer)
         // ============================================
         function initReveal() {
-            const elements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .project-card');
+            const elements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .project-card, .timeline-item');
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -2246,7 +2955,6 @@
                 toggle.addEventListener('click', () => {
                     navLinks.classList.toggle('open');
                 });
-                // close on link click (mobile)
                 navLinks.querySelectorAll('a').forEach(link => {
                     link.addEventListener('click', () => navLinks.classList.remove('open'));
                 });
@@ -2260,44 +2968,129 @@
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     applyLanguage(btn.getAttribute('data-lang'));
-                    // update music label after lang change
                     updateMusicUI();
                 });
             });
         }
 
         // ============================================
-        // 14. INIT ALL
+        // 14. NAVIGATION: SEJARAH ↔ PORTFOLIO
+        // ============================================
+        const viewPortfolio = document.getElementById('view-portfolio');
+        const viewHistory = document.getElementById('view-history');
+        const historyNavLink = document.getElementById('historyNavLink');
+        const backHomeBtn = document.getElementById('backHomeBtn');
+        const logoHomeLink = document.getElementById('logoHomeLink');
+
+        function showPortfolioView() {
+            viewHistory.classList.remove('active');
+            viewHistory.style.display = 'none';
+            viewPortfolio.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // re-trigger reveal for portfolio
+            setTimeout(() => {
+                document.querySelectorAll('#view-portfolio .reveal, #view-portfolio .reveal-left, #view-portfolio .reveal-right, #view-portfolio .reveal-scale')
+                    .forEach(el => {
+                        if (el.getBoundingClientRect().top < window.innerHeight * 0.85) {
+                            el.classList.add('visible');
+                        }
+                    });
+            }, 400);
+            // update navbar active state
+            document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('nav-link-active'));
+            document.querySelectorAll('.nav-portfolio-link').forEach(a => a.classList.add('nav-link-active'));
+            // close mobile nav
+            document.getElementById('navLinks').classList.remove('open');
+        }
+
+        function showHistoryView() {
+            viewPortfolio.style.display = 'none';
+            viewHistory.style.display = 'block';
+            // trigger reveal with small delay
+            setTimeout(() => {
+                viewHistory.classList.add('active');
+                // re-run observer for history items
+                document.querySelectorAll('#view-history .reveal, #view-history .timeline-item').forEach(el => {
+                    if (el.getBoundingClientRect().top < window.innerHeight * 0.85) {
+                        el.classList.add('visible');
+                    }
+                });
+            }, 50);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // update navbar active state
+            document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('nav-link-active'));
+            historyNavLink.classList.add('nav-link-active');
+            document.getElementById('navLinks').classList.remove('open');
+        }
+
+        // Event listeners
+        historyNavLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showHistoryView();
+        });
+
+        backHomeBtn.addEventListener('click', () => {
+            showPortfolioView();
+        });
+
+        logoHomeLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (viewHistory.classList.contains('active')) {
+                showPortfolioView();
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+
+        // Portfolio nav links (Projek, Tentang, Hubungi) – scroll to section
+        document.querySelectorAll('.nav-portfolio-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (viewHistory.classList.contains('active')) {
+                    e.preventDefault();
+                    showPortfolioView();
+                    // after showing, scroll to target
+                    setTimeout(() => {
+                        const target = link.getAttribute('href');
+                        if (target && target.startsWith('#')) {
+                            const el = document.querySelector(target);
+                            if (el) el.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }, 500);
+                }
+                // if already in portfolio, default scroll works
+            });
+        });
+
+        // ============================================
+        // 15. INIT ALL
         // ============================================
         document.addEventListener('DOMContentLoaded', () => {
             renderProjects();
-            renderGallery();
+            renderHistoryGallery();
             initReveal();
             initNavbarScroll();
             initNavToggle();
             initLangSwitcher();
 
-            // set default language
             applyLanguage('ms');
 
-            // start counters
             updateAge();
             updateInterest();
             setInterval(() => { updateAge();
                 updateInterest(); }, 1000);
 
-            // If user didn't click enter yet, but we want stats ready
-            // They'll animate on enter click.
-
-            // Ensure main portfolio is hidden initially (landing covers)
             mainPortfolio.style.opacity = '0';
 
-            // On enter, we already handle stats and reveal
+            // ensure history hidden initially
+            viewHistory.style.display = 'none';
+            viewHistory.classList.remove('active');
+            viewPortfolio.style.display = 'block';
+
+            // Mark portfolio links as active initially
+            document.querySelectorAll('.nav-portfolio-link').forEach(a => a.classList.add('nav-link-active'));
         });
 
-        // Also handle if somehow landing is bypassed (just in case)
-        // But we keep landing as first screen.
-        console.log('🚀 Portfolio premium siap!');
+        console.log('🚀 Portfolio premium siap dengan Sejarah SPA!');
     </script>
 
 </body>
