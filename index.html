@@ -992,36 +992,18 @@
         }
 
         /* ============================
-           MUSIC WIDGET (floating) — Weekly Trending Song
+           MUSIC BUTTON (floating)
            ============================ */
-        .music-widget {
+        .music-stop-btn {
             position: fixed;
             bottom: 24px;
             right: 24px;
             z-index: 200;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 6px;
-            max-width: min(78vw, 260px);
-        }
-        .music-trending-badge {
-            background: linear-gradient(90deg, #f97316, #ef4444);
-            color: #fff;
-            font-size: 0.62rem;
-            font-weight: 800;
-            letter-spacing: 0.03em;
-            padding: 3px 10px;
-            border-radius: 20px;
-            box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
-            white-space: nowrap;
-        }
-        .music-stop-btn {
             background: #0b1a2e;
             color: #fff;
             border: none;
-            padding: 10px 18px;
-            border-radius: 24px;
+            padding: 12px 22px;
+            border-radius: 40px;
             font-weight: 700;
             font-size: 0.85rem;
             cursor: pointer;
@@ -1032,7 +1014,6 @@
             transition: all 0.3s ease;
             backdrop-filter: blur(8px);
             background: rgba(11, 26, 46, 0.85);
-            max-width: 100%;
         }
         .music-stop-btn:hover {
             transform: translateY(-4px) scale(1.02);
@@ -1041,205 +1022,14 @@
         }
         .music-stop-btn i {
             font-size: 1rem;
-            flex-shrink: 0;
-        }
-        .music-btn-text {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            line-height: 1.25;
-            min-width: 0;
-            text-align: left;
-        }
-        #musicBtnLabel {
-            font-size: 0.8rem;
-        }
-        .music-song-info {
-            font-size: 0.68rem;
-            font-weight: 500;
-            opacity: 0.75;
-            max-width: 150px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        /* Info / tooltip panel */
-        .music-info-panel {
-            display: none;
-            flex-direction: column;
-            gap: 4px;
-            background: rgba(11, 26, 46, 0.97);
-            color: #fff;
-            padding: 14px 16px;
-            border-radius: 16px;
-            box-shadow: 0 12px 34px rgba(0, 0, 0, 0.3);
-            width: 240px;
-            max-width: 78vw;
-            backdrop-filter: blur(8px);
-        }
-        .music-info-panel.visible {
-            display: flex;
-        }
-        .music-info-title {
-            font-size: 0.72rem;
-            font-weight: 700;
-            opacity: 0.85;
-            margin-bottom: 2px;
-        }
-        .music-info-song {
-            font-size: 1rem;
-            font-weight: 800;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .music-info-artist {
-            font-size: 0.82rem;
-            opacity: 0.8;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .music-info-note {
-            font-size: 0.68rem;
-            opacity: 0.55;
-            margin-top: 4px;
-        }
-        .music-history-toggle {
-            margin-top: 8px;
-            background: rgba(255, 255, 255, 0.08);
-            border: none;
-            color: #fff;
-            font-size: 0.68rem;
-            font-weight: 700;
-            padding: 6px 10px;
-            border-radius: 10px;
-            cursor: pointer;
-            text-align: left;
-        }
-        .music-history-toggle:hover {
-            background: rgba(255, 255, 255, 0.15);
-        }
-        .music-history-list {
-            display: none;
-            flex-direction: column;
-            gap: 6px;
-            margin-top: 8px;
-            max-height: 160px;
-            overflow-y: auto;
-            padding-right: 2px;
-        }
-        .music-history-list.visible {
-            display: flex;
-        }
-        .music-history-item {
-            font-size: 0.7rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 6px;
-        }
-        .music-history-item .mh-date {
-            opacity: 0.55;
-            font-size: 0.62rem;
-        }
-        .music-history-item .mh-song {
-            font-weight: 700;
-        }
-        .music-history-empty {
-            font-size: 0.7rem;
-            opacity: 0.55;
-        }
-
-        /* Weekly change toast notification */
-        .music-toast {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%) translateY(140%);
-            z-index: 300;
-            background: rgba(11, 26, 46, 0.97);
-            color: #fff;
-            padding: 14px 40px 14px 16px;
-            border-radius: 16px;
-            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            width: min(90vw, 300px);
-            opacity: 0;
-            pointer-events: none;
-            transition: transform 0.45s ease, opacity 0.45s ease;
-            backdrop-filter: blur(8px);
-        }
-        .music-toast.visible {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .music-toast-icon {
-            font-size: 1.3rem;
-            line-height: 1;
-        }
-        .music-toast-title {
-            font-size: 0.78rem;
-            font-weight: 800;
-        }
-        .music-toast-sub {
-            font-size: 0.68rem;
-            opacity: 0.7;
-            margin-top: 4px;
-        }
-        .music-toast-song {
-            font-size: 0.9rem;
-            font-weight: 800;
-            margin-top: 2px;
-        }
-        .music-toast-artist {
-            font-size: 0.75rem;
-            opacity: 0.8;
-        }
-        .music-toast-footer {
-            font-size: 0.62rem;
-            opacity: 0.5;
-            margin-top: 6px;
-        }
-        .music-toast-close {
-            position: absolute;
-            top: 8px;
-            right: 10px;
-            background: none;
-            border: none;
-            color: #fff;
-            opacity: 0.6;
-            font-size: 1.1rem;
-            cursor: pointer;
-            line-height: 1;
-        }
-        .music-toast-close:hover {
-            opacity: 1;
         }
 
         @media (max-width: 480px) {
-            .music-widget {
+            .music-stop-btn {
+                padding: 10px 16px;
+                font-size: 0.75rem;
                 bottom: 16px;
                 right: 16px;
-                max-width: 70vw;
-            }
-            .music-stop-btn {
-                padding: 8px 14px;
-                font-size: 0.75rem;
-            }
-            .music-song-info {
-                max-width: 110px;
-                font-size: 0.62rem;
-            }
-            .music-info-panel {
-                width: 210px;
-            }
-            .music-toast {
-                bottom: 16px;
-                width: min(92vw, 280px);
-                padding: 12px 34px 12px 14px;
             }
         }
 
@@ -2142,40 +1932,11 @@
         </div>
         <!-- END view-history -->
 
-        <!-- ===== MUSIC WIDGET (Weekly Trending Song) ===== -->
-        <div class="music-widget" id="musicWidget">
-            <div class="music-trending-badge" id="musicTrendingBadge" data-i18n="music_trending_label">🔥 LAGU TRENDING</div>
-
-            <button class="music-stop-btn" id="musicToggleBtn">
-                <i class="fas fa-pause" id="musicIcon"></i>
-                <span class="music-btn-text">
-                    <span id="musicBtnLabel" data-i18n="music_stop">Stop</span>
-                    <span id="musicSongInfo" class="music-song-info">&nbsp;</span>
-                </span>
-            </button>
-
-            <div class="music-info-panel" id="musicInfoPanel">
-                <div class="music-info-title" id="musicInfoTitle" data-i18n="music_tooltip_title">🎵 Lagu Trending Minggu Ini</div>
-                <div class="music-info-song" id="musicInfoSong">—</div>
-                <div class="music-info-artist" id="musicInfoArtist">—</div>
-                <div class="music-info-note" id="musicInfoNote" data-i18n="music_tooltip_note">Bertukar setiap hari Isnin</div>
-                <button class="music-history-toggle" id="musicHistoryToggle" data-i18n="music_history_title">🎵 Sejarah Muzik</button>
-                <div class="music-history-list" id="musicHistoryList"></div>
-            </div>
-        </div>
-
-        <!-- ===== MUSIC TOAST (new weekly song notification) ===== -->
-        <div class="music-toast" id="musicToast">
-            <div class="music-toast-icon">🎵</div>
-            <div class="music-toast-body">
-                <div class="music-toast-title" id="musicToastTitle" data-i18n="music_toast_title">🎵 Lagu Trending Baharu</div>
-                <div class="music-toast-sub" id="musicToastSub" data-i18n="music_toast_sub">Lagu minggu ini:</div>
-                <div class="music-toast-song" id="musicToastSong">—</div>
-                <div class="music-toast-artist" id="musicToastArtist">—</div>
-                <div class="music-toast-footer" id="musicToastFooter" data-i18n="music_toast_footer">Dikemas kini setiap minggu</div>
-            </div>
-            <button class="music-toast-close" id="musicToastClose" aria-label="Close">&times;</button>
-        </div>
+        <!-- ===== MUSIC BUTTON ===== -->
+        <button class="music-stop-btn" id="musicToggleBtn">
+            <i class="fas fa-pause" id="musicIcon"></i>
+            <span id="musicBtnLabel" data-i18n="music_stop">Stop Muzik</span>
+        </button>
 
         <!-- ===== YOUTUBE PLAYER (hidden) ===== -->
         <div id="ytPlayerWrap"><div id="ytPlayer"></div></div>
@@ -2749,17 +2510,8 @@
                 form_message_ph: 'Tulis mesej anda...',
                 form_send: 'Hantar',
                 footer_text: '&copy; 2026 <strong>Azhar.dev</strong> — Membina sesuatu dengan basic skill dengan harapan mengubah sesuatu kecil.',
-                music_stop: 'Stop',
-                music_play: 'Main',
-                music_trending_label: '🔥 LAGU TRENDING',
-                music_tooltip_title: '🎵 Lagu Trending Minggu Ini',
-                music_tooltip_note: 'Bertukar setiap hari Isnin',
-                music_toast_title: '🎵 Lagu Trending Baharu',
-                music_toast_sub: 'Lagu minggu ini:',
-                music_toast_footer: 'Dikemas kini setiap minggu',
-                music_history_title: '🎵 Sejarah Muzik',
-                music_history_empty: 'Belum ada sejarah lagu.',
-                music_unavailable: 'Muzik Tidak Tersedia',
+                music_stop: 'Stop Muzik',
+                music_play: 'Main Muzik',
                 form_sending: 'Menghantar...',
                 form_success: 'Mesej berjaya dihantar! Terima kasih ',
                 form_error: 'Ralat. Sila cuba lagi.',
@@ -2854,17 +2606,8 @@
                 form_message_ph: 'Write your message...',
                 form_send: 'Send',
                 footer_text: '&copy; 2026 <strong>Azhar.dev</strong> — Using basic skills to create something, hoping to change a few small things.',
-                music_stop: 'Stop',
-                music_play: 'Play',
-                music_trending_label: '🔥 TRENDING SONG',
-                music_tooltip_title: '🎵 Trending Song of the Week',
-                music_tooltip_note: 'Changes every Monday',
-                music_toast_title: '🎵 New Trending Song',
-                music_toast_sub: "This week's song:",
-                music_toast_footer: 'Updated weekly',
-                music_history_title: '🎵 Music History',
-                music_history_empty: 'No song history yet.',
-                music_unavailable: 'Music Unavailable',
+                music_stop: 'Stop Music',
+                music_play: 'Play Music',
                 form_sending: 'Sending...',
                 form_success: 'Message sent successfully! Thank you ',
                 form_error: 'Error. Please try again.',
@@ -2959,17 +2702,8 @@
                 form_message_ph: '写下您的留言...',
                 form_send: '发送',
                 footer_text: '&copy; 2026 <strong>Azhar.dev</strong> — 用基本技能打造一个东西，希望能改变一些小事。',
-                music_stop: '停止',
-                music_play: '播放',
-                music_trending_label: '🔥 热门歌曲',
-                music_tooltip_title: '🎵 本周热门歌曲',
-                music_tooltip_note: '每周一更新',
-                music_toast_title: '🎵 新的热门歌曲',
-                music_toast_sub: '本周歌曲：',
-                music_toast_footer: '每周更新',
-                music_history_title: '🎵 音乐历史',
-                music_history_empty: '暂无歌曲历史。',
-                music_unavailable: '音乐不可用',
+                music_stop: '停止音乐',
+                music_play: '播放音乐',
                 form_sending: '发送中...',
                 form_success: '消息发送成功！谢谢 ',
                 form_error: '错误，请重试。',
@@ -3050,11 +2784,8 @@
             });
             document.documentElement.lang = lang;
 
-            if (typeof updateMusicUI === 'function') updateMusicUI();
-            const historyList = document.getElementById('musicHistoryList');
-            if (historyList && historyList.classList.contains('visible') && typeof renderMusicHistory === 'function') {
-                renderMusicHistory();
-            }
+            const label = document.getElementById('musicBtnLabel');
+            if (label) label.textContent = isPlaying ? dict.music_stop : dict.music_play;
 
             updateAge();
             updateInterest();
@@ -3066,273 +2797,50 @@
         }
 
         // ============================================
-        // 7. MUSIC (YouTube) — Weekly Trending Song
+        // 7. MUSIC (YouTube)
         // ============================================
-        // Senarai lagu trending (fallback list, boleh dikemas kini bila-bila masa).
-        // Hanya perlu videoId (bukan URL penuh) — sistem TIDAK perlu diedit setiap minggu,
-        // ia bertukar secara automatik mengikut tarikh sebenar (lihat getCurrentWeekNumber()).
-        // Untuk tambah/keluarkan lagu, edit sahaja senarai di bawah.
-        const trendingSongs = [
-            { title: 'Flowers', artist: 'Miley Cyrus', videoId: 'G7KNmW9a75Y' },
-            { title: 'Espresso', artist: 'Sabrina Carpenter', videoId: 'eVli-tstM5E' },
-            { title: 'APT.', artist: 'ROSÉ & Bruno Mars', videoId: 'ekr2nIex040' },
-            { title: 'Die With A Smile', artist: 'Lady Gaga & Bruno Mars', videoId: 'kPa7bsKwL-c' },
-            { title: 'Blinding Lights', artist: 'The Weeknd', videoId: '4NRXx6U8ABQ' }
-        ];
-
-        const MUSIC_HISTORY_KEY = 'azhar_music_history_v1';
-        const MUSIC_LAST_WEEK_KEY = 'azhar_music_last_week_v1';
-        const MUSIC_HISTORY_LIMIT = 20;
-
-        // Anchor tetap (1 Jan 2024, UTC) supaya pengiraan minggu konsisten untuk SEMUA pengguna,
-        // tanpa bergantung kepada setInterval() atau waktu pelawat membuka website.
-        const WEEK_ANCHOR_MS = Date.UTC(2024, 0, 1);
-        const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
-
-        function getCurrentWeekNumber() {
-            const diff = Date.now() - WEEK_ANCHOR_MS;
-            return Math.floor(diff / WEEK_MS);
-        }
-
-        function isValidVideoId(id) {
-            return typeof id === 'string' && /^[A-Za-z0-9_-]{11}$/.test(id);
-        }
-
-        // Tapis lagu yang videoId tidak sah supaya satu entri rosak tidak menjatuhkan seluruh sistem.
-        const validTrendingSongs = trendingSongs.filter(song => {
-            const ok = song && isValidVideoId(song.videoId);
-            if (!ok) console.error('Lagu trending diabaikan kerana videoId tidak sah:', song);
-            return ok;
-        });
-
-        function getWeeklySong() {
-            if (!validTrendingSongs.length) return null;
-            const weekNumber = getCurrentWeekNumber();
-            const index = ((weekNumber % validTrendingSongs.length) + validTrendingSongs.length) % validTrendingSongs.length;
-            return { ...validTrendingSongs[index], weekNumber };
-        }
-
-        const currentSong = getWeeklySong();
-        let musicDisabled = !currentSong;
-        if (musicDisabled) {
-            console.error('Tiada lagu trending yang sah dijumpai. Fungsi muzik telah dinyahaktifkan.');
-        }
-
         let ytPlayer;
         let isPlaying = false;
+        const YT_VIDEO_ID = 'AfIDRkYQD-w';
 
         function onYouTubeIframeAPIReady() {
-            if (musicDisabled) return;
-            try {
-                ytPlayer = new YT.Player('ytPlayer', {
-                    height: '1',
-                    width: '1',
-                    videoId: currentSong.videoId,
-                    playerVars: { autoplay: 0, mute: 1, controls: 0, loop: 1, playlist: currentSong.videoId },
-                    events: {
-                        onReady: (e) => {},
-                        onError: (e) => {
-                            console.error('Ralat YouTube Player:', e && e.data);
-                            musicDisabled = true;
-                            updateMusicUI();
-                        }
-                    }
-                });
-            } catch (e) {
-                console.error('Gagal memulakan YouTube Player:', e);
-                musicDisabled = true;
-                updateMusicUI();
-            }
+            ytPlayer = new YT.Player('ytPlayer', {
+                height: '1',
+                width: '1',
+                videoId: YT_VIDEO_ID,
+                playerVars: { autoplay: 0, mute: 1, controls: 0, loop: 1, playlist: YT_VIDEO_ID },
+                events: {
+                    onReady: (e) => {}
+                }
+            });
         }
 
-        if (!musicDisabled) {
-            const ytScript = document.createElement('script');
-            ytScript.src = 'https://www.youtube.com/iframe_api';
-            document.head.appendChild(ytScript);
-        }
+        const ytScript = document.createElement('script');
+        ytScript.src = 'https://www.youtube.com/iframe_api';
+        document.head.appendChild(ytScript);
 
         function updateMusicUI() {
             const icon = document.getElementById('musicIcon');
             const label = document.getElementById('musicBtnLabel');
-            const songInfoEl = document.getElementById('musicSongInfo');
             const dict = translations[currentLang] || translations.ms;
-
-            if (musicDisabled) {
-                if (icon) icon.className = 'fas fa-music';
-                if (label) label.textContent = dict.music_unavailable;
-                if (songInfoEl) songInfoEl.textContent = '';
-                return;
-            }
-
             if (icon) icon.className = isPlaying ? 'fas fa-pause' : 'fas fa-play';
             if (label) label.textContent = isPlaying ? dict.music_stop : dict.music_play;
-            if (songInfoEl && currentSong) {
-                const text = `${currentSong.title} — ${currentSong.artist}`;
-                songInfoEl.textContent = text;
-                songInfoEl.title = text;
-            }
         }
 
-        // ---------- Info / tooltip panel ----------
-        function fillMusicInfoPanel() {
-            const songEl = document.getElementById('musicInfoSong');
-            const artistEl = document.getElementById('musicInfoArtist');
-            if (!currentSong) return;
-            if (songEl) songEl.textContent = currentSong.title;
-            if (artistEl) artistEl.textContent = currentSong.artist;
-        }
-
-        function toggleMusicInfoPanel(forceState) {
-            const panel = document.getElementById('musicInfoPanel');
-            if (!panel) return;
-            const shouldShow = typeof forceState === 'boolean' ? forceState : !panel.classList.contains('visible');
-            panel.classList.toggle('visible', shouldShow);
-        }
-
-        const musicWidgetEl = document.getElementById('musicWidget');
-        const musicTrendingBadgeEl = document.getElementById('musicTrendingBadge');
-        const musicSongInfoEl = document.getElementById('musicSongInfo');
-
-        if (musicTrendingBadgeEl) {
-            musicTrendingBadgeEl.addEventListener('click', (e) => {
-                e.stopPropagation();
-                toggleMusicInfoPanel();
-            });
-        }
-        if (musicSongInfoEl) {
-            musicSongInfoEl.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (!musicDisabled) toggleMusicInfoPanel();
-            });
-        }
-        if (musicWidgetEl && window.matchMedia && window.matchMedia('(hover: hover)').matches) {
-            musicWidgetEl.addEventListener('mouseenter', () => toggleMusicInfoPanel(true));
-            musicWidgetEl.addEventListener('mouseleave', () => toggleMusicInfoPanel(false));
-        }
-        document.addEventListener('click', (e) => {
-            const panel = document.getElementById('musicInfoPanel');
-            if (panel && panel.classList.contains('visible') && musicWidgetEl && !musicWidgetEl.contains(e.target)) {
-                toggleMusicInfoPanel(false);
-            }
-        });
-
-        const musicHistoryToggleEl = document.getElementById('musicHistoryToggle');
-        if (musicHistoryToggleEl) {
-            musicHistoryToggleEl.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const list = document.getElementById('musicHistoryList');
-                if (!list) return;
-                const show = !list.classList.contains('visible');
-                if (show) renderMusicHistory();
-                list.classList.toggle('visible', show);
-            });
-        }
-
-        // ---------- localStorage: weekly history + change notification ----------
-        function readMusicHistory() {
-            try {
-                const raw = localStorage.getItem(MUSIC_HISTORY_KEY);
-                const parsed = raw ? JSON.parse(raw) : [];
-                return Array.isArray(parsed) ? parsed : [];
-            } catch (e) {
-                console.error('Gagal membaca sejarah muzik dari localStorage:', e);
-                return [];
-            }
-        }
-
-        function saveMusicHistory(history) {
-            try {
-                localStorage.setItem(MUSIC_HISTORY_KEY, JSON.stringify(history.slice(0, MUSIC_HISTORY_LIMIT)));
-            } catch (e) {
-                console.error('Gagal menyimpan sejarah muzik ke localStorage:', e);
-            }
-        }
-
-        function renderMusicHistory() {
-            const list = document.getElementById('musicHistoryList');
-            if (!list) return;
+        document.getElementById('musicToggleBtn').addEventListener('click', () => {
+            if (!ytPlayer) return;
             const dict = translations[currentLang] || translations.ms;
-            const history = readMusicHistory();
-            if (!history.length) {
-                list.innerHTML = `<div class="music-history-empty">${dict.music_history_empty}</div>`;
-                return;
+            if (isPlaying) {
+                ytPlayer.pauseVideo();
+                isPlaying = false;
+            } else {
+                ytPlayer.playVideo();
+                try { ytPlayer.unMute();
+                    ytPlayer.setVolume(50); } catch (e) {}
+                isPlaying = true;
             }
-            list.innerHTML = history.map(item => {
-                const d = new Date(item.firstSeen);
-                const dateStr = isNaN(d) ? '' : d.toLocaleDateString(currentLang === 'zh' ? 'zh-CN' : currentLang, { day: 'numeric', month: 'short', year: 'numeric' });
-                return `<div class="music-history-item"><div class="mh-date">${dateStr}</div><div class="mh-song">${item.title} — ${item.artist}</div></div>`;
-            }).join('');
-        }
-
-        function updateMusicHistoryAndMaybeNotify() {
-            if (!currentSong) return;
-            const history = readMusicHistory();
-            const alreadyLogged = history.some(item => item.weekNumber === currentSong.weekNumber);
-            if (!alreadyLogged) {
-                history.unshift({
-                    weekNumber: currentSong.weekNumber,
-                    title: currentSong.title,
-                    artist: currentSong.artist,
-                    firstSeen: new Date().toISOString()
-                });
-                saveMusicHistory(history);
-            }
-
-            let lastWeekSeen = null;
-            try { lastWeekSeen = localStorage.getItem(MUSIC_LAST_WEEK_KEY); } catch (e) {}
-
-            const isNewWeekForThisBrowser = lastWeekSeen !== null && String(currentSong.weekNumber) !== lastWeekSeen;
-            try { localStorage.setItem(MUSIC_LAST_WEEK_KEY, String(currentSong.weekNumber)); } catch (e) {}
-
-            if (isNewWeekForThisBrowser) {
-                showMusicToast();
-            }
-        }
-
-        let musicToastTimer = null;
-        function showMusicToast() {
-            const toast = document.getElementById('musicToast');
-            const songEl = document.getElementById('musicToastSong');
-            const artistEl = document.getElementById('musicToastArtist');
-            if (!toast || !currentSong) return;
-            if (songEl) songEl.textContent = currentSong.title;
-            if (artistEl) artistEl.textContent = currentSong.artist;
-            toast.classList.add('visible');
-            clearTimeout(musicToastTimer);
-            musicToastTimer = setTimeout(() => toast.classList.remove('visible'), 7000);
-        }
-
-        const musicToastCloseEl = document.getElementById('musicToastClose');
-        if (musicToastCloseEl) {
-            musicToastCloseEl.addEventListener('click', () => {
-                const toast = document.getElementById('musicToast');
-                if (toast) toast.classList.remove('visible');
-                clearTimeout(musicToastTimer);
-            });
-        }
-
-        // ---------- Play / Stop ----------
-        const musicToggleBtnEl = document.getElementById('musicToggleBtn');
-        if (musicToggleBtnEl) {
-            musicToggleBtnEl.addEventListener('click', () => {
-                if (musicDisabled || !ytPlayer) return;
-                if (isPlaying) {
-                    ytPlayer.pauseVideo();
-                    isPlaying = false;
-                } else {
-                    ytPlayer.playVideo();
-                    try { ytPlayer.unMute();
-                        ytPlayer.setVolume(50); } catch (e) {}
-                    isPlaying = true;
-                }
-                updateMusicUI();
-            });
-        }
-
-        // Inisialisasi paparan lagu minggu ini + sejarah + notifikasi.
-        fillMusicInfoPanel();
-        updateMusicUI();
-        updateMusicHistoryAndMaybeNotify();
+            updateMusicUI();
+        });
 
         // ============================================
         // 8. CONTACT FORM (FormSubmit)
