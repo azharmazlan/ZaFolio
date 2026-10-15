@@ -1319,32 +1319,20 @@
             width: 100%;
             overflow: hidden;
             padding: 20px 0;
-            touch-action: none;
+            touch-action: pan-y; /* scroll tegak halaman masih boleh, mendatar dikawal JS */
             user-select: none;
             -webkit-user-select: none;
         }
         .history-gallery .gallery-track {
             display: flex;
             gap: 28px;
-            animation: scrollGallery 40s linear infinite;
             width: max-content;
             cursor: grab;
             transition: none;
+            will-change: transform;
         }
         .history-gallery .gallery-track.dragging {
             cursor: grabbing;
-            animation-play-state: paused !important;
-        }
-        .history-gallery .gallery-track.paused {
-            animation-play-state: paused;
-        }
-        @keyframes scrollGallery {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(-50%);
-            }
         }
         .history-gallery .gallery-item {
             flex: 0 0 260px;
@@ -2182,33 +2170,64 @@
         // 4. HISTORY GALLERY (sijil)
         // ============================================
         const certificateImages = [
-            'Screenshot 2026-07-18 121316.png',
-            'Screenshot 2026-07-18 121515.png',
-            'Screenshot 2026-07-18 121725.png',
-            'Screenshot 2026-07-18 121849.png',
-            'Screenshot 2026-07-18 121938.png',
-            'Screenshot 2026-07-18 122020.png',
-            'Screenshot 2026-07-18 122203.png',
-            'Screenshot 2026-07-18 122256.png',
-            'Screenshot 2026-07-18 122410.png',
-            'Screenshot 2026-07-18 122538.png',
-            'Screenshot 2026-07-18 122726.png',
-            'Screenshot 2026-07-18 122827.png',
-            'Screenshot 2026-07-18 122913.png',
-            'Screenshot 2026-07-18 123002.png',
-            'Screenshot 2026-07-18 123040.png',
-            'Screenshot 2026-07-18 123124.png',
-            'Screenshot 2026-07-18 123237.png',
-            'Screenshot 2026-07-18 123411.png',
-            'Screenshot 2026-07-18 123524.png',
-            'Screenshot 2026-07-18 123623.png',
-            'Screenshot 2026-07-18 123706.png',
-            'Screenshot 2026-07-18 123751.png',
-            'Screenshot 2026-07-18 123925.png',
-            'Screenshot 2026-07-20 140447.png',
-            'Screenshot 2026-07-20 141024.png',
-            'Screenshot 2026-07-20 141228.png',
-            'Screenshot 2026-07-22 132330.png',
+            '1(1).png',
+            '2.png',
+            '3(3).png',
+            '4(4).png',
+            '5(5).png',
+            '6(6).png',
+            '7.png',
+            '8.png',
+            '9.png',
+            '10.png',
+            '11.png',
+            '12.png',
+            '13.png',
+            '14.png',
+            '15.png',
+            '16.png',
+            '17.png',
+            '18.png',
+            '19.png',
+            '20.png',
+            '21.png',
+            '22.png',
+            '23.png',
+            '24.png',
+            '25.png',
+            '26.png',
+            '27.png',
+            '28.png',
+            '29.png',
+            '30.png',
+            '31.png',
+            '32.png',
+            '33.png',
+            '34.png',
+            '35.png',
+            '36.png',
+            '37.png',
+            '38.png',
+            '39.png',
+            '40.png', 
+            '41.png',
+            '42.png',
+            '43.png',
+            '44.png',
+            '45.png',
+            '46.png',
+            '47.png',
+            '48.png',
+            '49.png',
+            '50.png',
+            '51.png',
+            '52.png',
+            '53.png',
+            '54.png',
+            '55.png',
+            '56.png',
+            '57.png',
+            '58.png',
         ];
         const fallbackCert = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="500" viewBox="0 0 400 500"%3E%3Crect width="400" height="500" fill="%23f1f5f9"/%3E%3Ctext x="200" y="250" font-family="Inter,sans-serif" font-size="24" fill="%2394a3b8" text-anchor="middle"%3ESijil%3C/text%3E%3C/svg%3E';
 
@@ -2232,15 +2251,130 @@
             const lightboxImg = document.getElementById('lightboxImg');
             const lightboxClose = document.getElementById('lightboxClose');
 
-            track.querySelectorAll('.gallery-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    const src = item.getAttribute('data-src') || item.querySelector('img')?.src;
-                    if (src) {
-                        lightboxImg.src = src;
-                        lightbox.classList.add('open');
-                        document.body.style.overflow = 'hidden';
+            function closeLightbox() {
+                lightbox.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+
+            // ---- SCROLL AUTO (JS) + SCROLL MANUAL + AUTO RESUME ----
+            const wrapper = document.getElementById('historyGalleryWrapper');
+            const AUTO_DURATION = 40;      // saat untuk satu pusingan penuh (sama seperti asal)
+            const RESUME_DELAY = 3000;     // ms selepas lepas scroll baru auto sambung
+            const DRAG_THRESHOLD = 6;      // px, bawah ini dikira klik (bukan seret)
+
+            let pos = 0;                   // kedudukan translateX semasa
+            let lastTime = null;
+            let isDragging = false;
+            let moved = false;
+            let startX = 0;
+            let startPos = 0;
+            let hoverPaused = false;
+            let userPaused = false;
+            let resumeTimeout = null;
+
+            // jarak satu pusingan = lebar satu set sijil (termasuk gap)
+            function loopWidth() {
+                const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+                return (track.scrollWidth + gap) / 2;
+            }
+
+            function wrapPos(p) {
+                const loop = loopWidth();
+                if (loop <= 0) return p;
+                while (p <= -loop) p += loop;
+                while (p > 0) p -= loop;
+                return p;
+            }
+
+            function applyPos() {
+                track.style.transform = `translate3d(${pos}px,0,0)`;
+            }
+
+            function holdAuto() {
+                userPaused = true;
+                if (resumeTimeout) { clearTimeout(resumeTimeout); resumeTimeout = null; }
+            }
+
+            function resumeAutoScrollAfterDelay() {
+                if (resumeTimeout) clearTimeout(resumeTimeout);
+                resumeTimeout = setTimeout(() => {
+                    resumeTimeout = null;
+                    if (!isDragging) {
+                        userPaused = false;
+                        hoverPaused = false;
                     }
-                });
+                }, RESUME_DELAY);
+            }
+
+            function tick(t) {
+                if (lastTime === null) lastTime = t;
+                const dt = Math.min(t - lastTime, 100) / 1000;
+                lastTime = t;
+                if (!isDragging && !userPaused && !hoverPaused) {
+                    const loop = loopWidth();
+                    if (loop > 0) {
+                        pos = wrapPos(pos - (loop / AUTO_DURATION) * dt);
+                        applyPos();
+                    }
+                }
+                requestAnimationFrame(tick);
+            }
+
+            // Seret (tetikus & sentuhan)
+            wrapper.addEventListener('pointerdown', (e) => {
+                if (e.pointerType === 'mouse' && e.button !== 0) return;
+                isDragging = true;
+                moved = false;
+                startX = e.clientX;
+                startPos = pos;
+                holdAuto();
+                track.classList.add('dragging');
+            });
+
+            window.addEventListener('pointermove', (e) => {
+                if (!isDragging) return;
+                const dx = e.clientX - startX;
+                if (Math.abs(dx) > DRAG_THRESHOLD) moved = true;
+                if (moved) {
+                    pos = wrapPos(startPos + dx);
+                    applyPos();
+                }
+            });
+
+            function endDrag() {
+                if (!isDragging) return;
+                isDragging = false;
+                track.classList.remove('dragging');
+                resumeAutoScrollAfterDelay();
+            }
+            window.addEventListener('pointerup', endDrag);
+            window.addEventListener('pointercancel', endDrag);
+
+            // Elak seret imej asal pelayar
+            wrapper.addEventListener('dragstart', (e) => e.preventDefault());
+
+            // Roda tetikus / trackpad mendatar
+            wrapper.addEventListener('wheel', (e) => {
+                const horizontal = Math.abs(e.deltaX) > Math.abs(e.deltaY) || e.shiftKey;
+                if (!horizontal) return; // scroll tegak halaman kekal normal
+                e.preventDefault();
+                holdAuto();
+                pos = wrapPos(pos - (e.deltaX || e.deltaY));
+                applyPos();
+                resumeAutoScrollAfterDelay();
+            }, { passive: false });
+
+            // Klik sijil -> preview (hanya jika bukan seretan)
+            track.addEventListener('click', (e) => {
+                if (moved) { moved = false; return; }
+                const item = e.target.closest('.gallery-item');
+                if (!item) return;
+                const src = item.getAttribute('data-src') || item.querySelector('img')?.src;
+                if (src) {
+                    lightboxImg.src = src;
+                    lightbox.classList.add('open');
+                    document.body.style.overflow = 'hidden';
+                }
             });
 
             lightboxClose.addEventListener('click', closeLightbox);
@@ -2251,152 +2385,19 @@
                 if (e.key === 'Escape') closeLightbox();
             });
 
-            function closeLightbox() {
-                lightbox.classList.remove('open');
-                document.body.style.overflow = '';
-            }
-
-            // ---- DRAG MANUAL + AUTO RESUME ----
-            let isDragging = false;
-            let startX = 0;
-            let scrollLeft = 0;
-            let dragPaused = false;
-            let resumeTimeout = null;
-
-            const wrapper = document.getElementById('historyGalleryWrapper');
-
-            function pauseAutoScroll() {
-                if (!dragPaused) {
-                    track.classList.add('paused');
-                    dragPaused = true;
-                    if (resumeTimeout) {
-                        clearTimeout(resumeTimeout);
-                        resumeTimeout = null;
-                    }
-                }
-            }
-
-            function resumeAutoScrollAfterDelay() {
-                if (resumeTimeout) {
-                    clearTimeout(resumeTimeout);
-                    resumeTimeout = null;
-                }
-                resumeTimeout = setTimeout(() => {
-                    if (!isDragging) {
-                        track.classList.remove('paused');
-                        dragPaused = false;
-                        resumeTimeout = null;
-                    }
-                }, 2500);
-            }
-
-            // Mouse events
-            wrapper.addEventListener('mousedown', (e) => {
-                isDragging = true;
-                pauseAutoScroll();
-                track.classList.add('dragging');
-                startX = e.pageX - wrapper.getBoundingClientRect().left;
-                scrollLeft = track.scrollLeft || 0;
-                // get current translateX
-                const style = window.getComputedStyle(track);
-                const transform = style.transform;
-                if (transform && transform !== 'none') {
-                    const matrix = transform.match(/matrix.*\((.+)\)/);
-                    if (matrix) {
-                        const values = matrix[1].split(', ');
-                        const tx = parseFloat(values[4] || 0);
-                        scrollLeft = tx;
-                    }
-                }
-                wrapper.style.cursor = 'grabbing';
-                e.preventDefault();
-            });
-
-            window.addEventListener('mousemove', (e) => {
-                if (!isDragging) return;
-                const x = e.pageX - wrapper.getBoundingClientRect().left;
-                const walk = (x - startX);
-                const currentTx = scrollLeft + walk;
-                track.style.transform = `translateX(${currentTx}px)`;
-                track.style.animation = 'none';
-            });
-
-            window.addEventListener('mouseup', () => {
-                if (isDragging) {
-                    isDragging = false;
-                    track.classList.remove('dragging');
-                    wrapper.style.cursor = 'grab';
-                    // resume auto scroll after delay
-                    track.style.animation = '';
-                    track.style.transform = '';
-                    resumeAutoScrollAfterDelay();
-                }
-            });
-
-            // Touch events
-            let touchStartX = 0;
-            let touchScrollLeft = 0;
-
-            wrapper.addEventListener('touchstart', (e) => {
-                const touch = e.touches[0];
-                isDragging = true;
-                pauseAutoScroll();
-                track.classList.add('dragging');
-                touchStartX = touch.pageX - wrapper.getBoundingClientRect().left;
-                const style = window.getComputedStyle(track);
-                const transform = style.transform;
-                if (transform && transform !== 'none') {
-                    const matrix = transform.match(/matrix.*\((.+)\)/);
-                    if (matrix) {
-                        const values = matrix[1].split(', ');
-                        const tx = parseFloat(values[4] || 0);
-                        touchScrollLeft = tx;
-                    }
-                } else {
-                    touchScrollLeft = 0;
-                }
-            }, { passive: true });
-
-            wrapper.addEventListener('touchmove', (e) => {
-                if (!isDragging) return;
-                const touch = e.touches[0];
-                const x = touch.pageX - wrapper.getBoundingClientRect().left;
-                const walk = (x - touchStartX);
-                const currentTx = touchScrollLeft + walk;
-                track.style.transform = `translateX(${currentTx}px)`;
-                track.style.animation = 'none';
-            }, { passive: true });
-
-            wrapper.addEventListener('touchend', () => {
-                if (isDragging) {
-                    isDragging = false;
-                    track.classList.remove('dragging');
-                    track.style.animation = '';
-                    track.style.transform = '';
-                    resumeAutoScrollAfterDelay();
-                }
-            }, { passive: true });
-
-            // Pause on hover (as before)
+            // Berhenti bila hover (seperti asal), sambung selepas beberapa saat
             track.addEventListener('mouseenter', () => {
                 if (!isDragging) {
-                    track.classList.add('paused');
-                    dragPaused = true;
-                    if (resumeTimeout) {
-                        clearTimeout(resumeTimeout);
-                        resumeTimeout = null;
-                    }
+                    hoverPaused = true;
+                    if (resumeTimeout) { clearTimeout(resumeTimeout); resumeTimeout = null; }
                 }
             });
             track.addEventListener('mouseleave', () => {
-                if (!isDragging) {
-                    resumeAutoScrollAfterDelay();
-                }
+                if (!isDragging) resumeAutoScrollAfterDelay();
             });
 
-            // Initial state: auto scroll running
-            track.classList.remove('paused');
-            dragPaused = false;
+            // Mula auto scroll
+            requestAnimationFrame(tick);
         }
 
         // ============================================
